@@ -1,5 +1,6 @@
 import sys
 import math
+import time
 
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -21,11 +22,13 @@ class MainWindow(Ui_MainWindow):
 	# Signals for simulation
 	startSimulation = pyqtSignal(dict)
 	stopSimulation = pyqtSignal()
+	updateDrawings = pyqtSignal(dict)
 
-	def __init__(self, window, controller):
+	def __init__(self, window):
 
 		# User interface setup
 		Ui_MainWindow.__init__(self)
+		self.window = window
 		self.setupUi(window)
 
 
@@ -42,6 +45,9 @@ class MainWindow(Ui_MainWindow):
 		self.setupInfos()
 		self.setupRules()
 		self.on_update_param('None')
+
+		self.running = False
+
 
 	def setupRules(self):
 
@@ -177,6 +183,11 @@ class MainWindow(Ui_MainWindow):
 		self.sl_lineEdit.setText(str(setup['sl']))
 
 		# Send signal to redraw geometry
+		self.updateDrawings.emit(setup)
+
+	def resizeEvent(self, event):
+		self.reloadGeometry()
+		print('Resizing')
 
 
 	def setupOperatingConditions(self, infos):
@@ -235,7 +246,7 @@ class MainWindow(Ui_MainWindow):
 			self.flowInputs['Ph_start'] = 1e5
 			self.flowInputs['Ph_end'] = 100e5
 			self.flowInputs['xc_in'] = 0.13
-			self.flowInputs['steps'] = 100
+			self.flowInputs['steps'] = 20
 
 		self.nVal_spinBox.setValue(self.flowInputs['steps'])
 		self.Tc_start_lineEdit.setText(str(self.flowInputs['Tc_start']))
@@ -272,8 +283,8 @@ class MainWindow(Ui_MainWindow):
 		self.geom['t'] = float(self.t_lineEdit.text())
 		self.geom['corr'] = self.corr_comboBox.itemText(self.corr_comboBox.currentIndex())
 		self.geom['corrPD'] = self.corrPD_comboBox.itemText(self.corrPD_comboBox.currentIndex())
-		self.geom['sq'] = self.sq_lineEdit.text()
-		self.geom['sl'] = self.sl_lineEdit.text()
+		self.geom['sq'] = float(self.sq_lineEdit.text())
+		self.geom['sl'] = float(self.sl_lineEdit.text())
 
 		self.opCond['FluidType'] = self.fluid_comboBox.itemText(self.fluid_comboBox.currentIndex())
 		self.opCond['TubeMat'] = self.tubeMaterial_comboBox.itemText(self.tubeMaterial_comboBox.currentIndex())
@@ -284,10 +295,10 @@ class MainWindow(Ui_MainWindow):
 		self.opCond['TubeThermalConductivity'] = float(self.tubeThermalConductivity_lineEdit.text()) 
 		
 
-
 	def on_saveConfiguration(self):
 
-		filename = 'default' # Todays date
+		filename = time.strftime("%Y%m%H%M%S")
+		print(filename)
 
 		# Verify filename
 		if self.configuration_lineEdit.text() is not None:
@@ -307,10 +318,27 @@ class MainWindow(Ui_MainWindow):
 	# Start simulation
 	def on_run(self):
 
-		self.simulation_progressBar.setProperty("visible", True)
-		configuration = {'opCond': self.opCond, 'geom': self.geom, 'flowInputs':self.flowInputs}
-		self.startSimulation.emit(configuration)
+		if not self.running:
+			# Fetch latest changes
+			self.updateConfiguration()
 
+			# Update GUI
+			self.run_button.setText('Stop')
+			self.simulation_progressBar.setProperty("visible", True)
+
+			# Launch simulation
+			self.running = True
+			self.flowInputs['currentParam'] = self.currentParam
+			configuration = {'opCond': self.opCond, 'geom': self.geom, 'flowInputs':self.flowInputs}
+			self.startSimulation.emit(configuration)
+
+		else:
+			self.running = False
+			self.run_button.setText('Run')
+			self.simulation_progressBar.setProperty("value", 0)
+			self.stopSimulation.emit()
+
+		
 
 	def on_update_param(self, param):
 

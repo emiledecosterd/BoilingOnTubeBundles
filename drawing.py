@@ -44,7 +44,6 @@ class PipeDrawing(object):
 		self.view.setScene(self.scene)
 
 
-
 	def drawCells(self, vert, hor):
 		'''
 		Draws the discretization cells in the rectangle
@@ -172,7 +171,5 @@ class PipeDrawing(object):
 
 				# Draw the rectangle
 				self.scene.addRect(rect, self.fillPen, brush)
-
-
 
 
