@@ -324,7 +324,7 @@ class MainWindow(Ui_MainWindow):
 				self.Th_checkBox.setChecked(False)
 				self.Ph_end_lineEdit.setEnabled(False)
 				self.Ph_checkBox.setChecked(False)
-				changed = True
+				self.nVal_spinBox.setEnabled(True)
 			else:
 				self.currentParam = 'None'
 			
@@ -337,7 +337,7 @@ class MainWindow(Ui_MainWindow):
 				self.Th_checkBox.setChecked(True)
 				self.Ph_end_lineEdit.setEnabled(False)
 				self.Ph_checkBox.setChecked(False)
-				changed = True
+				self.nVal_spinBox.setEnabled(True)
 			else:
 				self.currentParam = 'None'
 
@@ -350,17 +350,20 @@ class MainWindow(Ui_MainWindow):
 				self.Th_checkBox.setChecked(False)
 				self.Ph_end_lineEdit.setEnabled(True)
 				self.Ph_checkBox.setChecked(True)
-				changed = True
+				self.nVal_spinBox.setEnabled(True)
 			else:
 				self.currentParam = 'None'
 
-		if self.currentParam == 'None' and changed == False:
+		if self.currentParam == 'None':
 			self.Tc_end_lineEdit.setEnabled(False)
 			self.Tc_checkBox.setChecked(False)
 			self.Th_end_lineEdit.setEnabled(False)
 			self.Th_checkBox.setChecked(False)
 			self.Ph_end_lineEdit.setEnabled(False)
 			self.Ph_checkBox.setChecked(False)
+			self.nVal_spinBox.setEnabled(False)
+
+		print(self.currentParam)
 
 
 	# Update progress bar
@@ -446,6 +449,11 @@ class MainWindow(Ui_MainWindow):
 			# Change mfr_c accordingly
 			opCond['mfr_h'] = opCond['mdot_h']*factor_h
 			self.mfr_h_lineEdit.setText(str(opCond['mfr_h']))
+
+
+	def on_check_corr(self):
+
+			print('check')
 
 
 
