@@ -78,7 +78,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-402</y>
+         <y>-429</y>
          <width>451</width>
          <height>916</height>
         </rect>
@@ -671,7 +671,7 @@
              <item row="0" column="0">
               <widget class="QLabel" name="label_49">
                <property name="text">
-                <string>Number of values for parametrization</string>
+                <string>Values for parametrization</string>
                </property>
               </widget>
              </item>

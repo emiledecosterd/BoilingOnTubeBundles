@@ -12,6 +12,7 @@ class MainWindow(Ui_MainWindow):
 	opCond = None
 	geom = None
 	flowInputs = None
+	currentParam = 'None'
 
 	# Mass flow
 	currentMassFlow_c = 'mfr'
@@ -40,7 +41,7 @@ class MainWindow(Ui_MainWindow):
 		self.setupInputs(None)
 		self.setupInfos()
 		self.setupRules()
-		self.on_update_param(None)
+		self.on_update_param('None')
 
 	def setupRules(self):
 
@@ -106,9 +107,9 @@ class MainWindow(Ui_MainWindow):
 		self.mfr_h_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mfr_h'))
 		self.mdot_c_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mdot_c'))
 		self.mdot_h_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mdot_h'))
-		self.Tc_checkBox.stateChanged.connect(lambda: self.on_update_param('Tc'))
-		self.Th_checkBox.stateChanged.connect(lambda: self.on_update_param('Th'))
-		self.Ph_checkBox.stateChanged.connect(lambda: self.on_update_param('Ph'))
+		self.Tc_checkBox.clicked.connect(lambda: self.on_update_param('Tc'))
+		self.Th_checkBox.clicked.connect(lambda: self.on_update_param('Th'))
+		self.Ph_checkBox.clicked.connect(lambda: self.on_update_param('Ph'))
 
 
 	def setupInfos(self):
@@ -312,21 +313,20 @@ class MainWindow(Ui_MainWindow):
 
 	def on_update_param(self, param):
 
+		changed = False
+
 		if param == 'Tc':
 			if self.Tc_checkBox.isChecked():
 				self.currentParam = 'Tc'
 				self.Tc_end_lineEdit.setEnabled(True)
+				self.Tc_checkBox.setChecked(True)
 				self.Th_end_lineEdit.setEnabled(False)
 				self.Th_checkBox.setChecked(False)
 				self.Ph_end_lineEdit.setEnabled(False)
 				self.Ph_checkBox.setChecked(False)
+				changed = True
 			else:
 				self.currentParam = 'None'
-				self.Tc_end_lineEdit.setEnabled(False)
-				self.Th_end_lineEdit.setEnabled(False)
-				self.Th_checkBox.setChecked(False)
-				self.Ph_end_lineEdit.setEnabled(False)
-				self.Ph_checkBox.setChecked(False)
 			
 		elif param == 'Th':
 			if self.Th_checkBox.isChecked():
@@ -334,15 +334,12 @@ class MainWindow(Ui_MainWindow):
 				self.Tc_end_lineEdit.setEnabled(False)
 				self.Tc_checkBox.setChecked(False)
 				self.Th_end_lineEdit.setEnabled(True)
+				self.Th_checkBox.setChecked(True)
 				self.Ph_end_lineEdit.setEnabled(False)
 				self.Ph_checkBox.setChecked(False)
+				changed = True
 			else:
 				self.currentParam = 'None'
-				self.Tc_end_lineEdit.setEnabled(False)
-				self.Tc_checkBox.setChecked(False)
-				self.Th_end_lineEdit.setEnabled(False)
-				self.Ph_end_lineEdit.setEnabled(False)
-				self.Ph_checkBox.setChecked(False)
 
 		elif param == 'Ph':
 			if self.Ph_checkBox.isChecked():
@@ -352,22 +349,18 @@ class MainWindow(Ui_MainWindow):
 				self.Th_end_lineEdit.setEnabled(False)
 				self.Th_checkBox.setChecked(False)
 				self.Ph_end_lineEdit.setEnabled(True)
+				self.Ph_checkBox.setChecked(True)
+				changed = True
 			else:
 				self.currentParam = 'None'
-				self.Tc_end_lineEdit.setEnabled(False)
-				self.Tc_checkBox.setChecked(False)
-				self.Th_end_lineEdit.setEnabled(False)
-				self.Th_checkBox.setChecked(False)
-				self.Ph_end_lineEdit.setEnabled(False)
 
-		elif param == 'None':
-			self.currentParam = 'None'
+		if self.currentParam == 'None' and changed == False:
 			self.Tc_end_lineEdit.setEnabled(False)
 			self.Tc_checkBox.setChecked(False)
 			self.Th_end_lineEdit.setEnabled(False)
 			self.Th_checkBox.setChecked(False)
 			self.Ph_end_lineEdit.setEnabled(False)
-
+			self.Ph_checkBox.setChecked(False)
 
 
 	# Update progress bar
@@ -389,6 +382,10 @@ class MainWindow(Ui_MainWindow):
 
 	# An operating condition concerning the mass flow rate changed
 	def on_opCond_changed(self, flowRate):
+
+		print('opCond changed')
+		geom = self.geom
+		opCond = self.opCond
 
 		# If flowrate is None, the call does not come from the "editingFinished" signal 
 		# but because some geometry field changed
@@ -412,6 +409,7 @@ class MainWindow(Ui_MainWindow):
 
 		if flowRate == 'mfr_c':
 
+			print('mfr_c changed')
 			# Remember we want to change mfr and not mdot
 			self.currentMassFlow_c = 'mfr'
 
@@ -421,6 +419,7 @@ class MainWindow(Ui_MainWindow):
 
 		elif flowRate == 'mfr_h':
 
+			print('mfr_h changed')
 			# Remember we want to change mfr and not mdot
 			self.currentMassFlow_h = 'mfr'
 
@@ -430,6 +429,7 @@ class MainWindow(Ui_MainWindow):
 
 		elif flowRate == 'mdot_c':
 
+			print('mdot_c changed')
 			# Remember we want to change mdot and not mfr
 			self.currentMassFlow_c = 'mdot'
 
@@ -439,6 +439,7 @@ class MainWindow(Ui_MainWindow):
 
 		elif flowRate == 'mdot_h':
 
+			print('mdot_h changed')
 			# Remember we want to change mdot and not mfr
 			self.currentMassFlow_h = 'mdot'
 
