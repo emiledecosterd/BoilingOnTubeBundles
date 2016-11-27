@@ -6,6 +6,11 @@ from mainWindowGUI import Ui_MainWindow
 
 class MainWindow(Ui_MainWindow):
 
+	# Configuration¨
+	opCond = None
+	geom = None
+	flowInputs = None
+
 	# Signals for simulation
 	startSimulation = pyqtSignal(dict)
 	stopSimulation = pyqtSignal()
@@ -16,12 +21,6 @@ class MainWindow(Ui_MainWindow):
 		Ui_MainWindow.__init__(self)
 		self.setupUi(window)
 
-		# Hold a reference to the controller 
-		self.controller = controller
-
-		# Current configuration for the simulation
-		self.configuration = {} 
-
 
 	# SETUP
 
@@ -30,21 +29,26 @@ class MainWindow(Ui_MainWindow):
 		# Load the default setup (when the option for saving setups is added, load selected setup)
 		''' configuration = readFile('defaultSetup.xml') '''
 
-		configuration = {'opCond': None, 'flowInputs' : None, 'geom':None}
 		self.setupRules()
-		self.setupOperatingConditions(configuration['opCond'])
-		self.setupGeometry(configuration['geom'])
-		self.setupInputs(configuration['flowInputs'])
+		self.setupOperatingConditions()
+		self.setupGeometry()
+		self.setupInputs()
 		self.setupInfos()
 
 
 	def setupRules(self):
-		# Define validators for each field
+
+		# OpCond validators
 		self.mdot_c_lineEdit.setValidator(QRegExpValidator(
 			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.mdot_c_lineEdit)) # Set the value as double
 		self.mdot_h_lineEdit.setValidator(QRegExpValidator(
 			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.mdot_h_lineEdit)) # Set the value as double
-		#self.Nt_lineEdit.setValidator(QRegExpValidator(QRegExp("[0-9]*"))) # Set the value as int
+		self.mfr_c_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.mfr_c_lineEdit)) # Set the value as double
+		self.mfr_h_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.mfr_h_lineEdit)) # Set the value as double
+
+		# Geometry validators
 		self.L_lineEdit.setValidator(QRegExpValidator(
 			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"), self.L_lineEdit)) # Set value as double
 		self.s_lineEdit.setValidator(QRegExpValidator(
@@ -57,14 +61,24 @@ class MainWindow(Ui_MainWindow):
 			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.e_i_lineEdit)) # Set the value as double
 		self.t_lineEdit.setValidator(QRegExpValidator(
 			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.t_lineEdit)) # Set the value as double
-		self.Tc_lineEdit.setValidator(QRegExpValidator(
-			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Tc_lineEdit)) # Set the value as double
-		self.Th_lineEdit.setValidator(QRegExpValidator(
-			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Th_lineEdit)) # Set the value as double
-		self.Pc_lineEdit.setValidator(QRegExpValidator(
-			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Pc_lineEdit)) # Set the value as double
-		self.Ph_lineEdit.setValidator(QRegExpValidator(
-			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Ph_lineEdit)) # Set the value as double
+		self.sq_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.sq_lineEdit)) # Set the value as double
+		self.sl_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.sl_lineEdit)) # Set the value as double
+
+		# Flow inputs validators
+		self.Tc_start_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Tc_start_lineEdit)) # Set the value as double
+		self.Tc_end_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Tc_end_lineEdit)) # Set the value as double
+		self.Th_start_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Th_start_lineEdit)) # Set the value as double
+		self.Th_end_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Th_end_lineEdit)) # Set the value as double
+		self.Ph_start_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Ph_start_lineEdit)) # Set the value as double
+		self.Ph_end_lineEdit.setValidator(QRegExpValidator(
+			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.Ph_end_lineEdit)) # Set the value as double
 		self.xc_lineEdit.setValidator(QRegExpValidator(
 			QRegExp("[0-9]*\.?[0-9]+([eE][-]?[0-9]+)"),self.xc_lineEdit)) # Set the value as double
 
