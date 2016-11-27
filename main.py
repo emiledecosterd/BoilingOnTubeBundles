@@ -32,11 +32,11 @@ class MainController(QObject):
 
 		# Setup simulation
 		self.simulationStopped = False
-		self.setupSimulation()
+		#self.setupSimulation()
 
 		# Setup plotter
-		self.plotter = PipeDrawing(self.mainWindow.geometry_GraphicsView)
-		self.plotter.drawOuterRect()
+		#self.plotter = PipeDrawing(self.mainWindow.geometry_GraphicsView)
+		#self.plotter.drawOuterRect()
 
 		# Setup window
 		self.mainWindow.setup()
@@ -96,7 +96,31 @@ class MainController(QObject):
 		else:
 			print('No results!!!')
 
+	def checkSimulation(self):
 
+		if self.currentParam == 'Tc':
+			if self.current_Tc + self.step >= self.flowInputs['Tc_end']:
+				return
+			else:
+				self.current_Tc = self.current_Tc + self.step
+				self.flowInputs['Tc'] = self.current_Tc
+
+		elif self.currentParam == 'Th':
+			if self.current_Th + self.step >= self.flowInputs['Th_end']:
+				return
+			else:
+				self.current_Th = self.current_Th + self.step
+				self.flowInputs['Th'] = self.current_Th
+
+		elif self.currentParam == 'Ph':
+			if self.current_Ph + self.step >= self.flowInputs['Ph_end']:
+				return
+			else:
+				self.current_Ph = self.current_Ph + self.step
+				self.flowInputs['Ph'] = self.current_Ph
+
+		elif self.currentParam == 'None':
+			print('No parametrization')
 
 	## FILE MANAGEMENT
 
