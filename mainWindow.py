@@ -110,6 +110,7 @@ class MainWindow(Ui_MainWindow):
 		self.Tc_checkBox.clicked.connect(lambda: self.on_update_param('Tc'))
 		self.Th_checkBox.clicked.connect(lambda: self.on_update_param('Th'))
 		self.Ph_checkBox.clicked.connect(lambda: self.on_update_param('Ph'))
+		self.corrPD_comboBox.currentTextChanged.connect(self.on_check_corr)
 
 
 	def setupInfos(self):
@@ -269,13 +270,13 @@ class MainWindow(Ui_MainWindow):
 		self.geom['e_o'] = float(self.e_o_lineEdit.text())
 		self.geom['e_i'] = float(self.e_i_lineEdit.text())
 		self.geom['t'] = float(self.t_lineEdit.text())
-		self.geom['corr'] = self.corr_comboBox.currentText
-		self.geom['corrPD'] = self.corrPD_comboBox.currentText
+		self.geom['corr'] = self.corr_comboBox.itemText(self.corr_comboBox.currentIndex())
+		self.geom['corrPD'] = self.corrPD_comboBox.itemText(self.corrPD_comboBox.currentIndex())
 		self.geom['sq'] = self.sq_lineEdit.text()
 		self.geom['sl'] = self.sl_lineEdit.text()
 
-		self.opCond['FluidType'] = self.fluid_comboBox.currentText
-		self.opCond['TubeMat'] = self.tubeMaterial_comboBox.currentText 
+		self.opCond['FluidType'] = self.fluid_comboBox.itemText(self.fluid_comboBox.currentIndex())
+		self.opCond['TubeMat'] = self.tubeMaterial_comboBox.itemText(self.tubeMaterial_comboBox.currentIndex())
 		self.opCond['mdot_c'] = float(self.mdot_c_lineEdit.text()) 
 		self.opCond['mdot_h'] = float(self.mdot_h_lineEdit.text())
 		self.opCond['mfr_c'] = float(self.mfr_c_lineEdit.text())
@@ -453,7 +454,21 @@ class MainWindow(Ui_MainWindow):
 
 	def on_check_corr(self):
 
-			print('check')
+		self.updateConfiguration()
+		print(self.geom['corrPD'])
+
+		if self.geom['corrPD'] == 'Gaddis':
+			self.layout_comboBox.setEnabled(True)
+			self.sq_lineEdit.setEnabled(True)
+			self.sl_lineEdit.setEnabled(True)
+
+		else:
+			print('Disabled')
+			self.layout_comboBox.setEnabled(False)
+			self.sq_lineEdit.setEnabled(False)
+			self.sl_lineEdit.setEnabled(False)
+
+		print('check')
 
 
 
