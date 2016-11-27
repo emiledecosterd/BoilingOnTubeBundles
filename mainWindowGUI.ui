@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>881</width>
+    <height>697</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="2" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_38">
+        <property name="text">
+         <string>Field to be dislayed</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="displayField_comboBox">
+        <item>
+         <property name="text">
+          <string>Water temperature</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Working fluid pressure</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Working fluid vapor quality</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="1">
+     <widget class="QGraphicsView" name="long_GraphicsView"/>
+    </item>
+    <item row="7" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
+      <item>
+       <widget class="QPushButton" name="run_button">
+        <property name="text">
+         <string>Run</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="simulation_progressBar">
+        <property name="value">
+         <number>24</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="5" column="0" rowspan="2">
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>-402</y>
+         <width>407</width>
+         <height>889</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="title">
+           <string>Operating Conditions</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0,0">
+             <property name="spacing">
+              <number>5</number>
+             </property>
+             <item row="3" column="2">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>[kg/m^2s]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Tube material</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Fluid type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="fluid_comboBox">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <item>
+                <property name="text">
+                 <string>R134a</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Ammonia</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Propane</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>[kg/m^2s]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="mdot_c_lineEdit"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>Hot fluid mass flow</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Working fluid mass flow </string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="tubeMaterial_comboBox">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <item>
+                <property name="text">
+                 <string>aluminium</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>steel</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>copper</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>custom</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="mdot_h_lineEdit"/>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_40">
+               <property name="text">
+                <string>Tube thermal conductivity</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="tubeThermalConductivity_lineEdit"/>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="label_41">
+               <property name="text">
+                <string>[W/mK]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_27">
+               <property name="text">
+                <string>Working fluid mass flow rate</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLineEdit" name="mfr_c_lineEdit"/>
+             </item>
+             <item row="6" column="2">
+              <widget class="QLabel" name="label_28">
+               <property name="text">
+                <string>[kg/s]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_29">
+               <property name="text">
+                <string>Hot fluid mass flow rate</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLineEdit" name="mfr_h_lineEdit"/>
+             </item>
+             <item row="7" column="2">
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>[kg/s]</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="title">
+           <string>Geometry</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <item row="2" column="0">
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="1" column="1">
+              <widget class="QComboBox" name="corrPD_comboBox">
+               <item>
+                <property name="text">
+                 <string>Gaddis</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Zukauskas</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="10" column="1">
+              <widget class="QLineEdit" name="e_i_lineEdit"/>
+             </item>
+             <item row="4" column="2">
+              <widget class="QLabel" name="label_43">
+               <property name="text">
+                <string>[-]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_42">
+               <property name="text">
+                <string>Number of tube columns</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QSpinBox" name="Nt_col_spinBox">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QSpinBox" name="Nt_spinBox">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLabel" name="label_21">
+               <property name="text">
+                <string>Inside tube roughness</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="L_lineEdit"/>
+             </item>
+             <item row="9" column="2">
+              <widget class="QLabel" name="label_20">
+               <property name="text">
+                <string>[um]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="2">
+              <widget class="QLabel" name="label_24">
+               <property name="text">
+                <string>[m]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="2">
+              <widget class="QLabel" name="label_18">
+               <property name="text">
+                <string>[m]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="2">
+              <widget class="QLabel" name="label_23">
+               <property name="text">
+                <string>[um]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLabel" name="label_12">
+               <property name="text">
+                <string>[m]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="2">
+              <widget class="QLabel" name="label_26">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="QLineEdit" name="e_o_lineEdit"/>
+             </item>
+             <item row="7" column="2">
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>[m]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>[-]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="1">
+              <widget class="QLineEdit" name="t_lineEdit"/>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="label_19">
+               <property name="text">
+                <string>Outside tube roughness</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLineEdit" name="s_lineEdit"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Length of tubes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_15">
+               <property name="text">
+                <string>Tube pitch </string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QLineEdit" name="D_lineEdit"/>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_13">
+               <property name="text">
+                <string>Number of cells in tube direction</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QSpinBox" name="n_spinBox">
+               <property name="minimum">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_9">
+               <property name="text">
+                <string>Number of tubes</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="label_22">
+               <property name="text">
+                <string>Tube thickness</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <widget class="QLabel" name="label_14">
+               <property name="text">
+                <string>[-]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_17">
+               <property name="text">
+                <string>Outer diameter</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="2">
+              <widget class="QLabel" name="label_46">
+               <property name="text">
+                <string>[m]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_44">
+               <property name="text">
+                <string>Layout</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <widget class="QLabel" name="label_45">
+               <property name="text">
+                <string>sq</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_36">
+               <property name="text">
+                <string>Correlation pressure drop</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="layout_comboBox">
+               <item>
+                <property name="text">
+                 <string>Inline</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Staggered</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_25">
+               <property name="text">
+                <string>Correlation heat transfer coefficient</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="1">
+              <widget class="QLineEdit" name="sq_lineEdit"/>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="corr_comboBox">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Mostinski</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Cooper</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="13" column="2">
+              <widget class="QLabel" name="label_48">
+               <property name="text">
+                <string>[m]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="1">
+              <widget class="QLineEdit" name="sl_lineEdit"/>
+             </item>
+             <item row="13" column="0">
+              <widget class="QLabel" name="label_47">
+               <property name="text">
+                <string>sl</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_3">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="title">
+           <string>Inputs</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_8">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <item row="1" column="0">
+            <layout class="QGridLayout" name="gridLayout_3">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="spacing">
+              <number>5</number>
+             </property>
+             <item row="2" column="0">
+              <widget class="QCheckBox" name="Pc_in_checkBox">
+               <property name="text">
+                <string>Hot fluid inlet pressure</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLineEdit" name="Tc_start_lineEdit"/>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="Th_start_lineEdit"/>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="xc_lineEdit"/>
+             </item>
+             <item row="2" column="4">
+              <widget class="QLabel" name="label_34">
+               <property name="text">
+                <string>[Pa]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLineEdit" name="Ph_start_lineEdit"/>
+             </item>
+             <item row="1" column="4">
+              <widget class="QLabel" name="label_33">
+               <property name="text">
+                <string>[K]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="Tc_in_checkBox">
+               <property name="text">
+                <string>Working fluid inlet temperature</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="4">
+              <widget class="QLabel" name="label_32">
+               <property name="text">
+                <string>[K]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="4">
+              <widget class="QLabel" name="label_35">
+               <property name="text">
+                <string>[-]</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="Tc_end_lineEdit"/>
+             </item>
+             <item row="2" column="3">
+              <widget class="QLineEdit" name="Ph_end_lineEdit"/>
+             </item>
+             <item row="1" column="3">
+              <widget class="QLineEdit" name="Th_end_lineEdit"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QCheckBox" name="Th_in_checkBox">
+               <property name="text">
+                <string>Hot fluid inlet temperature</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_31">
+               <property name="text">
+                <string>Working fluid inlet vapor quality</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="label_37">
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+        <underline>false</underline>
+        <strikeout>false</strikeout>
+        <stylestrategy>PreferDefault</stylestrategy>
+        <kerning>false</kerning>
+       </font>
+      </property>
+      <property name="text">
+       <string>Boiling on tube bundles</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>10</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>10</number>
+        </property>
+        <property name="bottomMargin">
+         <number>10</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="label_39">
+            <property name="text">
+             <string>Configuration name</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="configuration_lineEdit"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="save_button">
+          <property name="text">
+           <string>Save configuration</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="load_button">
+          <property name="text">
+           <string>Load configuration</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item row="6" column="1">
+     <widget class="QGraphicsView" name="cut_graphicsView"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>881</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
