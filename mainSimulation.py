@@ -10,15 +10,14 @@ from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
-from Postprocess import plot_boiler
-from Postprocess import plot_xc_pipe
+from Postprocess import *
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
 class Simulation(QObject):
 
     # A signal emitted when progress has been updated
-    progressUpdated = pyqtSignal(float) 
+    progressUpdated = pyqtSignal(float)
     # A signal emitted when the simulation is completed
     simulationComplete = pyqtSignal(dict)
 
@@ -128,9 +127,9 @@ class Simulation(QObject):
                 Qtot += Q
 
                 np.set_printoptions(precision=3)
-                print(xc)
-                print(OtherData)
-                print(Th)
+                #print(xc)
+                #print(OtherData)
+                #print(Th)
 
         print('Calculation complete !\n')
 
@@ -145,29 +144,33 @@ class Simulation(QObject):
         Q=Qtot*geom['Nt_col'] # [kW]
 
 
-        print('Ph_drop')
-        print(Ph_drop)
-        print('Pc_drop')
-        print(Pc_drop)
-        print('Th_drop')
-        print(Th_drop)
-        print('Tc_drop')
-        print(Tc_drop)
-        print('xc_drop')
-        print(xc_drop)
-        print('Heat transfer Q [kW] %.3f :' %Q)
+        #print('Ph_drop')
+        #print(Ph_drop)
+        #print('Pc_drop')
+        #print(Pc_drop)
+        #print('Th_drop')
+        #print(Th_drop)
+        #print('Tc_drop')
+        #print(Tc_drop)
+        #print('xc_drop')
+        #print(xc_drop)
+        #print('Heat transfer Q [kW] %.3f :' %Q)
 
         ################################################################################
         #               Postprocessing
 
         plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
         plot_xc_pipe(xc, geom['n'], geom['Nt'])
+        PostProcess_calc(opCond, geom, Q, OtherData)
+
+        input()
+
 
         self.results = {
             'Th' : Th,
-            'Ph' : Ph, 
+            'Ph' : Ph,
             'Tc' : Tc,
-            'Pc' : Pc, 
+            'Pc' : Pc,
             'xc' : xc,
             'Q': Q
         }

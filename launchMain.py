@@ -28,7 +28,7 @@ opCond['TubeThermalConductivity']= 400
 
 # Geometrical Inputs
 geom['Nt'] = 4
-geom['Nt_col'] = 6
+geom['Nt_col'] = 4
 geom['L'] = 3.0
 geom['n'] = 7
 geom['s'] = 150e-3
