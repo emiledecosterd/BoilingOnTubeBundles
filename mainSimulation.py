@@ -163,8 +163,6 @@ class Simulation(QObject):
         plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
         plot_xc_pipe(xc, geom['n'], geom['Nt'])
 
-        input()
-
         self.results = {
             'Th' : Th,
             'Ph' : Ph, 
