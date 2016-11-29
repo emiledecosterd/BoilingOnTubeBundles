@@ -61,7 +61,7 @@ def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt):
     ax2.add_artist(a)
     b = Arrow3D([1,Nt],[n/2.0,n/2.0],[Tc[1,1],Tc[1,1]], mutation_scale=20, lw=1, arrowstyle="-|>", color="b")
     ax2.add_artist(b)
-    ax2.view_init(elev=40, azim=-145)
+    ax2.view_init(elev=40, azim=-55)
     h.show()
 
     i=plt.figure(4)
@@ -74,7 +74,7 @@ def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt):
     ax3.add_artist(a)
     b = Arrow3D([1,Nt],[n/2.0,n/2.0],[Pc[1,1],Pc[1,1]], mutation_scale=20, lw=1, arrowstyle="-|>", color="b")
     ax3.add_artist(b)
-    ax3.view_init(elev=40, azim=-145)
+    ax3.view_init(elev=40, azim=-55)
     i.show()
 
     j=plt.figure(5)
@@ -127,7 +127,7 @@ def plot_xc_pipe(xc, n, Nt):
 
 
 def PostProcess_calc(opCond, geom, Q, OtherData):
-    q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N'])
+    q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N']*geom['Nt_col'])
 
     alpha_a_tot = 0
     for i in range(1, geom['Nt']+1):
