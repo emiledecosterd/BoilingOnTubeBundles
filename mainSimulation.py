@@ -10,8 +10,8 @@ from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
-from mdothDesired import guessMassFlow
-from Postprocessing import *
+from Postprocess import plot_boiler
+from Postprocess import plot_xc_pipe
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -23,6 +23,8 @@ class Simulation(QObject):
     simulationComplete = pyqtSignal(dict)
 
     def startSimulation(self, configuration):
+
+        print(configuration)
 
         '''
         #### Inputs settings ###
@@ -65,17 +67,6 @@ class Simulation(QObject):
         geom['N'] = geom['Nt']*geom['Nt_col']
 
         Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
-
-        # Guess mdot_h [kg/m²s]
-        Th_outGuess = 25 + 273.15
-        Q = 600 # [kW]
-        qGuess = Q/(geom['N']*math.pi*geom['D']*geom['L'])   # [W/m²]
-
-        mdot_hGuess = guessMassFlow(opCond, geom, flowInputs['Th_in'], Th_outGuess, qGuess)
-        opCond['mdot_h'] = 200 #mdot_hGuess
-
-        print(opCond['mdot_h'])
-
 
 
         '''
@@ -121,23 +112,18 @@ class Simulation(QObject):
         '''
         Qtot = 0.0
 
-        totalLoops = (geom['Nt'])*(geom['n'])
-        currentLoop = 0
 
         # ForLoop over the domain to compute T, x, and eps
         for i in range(1, geom['Nt']+1):
             for j in range(1, geom['n']+1):
-
-                # Let know where we are in the simulation
-                currentLoop = currentLoop+1
-                self.progressUpdated.emit(currentLoop/totalLoops)
 
                 [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
                 Qtot += Q
 
                 np.set_printoptions(precision=3)
                 print(xc)
-                #print(OtherData)
+                print(OtherData)
+                print(Th)
 
         print('Calculation complete !\n')
 
@@ -163,6 +149,9 @@ class Simulation(QObject):
         print('xc_drop')
         print(xc_drop)
         print('Heat transfer Q [kW] %.3f :' %Q)
+
+        ################################################################################
+        #               Postprocessing
 
         plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
         plot_xc_pipe(xc, geom['n'], geom['Nt'])
