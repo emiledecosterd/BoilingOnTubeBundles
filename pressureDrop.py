@@ -75,8 +75,8 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
         ## Gaddis and Gnielinski for single pressure drop
 
         # Geometry parameters
-        a = geom['sq']/geom['D']
-        b = geom['sl']/geom['D']
+        a = geom['sh']/geom['D']
+        b = geom['s']/geom['D']
         c = math.sqrt((a/2)**2+b**2)
 
         # Compute the viscosity correction factor for laminar and turbulent flow

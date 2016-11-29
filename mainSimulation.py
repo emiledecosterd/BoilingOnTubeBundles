@@ -10,8 +10,8 @@ from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
-from mdothDesired import guessMassFlow
-from Postprocess import *
+from Postprocess import plot_boiler
+from Postprocess import plot_xc_pipe
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -23,6 +23,8 @@ class Simulation(QObject):
     simulationComplete = pyqtSignal(dict)
 
     def startSimulation(self, configuration):
+
+        print(configuration)
 
         '''
         #### Inputs settings ###
@@ -110,16 +112,13 @@ class Simulation(QObject):
         '''
         Qtot = 0.0
 
-        totalLoops = (geom['Nt'])*(geom['n'])
-        currentLoop = 0
 
         # ForLoop over the domain to compute T, x, and eps
         for i in range(1, geom['Nt']+1):
             for j in range(1, geom['n']+1):
 
-                # Let know where we are in the simulation
-                currentLoop = currentLoop+1
-                self.progressUpdated.emit(currentLoop/totalLoops)
+                [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+                Qtot += Q
 
                 np.set_printoptions(precision=3)
                 print(xc)
@@ -127,7 +126,6 @@ class Simulation(QObject):
                 print(Th)
 
         print('Calculation complete !\n')
-
 
 
         Ph_drop = Ph[ geom['Nt'],geom['n']]-flowInputs['Ph_in']
