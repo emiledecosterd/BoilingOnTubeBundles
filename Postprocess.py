@@ -76,14 +76,18 @@ def plot_xc_pipe(xc, n, Nt):
     This lots an average vapor quality per pipe
     '''
 
-    x_pipe=[0 for i in range(0,Nt)]
+    x_pipe_avg=[0 for i in range(0,Nt)]
+    x_pipe_max=[0 for i in range(0,Nt)]
     for i in range(1,Nt+1):
-        x_pipe[i-1] = 1/n*np.sum(xc[i-1,1:n+1])
+        x_pipe_avg[i-1] = 1/n*np.sum(xc[i-1,1:n+1])
+        x_pipe_max[i-1] = np.max(xc[i-1,1:n+1])
 
 
     l=plt.figure(7)
     ax=l.gca()
-    ax.bar(np.linspace(1,Nt,num=Nt),x_pipe)
+    ax.bar(np.linspace(1,Nt,num=Nt)-0.3,x_pipe_avg,0.3,color='b',label='Average')
+    ax.bar(np.linspace(1,Nt,num=Nt),x_pipe_max,0.3,color='r',label='Max')
     ax.set_xlabel('pipe #')
     ax.set_ylabel('average vapor quality')
+    plt.legend()
     l.show()
