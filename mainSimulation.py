@@ -113,9 +113,16 @@ class Simulation(QObject):
         Qtot = 0.0
 
 
+        total = geom['Nt']*geom['n']
+        currentLoop = 0
+
         # ForLoop over the domain to compute T, x, and eps
         for i in range(1, geom['Nt']+1):
             for j in range(1, geom['n']+1):
+
+                currentLoop = currentLoop+1
+                progress = currentLoop/total
+                self.progressUpdated.emit(progress)
 
                 [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
                 Qtot += Q
