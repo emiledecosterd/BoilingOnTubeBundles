@@ -155,8 +155,7 @@ class MainWindow(Ui_MainWindow):
 			self.geom['corr'] = 'Mostinski'
 			self.geom['corrPD'] = 'Gaddis'
 			self.geom['layout'] = 'Staggered'
-			self.geom['sq'] = 150e-3
-			self.geom['sl'] = 150e-3
+			self.geom['sh'] = 150e-3
 			self.geom['N'] = self.geom['Nt']*self.geom['Nt_col']
 
 
@@ -179,8 +178,7 @@ class MainWindow(Ui_MainWindow):
 		self.t_lineEdit.setText(str(setup['t']))
 		self.corr_comboBox.currentText = setup['corr']
 		self.corrPD_comboBox.currentText = setup['corrPD']
-		self.sq_lineEdit.setText(str(setup['sq']))
-		self.sl_lineEdit.setText(str(setup['sl']))
+		self.sq_lineEdit.setText(str(setup['sh']))
 
 		# Send signal to redraw geometry
 		self.updateDrawings.emit(setup)
@@ -277,15 +275,14 @@ class MainWindow(Ui_MainWindow):
 		self.geom['L'] = float(self.L_lineEdit.text())
 		self.geom['n'] = self.n_spinBox.value()
 		self.geom['s'] = float(self.s_lineEdit.text())
+		self.geom['sh'] = float(self.sq_lineEdit.text())
 		self.geom['D'] = float(self.D_lineEdit.text())
 		self.geom['e_o'] = float(self.e_o_lineEdit.text())
 		self.geom['e_i'] = float(self.e_i_lineEdit.text())
 		self.geom['t'] = float(self.t_lineEdit.text())
 		self.geom['corr'] = self.corr_comboBox.itemText(self.corr_comboBox.currentIndex())
 		self.geom['corrPD'] = self.corrPD_comboBox.itemText(self.corrPD_comboBox.currentIndex())
-		self.geom['sq'] = float(self.sq_lineEdit.text())
-		self.geom['sl'] = float(self.sl_lineEdit.text())
-
+		
 		self.opCond['FluidType'] = self.fluid_comboBox.itemText(self.fluid_comboBox.currentIndex())
 		self.opCond['TubeMat'] = self.tubeMaterial_comboBox.itemText(self.tubeMaterial_comboBox.currentIndex())
 		self.opCond['mdot_c'] = float(self.mdot_c_lineEdit.text()) 
