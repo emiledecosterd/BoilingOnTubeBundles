@@ -11,7 +11,7 @@ from CoolProp.CoolProp import PropsSI
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
 from mdothDesired import guessMassFlow
-from plotstuff import plot_boiler
+from Postprocessing import *
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -164,7 +164,10 @@ class Simulation(QObject):
         print(xc_drop)
         print('Heat transfer Q [kW] %.3f :' %Q)
 
-        #plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
+        plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
+        plot_xc_pipe(xc, geom['n'], geom['Nt'])
+
+        input()
 
         self.results = {
             'Th' : Th,

@@ -32,6 +32,7 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	errorPc = 100
 	errorPh = 100
 
+
 	# Initialization of the variables
 	kp = 0
 	# Definition of Tc_out : equal to Tc_in since we take into account only evaporation
@@ -44,49 +45,56 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 
 	while (errorPc > tolP and errorPh > tolP and kp < kpmax):
 
-		'''
-		#### 1) Water Temperature calculation ####
-		The output water temperature (Th_out) is calculated using the newton method.
-		The stopping criterion is based on the error between Th_out and the previous
-		iteration.
-		'''
+		Q_rest = 0.0
 
-		# Newton method used to solve Th_out
-		ktmax = 1000
-		tol = 1e-6
+		if 1:
 
-		errest = 10
-		h=0.01
-		kt = 0
+			'''
+			#### 1) Water Temperature calculation ####
+			The output water temperature (Th_out) is calculated using the newton method.
+			The stopping criterion is based on the error between Th_out and the previous
+			iteration.
+			'''
 
-		# Initial guess on the temperature
-		prevTh_out = Th_in*0.99
+			# Newton method used to solve Th_out
+			ktmax = 1000
+			tol = 1e-6
 
-		while (errest > tol and kt < ktmax):
+			errest = 10
+			h=0.01
+			kt = 0
 
-			#print(prevTh_out)
-			#print(EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out))
-			#print(deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h))
+			# Initial guess on the temperature
+			prevTh_out = Th_in*0.99
 
-			Th_out = prevTh_out - EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out)['balance']\
-				/deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h)
+			while (errest > tol and kt < ktmax):
 
-			errest = abs(Th_out - prevTh_out)
-			prevTh_out = Th_out
-			kt = kt + 1
+				#print(prevTh_out)
+				#print(EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out))
+				#print(deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h))
 
-		if (kt == ktmax):
-			print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
-			print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
-		else:
-			print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
+				Th_out = prevTh_out - EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out)['balance']\
+					/deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h)
+
+				errest = abs(Th_out - prevTh_out)
+				prevTh_out = Th_out
+				kt = kt + 1
+
+			if (kt == ktmax):
+				print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
+				print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
+			else:
+				print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
 
 		'''
 		#### 2) Vapor Quality calculation ####
 		'''
 
-		[xc_out, hc_in, hc_out] = cell_vaporQuality(opCond, geom, Th_in, Th_out, Tc_in, xc_in )
+		[xc_out, hc_in, hc_out, Q_rest] = cell_vaporQuality(opCond, geom, Th_in, Th_out, Tc_in, xc_in )
 		print('Working fluid vapor quality value (xc_out): %.5f. \n' %(xc_out))
+
+		if Q_rest>0:
+			Th_out = Th_out + 1e3*Q_rest/(opCond['mdot_h']*1/4*math.pi*(geom['D']-2*geom['t'])**2*PropsSI('C','T',Th_out,'Q',0.0,'Water'))
 
 		'''
 		#### 3) Void Fraction calculation ####
@@ -145,9 +153,12 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 
 	# Capacity of the cell
 	Qcell = Q #[kW]
+	OtherData = EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, Th_out, Tc_out)
+	#OtherData['kt']=kt
+	#OtherData['kp']=kp
+	#OtherData['Bilan2']=(mdot_c*(hc_out- hc_in) - Q)
 
-
-	return [Ph_out, Pc_out, Th_out, Tc_out, xc_out, eps_out, Qcell,EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)]
+	return [Ph_out, Pc_out, Th_out, Tc_out, xc_out, eps_out, Qcell, OtherData]
 
 
 
