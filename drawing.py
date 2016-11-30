@@ -163,7 +163,7 @@ class PipeDrawing(object):
 
 				# Get right color
 				''' /!\ To be corrected !!! '''
-				val = (field[j,i]-minVal)/(maxVal-minVal)
+				val = (field[j,i]-minVal)/(maxVal-minVal)/5
 				print(val)
 				color = QColor()
 				color.setHsvF(val, 0.5,0.5,0.5)
