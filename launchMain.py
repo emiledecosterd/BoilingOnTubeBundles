@@ -51,7 +51,7 @@ flowInputs['xc_in'] = 0.05
 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
 
-opCond['mfr_h'] = 15 #mfr_hGuess
+opCond['mfr_h'] = 15.0 #mfr_hGuess
 opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
 opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
