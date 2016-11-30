@@ -20,8 +20,8 @@ geom = {}
 flowInputs = {}
 
 # Operating Conditions
-opCond['FluidType'] = 'Ammonia'
-opCond['mfr_c'] = 0.5
+opCond['FluidType'] = 'Propane'
+opCond['mfr_c'] = 2.1
 # opCond['mdot_h'] = 103.0 # Need to guess it
 opCond['TubeMat'] = 'copper'
 opCond['TubeThermalConductivity']= 400
