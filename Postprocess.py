@@ -122,7 +122,7 @@ def plot_xc_pipe(xc, n, Nt):
     ax.bar(np.linspace(1,Nt,num=Nt),x_pipe_max,0.3,color='r',label='Max')
     ax.set_xlabel('pipe #')
     ax.set_ylabel('Vapor quality')
-    plt.legend()
+    plt.legend(loc=2)
     l.show()
 
 

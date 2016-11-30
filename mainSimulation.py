@@ -127,7 +127,8 @@ class Simulation(QObject):
                 Qtot += Q
 
                 np.set_printoptions(precision=3)
-                #print(xc)
+                print(xc)
+                print(eps)
                 #print(OtherData)
                 #print(Th)
 
