@@ -145,10 +145,10 @@ class Simulation(QObject):
         Q=Qtot*geom['Nt_col'] # [kW]
 
 
-        #print('Ph_drop')
-        #print(Ph_drop)
-        #print('Pc_drop')
-        #print(Pc_drop)
+        print('Ph_drop')
+        print(Ph_drop)
+        print('Pc_drop')
+        print(Pc_drop)
         #print('Th_drop')
         #print(Th_drop)
         #print('Tc_drop')

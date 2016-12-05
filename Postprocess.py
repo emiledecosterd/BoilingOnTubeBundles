@@ -127,16 +127,20 @@ def plot_xc_pipe(xc, n, Nt):
 
 
 def PostProcess_calc(opCond, geom, Q, OtherData):
-    q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N']*geom['Nt_col'])
+    q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N'])
 
-    alpha_a_tot = 0
+    alpha_a_tot = 0.0
+    alpha_i_tot = 0
     for i in range(1, geom['Nt']+1):
         for j in range(1, geom['n']+1):
             alpha_a_tot += OtherData[i,j]['alpha_a']
+            alpha_i_tot += OtherData[i,j]['alpha_i']
 
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
+    alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
 
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
-    print('Average heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
+    print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
+    print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
