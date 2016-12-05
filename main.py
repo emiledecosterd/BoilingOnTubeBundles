@@ -8,6 +8,8 @@ from mainWindow import MainWindow
 from drawing import PipeDrawing
 import numpy as np
 from mainSimulation import Simulation
+from Postprocess import plot_boiler
+from Postprocess import plot_xc_pipe
 
 '''
 /!\
@@ -22,6 +24,10 @@ class MainController(QObject):
 	opCond = {}
 	geom = {}
 	flowInputs = {}
+
+	# Simulation results
+	results = None
+	currentResult = None
 
 	# For the parametric simulation
 	current_Tc = 0
@@ -58,6 +64,7 @@ class MainController(QObject):
 		self.mainWindow.setup()
 		self.mainWindow.startSimulation.connect(self.startSimulation)
 		self.mainWindow.stopSimulation.connect(self.forceQuit)
+		self.mainWindow.displayField_comboBox.currentTextChanged.connect(self.fillCells)
 
 		# Launch application
 		sys.exit(app.exec_())
@@ -106,8 +113,13 @@ class MainController(QObject):
 	def handleSimulationResults(self, results):
 		print('Simulation finished')
 
+		self.results = results
+		plot_boiler(results['Th'], results['Ph'], results['Tc'], results['Pc'], results['xc'], 
+			results['eps'], self.geom['n'], self.geom['Nt'])
+		plot_xc_pipe(results['xc'], self.geom['n'], self.geom['Nt'])
+
 		# Display results
-		self.fillCells(results)
+		self.fillCells()
 
 		# Check if we need to make another parametric simulation
 		if self.checkSimulation():
@@ -213,9 +225,29 @@ class MainController(QObject):
 		print('Drawing finished')
 
 
-	def fillCells(self, results):
+	def fillCells(self):
 
-		self.long_plotter.fillCells(self.coordinates, results['Th'])
+		results = self.results
+
+		if results is not None:
+			userChoice = self.mainWindow.displayField_comboBox.currentText()
+			self.chooseResult(userChoice)
+			self.long_plotter.fillCells(self.coordinates, results[self.currentResult])
+
+
+	def chooseResult(self, comboText):
+
+		if comboText is not None:
+			if comboText == 'Water temperature':
+				self.currentResult = 'Th'
+			elif comboText == 'Working fluid pressure':
+				self.currentResult = 'Pc'
+			elif comboText == 'Working fluid vapor quality':
+				self.currentResult = 'xc'
+			elif comboText == 'Working fluid temperature':
+				self.currentResult = 'Tc'
+			elif comboText == 'Water pressure':
+				self.currentResult = 'Ph'
 
 
 	### THREADING

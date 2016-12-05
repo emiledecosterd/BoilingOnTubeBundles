@@ -118,6 +118,8 @@ class MainWindow(Ui_MainWindow):
 		self.Ph_checkBox.clicked.connect(lambda: self.on_update_param('Ph'))
 		self.corrPD_comboBox.currentTextChanged.connect(self.on_check_corr)
 
+		print('Setup rules finished')
+
 
 	def setupInfos(self):
 

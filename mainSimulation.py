@@ -10,8 +10,6 @@ from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
-from Postprocess import plot_boiler
-from Postprocess import plot_xc_pipe
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -160,8 +158,8 @@ class Simulation(QObject):
         ################################################################################
         #               Postprocessing
 
-        plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
-        plot_xc_pipe(xc, geom['n'], geom['Nt'])
+        #plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
+        #plot_xc_pipe(xc, geom['n'], geom['Nt'])
 
         self.results = {
             'Th' : Th,
@@ -169,7 +167,8 @@ class Simulation(QObject):
             'Tc' : Tc,
             'Pc' : Pc, 
             'xc' : xc,
-            'Q': Q
+            'Q': Q,
+            'eps' : eps
         }
         self.simulationComplete.emit(self.results)
         return
