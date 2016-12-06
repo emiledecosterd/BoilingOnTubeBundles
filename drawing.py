@@ -34,6 +34,7 @@ class PipeDrawing(object):
 		'''
 		# Setup geometry
 		baseRect = QRectF(self.view.geometry())
+		print(baseRect)
 		origin = QPointF(baseRect.x()+20, baseRect.y()+20)
 		size = QSizeF(baseRect.width()-40, baseRect.height()-40)
 		outerRect = QRectF(origin, size)

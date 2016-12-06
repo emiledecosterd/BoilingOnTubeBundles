@@ -37,6 +37,9 @@ class MainController(QObject):
 	current_step = 0
 	total = 1
 
+	# Drawing
+	long_plotter = None
+
 	# Signals emitted by the main controller
 	simulate = pyqtSignal(dict)
 	progressUpdated = pyqtSignal(float)
@@ -46,8 +49,9 @@ class MainController(QObject):
 		super(MainController, self).__init__(app)
 
 		# Fire main window
-		window = QMainWindow()
+		window = QResizableMainWindow()
 		self.mainWindow = MainWindow(window)
+		window.resized.connect(self.resize)
 		window.show()
 
 		# Setup filemanager
@@ -212,17 +216,27 @@ class MainController(QObject):
 
 	## DRAWING MANAGEMENT
 
+	def resize(self):
+		self.redrawGeometry(None)
+
+
 	def redrawGeometry(self, geom):
-		self.geom = geom
-		self.redrawLongitudinalPipes()
+		if geom is not None:
+			self.geom = geom
+		
+		if self.geom is not None:
+			self.redrawLongitudinalPipes()
+		
 
 	def redrawLongitudinalPipes(self):
 		geom = self.geom
-		self.long_plotter.scene.clear()
-		self.long_plotter.drawOuterRect()
-		self.long_plotter.drawPipes(geom['Nt'])
-		self.coordinates = self.long_plotter.drawCells(geom['Nt'], geom['n'])
-		print('Drawing finished')
+		if self.long_plotter is not None:
+			self.long_plotter.view = self.mainWindow.long_GraphicsView
+			self.long_plotter.scene.clear()
+			self.long_plotter.drawOuterRect()
+			self.long_plotter.drawPipes(geom['Nt'])
+			self.coordinates = self.long_plotter.drawCells(geom['Nt'], geom['n'])
+			#print('Drawing finished')
 
 
 	def fillCells(self):
@@ -256,6 +270,13 @@ class MainController(QObject):
 		if self.simulationThread.isRunning():
 			self.simulationThread.terminate()
 			self.simulationThread.wait()
+
+class QResizableMainWindow(QMainWindow):
+
+	resized = pyqtSignal()
+
+	def resizeEvent(self, resizeEvent):
+		self.resized.emit()
 
 
 if __name__ == '__main__':

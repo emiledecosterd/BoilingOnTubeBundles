@@ -503,7 +503,5 @@ class MainWindow(Ui_MainWindow):
 
 
 
-
-
 		
 
