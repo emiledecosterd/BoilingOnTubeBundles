@@ -10,6 +10,7 @@ class PipeDrawing(object):
 	This class manages all the drawings of the pipe 
 	and the rendition of the simulation resutls
 	'''
+	cells = None
 
 	def __init__(self, graphicsView):
 
@@ -137,6 +138,13 @@ class PipeDrawing(object):
 
 	def fillCells(self, coordinates, field):
 
+		if self.cells is not None:
+			for i in range(1, len(self.cells)):
+				self.scene.removeItem(self.cells[i])
+			del self.cells[:]
+		else:
+			self.cells = []
+
 		coordinates_x = coordinates[0]
 		coordinates_y = coordinates[1]
 
@@ -164,13 +172,13 @@ class PipeDrawing(object):
 
 				# Get right color
 				''' /!\ To be corrected !!! '''
-				val = (field[j,i]-minVal)/(maxVal-minVal)/5
-				print(val)
+				val = (field[j,i]-minVal)/(maxVal-minVal)/5 + 0.3
 				color = QColor()
 				color.setHsvF(val, 0.5,0.5,0.5)
 				brush = QBrush(color, Qt.Dense2Pattern)
 
 				# Draw the rectangle
-				self.scene.addRect(rect, self.fillPen, brush)
+				cell = self.scene.addRect(rect, self.fillPen, brush)
+				self.cells.append(cell)
 
 

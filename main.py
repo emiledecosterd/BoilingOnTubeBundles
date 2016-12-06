@@ -78,7 +78,7 @@ class MainController(QObject):
 
 	def setupSimulation(self):
 		print('Setup simulation')
-
+		self.simulation = None
 		self.simulation = Simulation()
 		self.simulationThread = QThread()
 		self.simulation.moveToThread(self.simulationThread)
@@ -139,6 +139,7 @@ class MainController(QObject):
 			self.current_Th = 0
 			self.current_Ph = 0
 			self.current_step = 1
+			self.setupSimulation()
 
 
 	# Calculate parameters for the next simulation: returns true if it needs to continue
