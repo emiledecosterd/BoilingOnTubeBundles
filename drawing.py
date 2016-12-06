@@ -35,6 +35,7 @@ class PipeDrawing(object):
 		'''
 		# Setup geometry
 		baseRect = QRectF(self.view.geometry())
+		self.scene.setSceneRect(baseRect)
 		print(baseRect)
 		origin = QPointF(baseRect.x()+20, baseRect.y()+20)
 		size = QSizeF(baseRect.width()-40, baseRect.height()-40)
@@ -172,7 +173,7 @@ class PipeDrawing(object):
 
 				# Get right color
 				''' /!\ To be corrected !!! '''
-				val = (field[j,i]-minVal)/(maxVal-minVal)/5 + 0.3
+				val = (field[j,i]-minVal)/(maxVal-minVal)/5 + 0.7
 				color = QColor()
 				color.setHsvF(val, 0.5,0.5,0.5)
 				brush = QBrush(color, Qt.Dense2Pattern)

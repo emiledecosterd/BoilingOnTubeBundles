@@ -8,8 +8,7 @@ from mainWindow import MainWindow
 from drawing import PipeDrawing
 import numpy as np
 from mainSimulation import Simulation
-from Postprocess import plot_boiler
-from Postprocess import plot_xc_pipe
+from Postprocess import *
 
 '''
 /!\
@@ -121,6 +120,7 @@ class MainController(QObject):
 		plot_boiler(results['Th'], results['Ph'], results['Tc'], results['Pc'], results['xc'], 
 			results['eps'], self.geom['n'], self.geom['Nt'])
 		plot_xc_pipe(results['xc'], self.geom['n'], self.geom['Nt'])
+		PostProcess_calc(self.opCond, self.geom, results['Q'], results['OtherData'])
 
 		# Display results
 		self.fillCells()
@@ -237,6 +237,7 @@ class MainController(QObject):
 			self.long_plotter.drawOuterRect()
 			self.long_plotter.drawPipes(geom['Nt'])
 			self.coordinates = self.long_plotter.drawCells(geom['Nt'], geom['n'])
+			self.fillCells()
 			#print('Drawing finished')
 
 

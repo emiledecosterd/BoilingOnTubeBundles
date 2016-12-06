@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_MainWindow(QtWidgets.QMainWindow):
+class Ui_MainWindow(QtWidgets.QWidget):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(881, 697)
@@ -473,8 +473,4 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.label_39.setText(_translate("MainWindow", "Configuration name"))
         self.save_button.setText(_translate("MainWindow", "Save configuration"))
         self.load_button.setText(_translate("MainWindow", "Load configuration"))
-
-    def resizeEvent(self, resizeEvent):
-        print('Window resized')
-
 
