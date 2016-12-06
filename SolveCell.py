@@ -10,6 +10,8 @@ from vaporQuality import cell_vaporQuality
 from energyBalance import EnergyBalance
 from energyBalance import deriv_EnergyBalance
 from q_dnb import q_dnb
+from heatTransferCoefficient import*
+
 
 
 
@@ -153,7 +155,9 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 
 	# Capacity of the cell
 	Qcell = Q #[kW]
-	OtherData = EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, Th_out, Tc_out)
+	OtherData={}
+	OtherData['alpha_a'] = outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
+	OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
 	#OtherData['kt']=kt
 	#OtherData['kp']=kp
 	#OtherData['Bilan2']=(mdot_c*(hc_out- hc_in) - Q)

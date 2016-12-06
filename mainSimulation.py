@@ -10,13 +10,17 @@ from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
+<<<<<<< HEAD
+=======
+from Postprocess import *
+>>>>>>> Postprocessing
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
 class Simulation(QObject):
 
     # A signal emitted when progress has been updated
-    progressUpdated = pyqtSignal(float) 
+    progressUpdated = pyqtSignal(float)
     # A signal emitted when the simulation is completed
     simulationComplete = pyqtSignal(dict)
 
@@ -127,8 +131,9 @@ class Simulation(QObject):
 
                 np.set_printoptions(precision=3)
                 print(xc)
-                print(OtherData)
-                print(Th)
+                print(eps)
+                #print(OtherData)
+                #print(Th)
 
         print('Calculation complete !\n')
 
@@ -147,25 +152,34 @@ class Simulation(QObject):
         print(Ph_drop)
         print('Pc_drop')
         print(Pc_drop)
-        print('Th_drop')
-        print(Th_drop)
-        print('Tc_drop')
-        print(Tc_drop)
-        print('xc_drop')
-        print(xc_drop)
-        print('Heat transfer Q [kW] %.3f :' %Q)
+        #print('Th_drop')
+        #print(Th_drop)
+        #print('Tc_drop')
+        #print(Tc_drop)
+        #print('xc_drop')
+        #print(xc_drop)
+        #print('Heat transfer Q [kW] %.3f :' %Q)
 
         ################################################################################
         #               Postprocessing
 
+<<<<<<< HEAD
         #plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
         #plot_xc_pipe(xc, geom['n'], geom['Nt'])
+=======
+        plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
+        plot_xc_pipe(xc, geom['n'], geom['Nt'])
+        PostProcess_calc(opCond, geom, Q, OtherData)
+
+        input()
+
+>>>>>>> Postprocessing
 
         self.results = {
             'Th' : Th,
-            'Ph' : Ph, 
+            'Ph' : Ph,
             'Tc' : Tc,
-            'Pc' : Pc, 
+            'Pc' : Pc,
             'xc' : xc,
             'Q': Q,
             'eps' : eps

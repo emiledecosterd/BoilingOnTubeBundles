@@ -5,8 +5,7 @@ Void fraction in the cold fluid direction
 import sys
 import math
 import numpy as np
-from properties import get_properties
-import properties
+from CoolProp.CoolProp import PropsSI
 
 # Global variable
 g = 9.81
@@ -53,26 +52,32 @@ def cell_voidFraction(opCond, geom, xc_out, Tc_out, eps_in ):
     delta = 100
 
     # Get the Cold Flux properties values at the outlet of the cell :
-    propC = get_properties(Tc_out, opCond["FluidType"])
+    mu_L = PropsSI('V','T',Tc_out,'Q',0.0,'R134a')
+    mu_G = PropsSI('V','T',Tc_out,'Q',1.0,'R134a')
+
+    rho_L = PropsSI('D','T',Tc_out,'Q',0.0,'R134a')
+    rho_G = PropsSI('D','T',Tc_out,'Q',1.0,'R134a')
+
+    sigma = PropsSI('I','T',Tc_out,'Q',1.0,'R134a')
 
 
     while (k < kMax and  delta > tol ):
 
         # Mean vapor velocity :
-        ug = xc_out*opCond["mdot_c"]/(eps*propC["rho_G"])
+        ug = xc_out*opCond["mdot_c"]/(eps*rho_G)
 
         # Capillary number :
-        Cap = propC["mu_L"]*ug/propC["sigma"]
+        Cap = mu_L*ug/sigma
 
         # Richardson number :
-        Ri = (math.pow((propC["rho_L"]-propC["rho_G"]), 2)*g*(geom["s"]-geom["D"]))/math.pow(opCond["mdot_c"], 2)
+        Ri = (math.pow((rho_L-rho_G), 2)*g*(geom["s"]-geom["D"]))/math.pow(opCond["mdot_c"], 2)
 
         # Velocity ratio :
         S = 1 + 25.7*math.pow((Ri*Cap),0.5)*math.pow((geom["s"]/geom["D"]),-1)
 
         # Void fraction
         epsPrev = eps
-        eps = math.pow((1+S*(propC["rho_G"]/propC["rho_L"])*(1-xc_out)/xc_out), -1)
+        eps = math.pow((1+S*(rho_G/rho_L)*(1-xc_out)/xc_out), -1)
 
         delta = math.fabs(epsPrev-eps)
 
@@ -127,26 +132,32 @@ def ini_cell_voidFraction(opCond, geom, xc_in, Tc_in, eps_in ):
     delta = 100
 
     # Get the Cold Flux properties values at the inlet of the cell :
-    propC = get_properties(Tc_in, opCond["FluidType"])
+    mu_L = PropsSI('V','T',Tc_in,'Q',0.0,'R134a')
+    mu_G = PropsSI('V','T',Tc_in,'Q',1.0,'R134a')
+
+    rho_L = PropsSI('D','T',Tc_in,'Q',0.0,'R134a')
+    rho_G = PropsSI('D','T',Tc_in,'Q',1.0,'R134a')
+
+    sigma = PropsSI('I','T',Tc_in,'Q',1.0,'R134a')
 
 
     while (k < kMax and  delta > tol ):
 
         # Mean vapor velocity :
-        ug = xc_in*opCond["mdot_c"]/(eps*propC["rho_G"])
+        ug = xc_in*opCond["mdot_c"]/(eps*rho_G)
 
         # Capillary number :
-        Cap = propC["mu_L"]*ug/propC["sigma"]
+        Cap = mu_L*ug/sigma
 
         # Richardson number :
-        Ri = (math.pow((propC["rho_L"]-propC["rho_G"]), 2)*g*(geom["s"]-geom["D"]))/math.pow(opCond["mdot_c"], 2)
+        Ri = (math.pow((rho_L-rho_G), 2)*g*(geom["s"]-geom["D"]))/math.pow(opCond["mdot_c"], 2)
 
         # Velocity ratio :
         S = 1 + 25.7*math.pow((Ri*Cap),0.5)*math.pow((geom["s"]/geom["D"]),-1)
 
         # Void fraction
         epsPrev = eps
-        eps = math.pow((1+S*(propC["rho_G"]/propC["rho_L"])*(1-xc_in)/xc_in), -1)
+        eps = math.pow((1+S*(rho_G/rho_L)*(1-xc_in)/xc_in), -1)
 
         delta = math.fabs(epsPrev-eps)
 
@@ -178,4 +189,3 @@ def ini_cell_voidFraction(opCond, geom, xc_in, Tc_in, eps_in ):
 
 # test = cell_voidFraction(opCond, geom, xc_in, Tc_in, epsInit )
 # print(test)
-

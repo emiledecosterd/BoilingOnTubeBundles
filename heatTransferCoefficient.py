@@ -9,7 +9,7 @@ def innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 
 	geom['dx'] = geom['L']/geom['n'] # [m]
 	A = math.pi*geom['D']*geom['dx'] # [m^2] external surface of tube section
-	mdot_h = opCond['mdot_h']*1/4*math.pi*(geom['D']-2*geom['t'])**2 # [kg/s]
+	mdot_h = opCond['mdot_h']*0.25*math.pi*(geom['D']-2.0*geom['t'])**2.0 # [kg/s]
 	cp_hi = PropsSI('C','T',Th_in,'Q',0.0,'Water') # [J/kg/K]
 
 
@@ -18,20 +18,20 @@ def innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 
 	Pr = cp_hi*mu_h/k_h # [-] Prandlt number
 
-	Re_D = 4*mdot_h/(mu_h*math.pi*(geom['D']-2*geom['t'])) # [-] Reynolds number
+	Re_D = 4.0*mdot_h/(mu_h*math.pi*(geom['D']-2.0*geom['t'])) # [-] Reynolds number
 
 	if geom['e_i'] <= 2e-6 :
 		# Hydrodynamically Smooth model
-		f = (0.79*math.log(Re_D)-1.64)**-2 # [-] friction factor for smooth pipes
-		Nu = ((f/8)*(Re_D-1000)*Pr)/(1+12.7*(f/8)**0.5*(Pr**(2/3)-1)) # [-] Nusselt number
+		f = (0.79*math.log(Re_D)-1.64)**-2.0 # [-] friction factor for smooth pipes
+		Nu = ((f/8.0)*(Re_D-1000.0)*Pr)/(1.0+12.7*(f/8.0)**0.5*(Pr**(2.0/3.0)-1.0)) # [-] Nusselt number
 	else:
 		# Hydrodynamically Rough-walled pipes
-		f = (1.8*math.log10((6.9/Re_D)+(geom['e_i']/((geom['D']-2*geom['t'])*3.7))**1.11))**-2 # [-] friction factor for rough pipes
-		Re_e = Re_D*(geom['e_i']/(geom['D']-2*geom['t']))*(f/8)**0.5 # [-] Roughness Reynolds number
-		Nu = ((f/8)*Re_D*Pr)/(1+(f/8)**0.5*(4.5*Re_e**0.2*Pr**0.5-8.48)) # [-] Nusselt number
+		f = (1.8*math.log10((6.9/Re_D)+(geom['e_i']/((geom['D']-2.0*geom['t'])*3.7))**1.11))**-2.0 # [-] friction factor for rough pipes
+		Re_e = Re_D*(geom['e_i']/(geom['D']-2.0*geom['t']))*(f/8.0)**0.5 # [-] Roughness Reynolds number
+		Nu = ((f/8.0)*Re_D*Pr)/(1.0+(f/8.0)**0.5*(4.5*Re_e**0.2*Pr**0.5-8.48)) # [-] Nusselt number
 
 	# Inner Heat transfer coefficient alpha_i :
-	alpha_i = Nu*k_h/((geom['D']-2*geom['t'])) # [W/m^2/K]
+	alpha_i = Nu*k_h/((geom['D']-2.0*geom['t'])) # [W/m^2/K]
 
 	return(alpha_i,f)
 
@@ -41,7 +41,7 @@ def outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 
 	geom['dx'] = geom['L']/geom['n'] # [m]
 	A = math.pi*geom['D']*geom['dx'] # [m^2] external surface of tube section
-	mdot_h = opCond['mdot_h']*1/4*math.pi*(geom['D']-2*geom['t'])**2 # [kg/s]
+	mdot_h = opCond['mdot_h']*0.25*math.pi*(geom['D']-2.0*geom['t'])**2.0 # [kg/s]
 	cp_hi = PropsSI('C','T',Th_in,'Q',0.0,'Water') # [J/kg/K]
 
 	### Calculation of alpha_a (outer heat transfer coefficient)
