@@ -130,10 +130,10 @@ class Simulation(QObject):
                 print(xc)
                 print(eps)
                 #print(OtherData)
-                #print(Th)
+
 
         print('Calculation complete !\n')
-
+        print(Th)
 
         Ph_drop = Ph[ geom['Nt'],geom['n']]-flowInputs['Ph_in']
         Pc_drop = Pc[ geom['Nt'],geom['n']]-Pc_in
@@ -160,8 +160,8 @@ class Simulation(QObject):
         ################################################################################
         #               Postprocessing
 
-        plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
-        plot_xc_pipe(xc, geom['n'], geom['Nt'])
+        plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'],1)
+        plot_xc_pipe(xc, geom['n'], geom['Nt'], 1)
         PostProcess_calc(opCond, geom, Q, OtherData)
 
         input()
