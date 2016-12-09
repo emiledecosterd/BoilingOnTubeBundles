@@ -101,25 +101,39 @@ class MainWindow(Ui_MainWindow):
 		self.load_button.clicked.connect(self.on_loadConfiguration)
 
 		# Listen to signals sent by some fields
-		self.Nt_spinBox.valueChanged.connect(self.on_Nt_changed)
-		self.Nt_spinBox.valueChanged.connect(lambda: self.on_opCond_changed(None))
-		self.Nt_col_spinBox.valueChanged.connect(lambda: self.on_opCond_changed(None))
-		self.D_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
-		self.t_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
-		self.s_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
-		self.L_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
-		self.n_spinBox.valueChanged.connect(self.on_n_changed)
-		self.mfr_c_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mfr_c'))
-		self.mfr_h_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mfr_h'))
-		self.mdot_c_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mdot_c'))
-		self.mdot_h_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mdot_h'))
-		self.Tc_checkBox.clicked.connect(lambda: self.on_update_param('Tc'))
-		self.Th_checkBox.clicked.connect(lambda: self.on_update_param('Th'))
-		self.Ph_checkBox.clicked.connect(lambda: self.on_update_param('Ph'))
-		self.corrPD_comboBox.currentTextChanged.connect(self.on_check_corr)
+		# self.Nt_spinBox.valueChanged.connect(self.on_Nt_changed)
+		# self.Nt_spinBox.valueChanged.connect(lambda: self.on_opCond_changed(None))
+		# self.Nt_col_spinBox.valueChanged.connect(self.on_Nt_col_changed)
+		# self.D_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
+		# self.t_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
+		# self.s_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
+		# self.L_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed(None))
+		# self.n_spinBox.valueChanged.connect(self.on_n_changed)
+		# self.mfr_c_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mfr_c'))
+		# self.mfr_h_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mfr_h'))
+		# self.mdot_c_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mdot_c'))
+		# self.mdot_h_lineEdit.editingFinished.connect(lambda: self.on_opCond_changed('mdot_h'))
+		# self.Tc_checkBox.clicked.connect(lambda: self.on_update_param('Tc'))
+		# self.Th_checkBox.clicked.connect(lambda: self.on_update_param('Th'))
+		# self.Ph_checkBox.clicked.connect(lambda: self.on_update_param('Ph'))
+		# self.corrPD_comboBox.currentTextChanged.connect(self.on_check_corr)
+
+
+		self.Nt_spinBox.valueChanged.connect(self.updtateD)
+		self.Nt_col_spinBox.valueChanged.connect(self.updtateD)
+		self.s_lineEdit.editingFinished.connect(self.updtateD)
+		self.sq_lineEdit.editingFinished.connect(self.updtateD)
+		self.D_lineEdit.editingFinished.connect(self.updtateD)
+		# self.Ds_lineEdit.editingFinished.connect(self.updtateD)
+		self.layout_comboBox.currentTextChanged.connect(self.updtateD)
+		self.n_spinBox.valueChanged.connect(self.updtateD)
+		self.L_lineEdit.editingFinished.connect(self.updtateD)
 
 		print('Setup rules finished')
 
+	def updtateD(self):
+		self.updateConfiguration()
+		self.updateDrawings.emit(self.geom)
 
 	def setupInfos(self):
 
@@ -145,24 +159,47 @@ class MainWindow(Ui_MainWindow):
 			# Put default values
 			self.geom = {}
 
-			self.geom['Nt'] = 3
-			self.geom['Nt_col'] = 2
+			self.geom['Nt'] = 2
+			self.geom['Nt_col'] = 5
 			self.geom['L'] = 1.0
 			self.geom['n'] = 6
-			self.geom['s'] = 23.81e-3
-			self.geom['D'] = 19.05e-3
+			self.geom['s'] = 20e-3
+			self.geom['D'] = 15e-3
 			self.geom['e_i'] = 2e-6
 			self.geom['e_o'] = 2e-6
 			self.geom['t'] = 2e-3
 			self.geom['corr'] = 'Mostinski'
 			self.geom['corrPD'] = 'Gaddis'
 			self.geom['layout'] = 'Staggered'
-			self.geom['sh'] = 150e-3
+			self.geom['sh'] = 30e-3
 			self.geom['N'] = self.geom['Nt']*self.geom['Nt_col']
+			self.geom['Ds'] = 0.2
 
 
 		# Display changes
 		self.reloadGeometry()
+
+	def setupGraphicsView(self):
+
+		# Delete GraphicsView and create a new one with the clickable utility
+		self.long_GraphicsView.setParent(None)
+		self.long_GraphicsView = QClickableGraphicsView(self.centralwidget)
+		self.long_GraphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+		self.long_GraphicsView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+		self.long_GraphicsView.setAlignment(Qt.AlignCenter)
+		self.verticalLayout_4.insertWidget(1, self.long_GraphicsView)
+
+		# Create second GraphicsView 
+		self.cut_GraphicsView = QClickableGraphicsView(self.centralwidget)
+		self.cut_GraphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+		self.cut_GraphicsView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+		self.cut_GraphicsView.setAlignment(Qt.AlignCenter)
+		self.verticalLayout_4.insertWidget(1, self.cut_GraphicsView)
+		self.cut_GraphicsView.setVisible(False)
+
+		# Setup signals
+		self.long_GraphicsView.clicked.connect(self.toggleGraphicsView)
+		self.cut_GraphicsView.clicked.connect(self.toggleGraphicsView)
 
 
 	def reloadGeometry(self):
@@ -184,10 +221,6 @@ class MainWindow(Ui_MainWindow):
 
 		# Send signal to redraw geometry
 		self.updateDrawings.emit(setup)
-
-	def resizeEvent(self, event):
-		self.reloadGeometry()
-		print('Resizing')
 
 
 	def setupOperatingConditions(self, infos):
@@ -282,6 +315,7 @@ class MainWindow(Ui_MainWindow):
 		self.geom['e_o'] = float(self.e_o_lineEdit.text())
 		self.geom['e_i'] = float(self.e_i_lineEdit.text())
 		self.geom['t'] = float(self.t_lineEdit.text())
+		self.geom['Ds'] = float(0.2) # TO BE IMPLEMENTED (SHELL DIAMETER)
 		self.geom['corr'] = self.corr_comboBox.itemText(self.corr_comboBox.currentIndex())
 		self.geom['corrPD'] = self.corrPD_comboBox.itemText(self.corrPD_comboBox.currentIndex())
 		
@@ -398,85 +432,91 @@ class MainWindow(Ui_MainWindow):
 	def on_updateProgress(self,progress):
 		self.simulation_progressBar.setProperty("value", progress)
 
-	# Number of pipes changed
-	def on_Nt_changed(self):
+	# # Number of pipes changed
+	# def on_Nt_changed(self):
 
-		self.geom['Nt'] = self.Nt_spinBox.value()
-		self.reloadGeometry()
+	# 	self.geom['Nt'] = self.Nt_spinBox.value()
+	# 	self.reloadGeometry()
 
-	# Number of cells changed
-	def on_n_changed(self):
+	# # Number of pipes changed
+	# def on_Nt_col_changed(self):
 
-		self.geom['n'] = self.n_spinBox.value()
-		self.reloadGeometry()
+	# 	self.geom['Nt_col'] = self.Nt_col_spinBox.value()
+	# 	self.reloadGeometry()
+
+	# # Number of cells changed
+	# def on_n_changed(self):
+
+	# 	self.geom['n'] = self.n_spinBox.value()
+	# 	self.reloadGeometry()
 
 
-	# An operating condition concerning the mass flow rate changed
-	def on_opCond_changed(self, flowRate):
+	# # An operating condition concerning the mass flow rate changed
+	# def on_opCond_changed(self, flowRate):
 
-		print('opCond changed')
-		geom = self.geom
-		opCond = self.opCond
+	# 	# print('opCond changed')
+	# 	geom = self.geom
+	# 	opCond = self.opCond
 
-		# If flowrate is None, the call does not come from the "editingFinished" signal 
-		# but because some geometry field changed
-		if flowRate is None:
-			if self.currentMassFlow_c == 'mfr':
-				self.on_opCond_changed('mfr_c')
-			elif self.currentMassFlow_c == 'mdot':
-				self.on_opCond_changed('mdot_c')
+	# 	# If flowrate is None, the call does not come from the "editingFinished" signal 
+	# 	# but because some geometry field changed
+	# 	if flowRate is None:
+	# 		if self.currentMassFlow_c == 'mfr':
+	# 			self.on_opCond_changed('mfr_c')
+	# 		elif self.currentMassFlow_c == 'mdot':
+	# 			self.on_opCond_changed('mdot_c')
 
-			if self.currentMassFlow_h == 'mfr':
-				self.on_opCond_changed('mfr_h')
-			elif self.currentMassFlow_h == 'mdot':
-				self.on_opCond_changed('mdot_h')
+	# 		if self.currentMassFlow_h == 'mfr':
+	# 			self.on_opCond_changed('mfr_h')
+	# 		elif self.currentMassFlow_h == 'mdot':
+	# 			self.on_opCond_changed('mdot_h')
 
-		# Save the values of the GUI in instance variables
-		self.updateConfiguration();
+	# 	# Save the values of the GUI in instance variables
+	# 	self.updateConfiguration();
 
-		# Calculate conversion factors
-		factor_h = geom['Nt']*geom['Nt_col']*math.pi*0.25*(geom['D']-2*geom['t'])**2
-		factor_c = (geom['Nt_col']*geom['s']*geom['L'])
+	# 	# Calculate conversion factors
+	# 	factor_h = geom['Nt']*geom['Nt_col']*math.pi*0.25*(geom['D']-2*geom['t'])**2
+	# 	factor_c = (geom['Nt_col']*geom['s']*geom['L'])
 
-		if flowRate == 'mfr_c':
+	# 	if flowRate == 'mfr_c':
 
-			print('mfr_c changed')
-			# Remember we want to change mfr and not mdot
-			self.currentMassFlow_c = 'mfr'
+	# 		# print('mfr_c changed')
+	# 		# Remember we want to change mfr and not mdot
+	# 		self.currentMassFlow_c = 'mfr'
 
-			# Change mdot_c accordingly and display changes
-			opCond['mdot_c'] = opCond['mfr_c']/factor_c
-			self.mdot_c_lineEdit.setText(str(opCond['mdot_c']))
+	# 		# Change mdot_c accordingly and display changes
+	# 		opCond['mdot_c'] = opCond['mfr_c']/factor_c
+	# 		self.mdot_c_lineEdit.setText(str(opCond['mdot_c']))
 
-		elif flowRate == 'mfr_h':
+	# 	elif flowRate == 'mfr_h':
 
-			print('mfr_h changed')
-			# Remember we want to change mfr and not mdot
-			self.currentMassFlow_h = 'mfr'
+	# 		# print('mfr_h changed')
+	# 		# Remember we want to change mfr and not mdot
+	# 		self.currentMassFlow_h = 'mfr'
 
-			# Change mdot_h accordingly
-			opCond['mdot_h'] = opCond['mfr_h']/factor_h
-			self.mdot_h_lineEdit.setText(str(opCond['mdot_h']))
+	# 		# Change mdot_h accordingly
+	# 		opCond['mdot_h'] = opCond['mfr_h']/factor_h
+	# 		self.mdot_h_lineEdit.setText(str(opCond['mdot_h']))
 
-		elif flowRate == 'mdot_c':
+	# 	elif flowRate == 'mdot_c':
 
-			print('mdot_c changed')
-			# Remember we want to change mdot and not mfr
-			self.currentMassFlow_c = 'mdot'
+	# 		print('mdot_c changed')
+	# 		# Remember we want to change mdot and not mfr
+	# 		self.currentMassFlow_c = 'mdot'
 
-			# Change mfr_c accordingly
-			opCond['mfr_c'] = opCond['mdot_c']*factor_c
-			self.mfr_c_lineEdit.setText(str(opCond['mfr_c']))
+	# 		# Change mfr_c accordingly
+	# 		opCond['mfr_c'] = opCond['mdot_c']*factor_c
+	# 		self.mfr_c_lineEdit.setText(str(opCond['mfr_c']))
 
-		elif flowRate == 'mdot_h':
+	# 	elif flowRate == 'mdot_h':
 
-			print('mdot_h changed')
-			# Remember we want to change mdot and not mfr
-			self.currentMassFlow_h = 'mdot'
+	# 		print('mdot_h changed')
+	# 		# Remember we want to change mdot and not mfr
+	# 		self.currentMassFlow_h = 'mdot'
 
-			# Change mfr_c accordingly
-			opCond['mfr_h'] = opCond['mdot_h']*factor_h
-			self.mfr_h_lineEdit.setText(str(opCond['mfr_h']))
+	# 		# Change mfr_c accordingly
+	# 		opCond['mfr_h'] = opCond['mdot_h']*factor_h
+	# 		self.mfr_h_lineEdit.setText(str(opCond['mfr_h']))
 
 
 	def on_check_corr(self):
@@ -498,8 +538,27 @@ class MainWindow(Ui_MainWindow):
 		print('check')
 
 
+	def toggleGraphicsView(self):
+		if (self.long_GraphicsView.isVisible()):
+			self.long_GraphicsView.setVisible(False)
+			self.cut_GraphicsView.setVisible(True)
+			self.reloadGeometry()
+		else:
+			self.long_GraphicsView.setVisible(True)
+			self.cut_GraphicsView.setVisible(False)
+			self.reloadGeometry()
 
 
+class QClickableGraphicsView(QGraphicsView):
+	# See if we need a timer in order to reduce latency (little freezes)
+
+	clicked = pyqtSignal() 
+
+	def __init__(self, parent=None):
+		super(QClickableGraphicsView, self).__init__(parent)
+
+	def mousePressEvent(self, event):
+		self.clicked.emit()
 
 
 

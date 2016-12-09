@@ -1,4 +1,5 @@
 
+import time
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -36,6 +37,7 @@ def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt):
     b = Arrow3D([1,Nt],[n/2.0,n/2.0],[np.max(Th),np.max(Th)], mutation_scale=20, lw=1, arrowstyle="-|>", color="b")
     ax.add_artist(b)
     ax.view_init(elev=40, azim=-145)
+    f.savefig('')
     f.show()
 
     g=plt.figure(2)
@@ -124,6 +126,10 @@ def plot_xc_pipe(xc, n, Nt):
     ax.set_ylabel('Vapor quality')
     plt.legend(loc=2)
     l.show()
+
+# def setSimName(plotName):
+#     time = time.strftime("%Y%m%H%M")
+#     self.simName = (time + "_" + plotName)
 
 
 def PostProcess_calc(opCond, geom, Q, OtherData):

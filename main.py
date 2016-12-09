@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from mainWindow import MainWindow
-from drawing import PipeDrawing
+from drawing import *
 import numpy as np
 from mainSimulation import Simulation
 from Postprocess import *
@@ -38,6 +38,7 @@ class MainController(QObject):
 
 	# Drawing
 	long_plotter = None
+	cut_plotter = None
 
 	# Signals emitted by the main controller
 	simulate = pyqtSignal(dict)
@@ -58,9 +59,13 @@ class MainController(QObject):
 		# Setup simulation
 		self.setupSimulation()
 
-		# Setup plotter
+		# Setup plotters
+		self.mainWindow.setupGraphicsView()
 		self.long_plotter = PipeDrawing(self.mainWindow.long_GraphicsView)
-		self.long_plotter.drawOuterRect()
+		self.long_plotter.updateView()
+
+		self.cut_plotter = CutDrawing(self.mainWindow.cut_GraphicsView)
+		self.cut_plotter.updateView()
 
 		# Setup window
 		self.mainWindow.updateDrawings.connect(self.redrawGeometry)
@@ -227,6 +232,8 @@ class MainController(QObject):
 		
 		if self.geom is not None:
 			self.redrawLongitudinalPipes()
+			self.redrawTransversalPipes()
+
 		
 
 	def redrawLongitudinalPipes(self):
@@ -239,6 +246,26 @@ class MainController(QObject):
 			self.coordinates = self.long_plotter.drawCells(geom['Nt'], geom['n'])
 			self.fillCells()
 			#print('Drawing finished')
+
+	def redrawTransversalPipes(self):
+		geom = self.geom
+		if self.cut_plotter:
+			if self.forceCorrectGeom():
+				self.cut_plotter.drawScheme(geom)
+
+	def forceCorrectGeom(self):
+		print(self.geom['s']*self.geom['Nt'])
+		print(self.geom['Ds'])
+		if (self.geom['s']*self.geom['Nt'] >= \
+			self.geom['Ds']*math.cos(math.asin(self.geom['Nt_col']*self.geom['sh']/self.geom['Ds']))):
+			self.mainWindow.Nt_spinBox.setValue(round(self.geom['Ds']*math.cos(math.asin(self.geom['Nt_col']*self.geom['sh']/self.geom['Ds']))/self.geom['s']))
+			return False
+		elif (self.geom['sh']*self.geom['Nt_col'] >= \
+			self.geom['Ds']*math.sin(math.acos(self.geom['Nt']*self.geom['s']/self.geom['Ds']))):
+			self.mainWindow.Nt_col_spinBox.setValue(round(self.geom['Ds']*math.sin(math.acos(self.geom['Nt']*self.geom['s']/self.geom['Ds']))/self.geom['sh']))
+			return False
+		else:
+			return True
 
 
 	def fillCells(self):
