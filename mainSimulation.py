@@ -10,7 +10,9 @@ from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
+
 from Postprocess import *
+
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
@@ -145,10 +147,10 @@ class Simulation(QObject):
         Q=Qtot*geom['Nt_col'] # [kW]
 
 
-        #print('Ph_drop')
-        #print(Ph_drop)
-        #print('Pc_drop')
-        #print(Pc_drop)
+        print('Ph_drop')
+        print(Ph_drop)
+        print('Pc_drop')
+        print(Pc_drop)
         #print('Th_drop')
         #print(Th_drop)
         #print('Tc_drop')
@@ -160,12 +162,7 @@ class Simulation(QObject):
         ################################################################################
         #               Postprocessing
 
-        plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'])
-        plot_xc_pipe(xc, geom['n'], geom['Nt'])
         PostProcess_calc(opCond, geom, Q, OtherData)
-
-        input()
-
 
         self.results = {
             'Th' : Th,
@@ -173,7 +170,9 @@ class Simulation(QObject):
             'Tc' : Tc,
             'Pc' : Pc,
             'xc' : xc,
-            'Q': Q
+            'Q': Q,
+            'eps' : eps,
+            'OtherData' : OtherData
         }
         self.simulationComplete.emit(self.results)
         return

@@ -5,9 +5,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from mainWindow import MainWindow
-from drawing import PipeDrawing
+from drawing import *
 import numpy as np
 from mainSimulation import Simulation
+from Postprocess import *
 
 '''
 /!\
@@ -23,6 +24,10 @@ class MainController(QObject):
 	geom = {}
 	flowInputs = {}
 
+	# Simulation results
+	results = None
+	currentResult = None
+
 	# For the parametric simulation
 	current_Tc = 0
 	current_Th = 0
@@ -30,6 +35,10 @@ class MainController(QObject):
 	step = 0
 	current_step = 0
 	total = 1
+
+	# Drawing
+	long_plotter = None
+	cut_plotter = None
 
 	# Signals emitted by the main controller
 	simulate = pyqtSignal(dict)
@@ -40,8 +49,9 @@ class MainController(QObject):
 		super(MainController, self).__init__(app)
 
 		# Fire main window
-		window = QMainWindow()
+		window = QResizableMainWindow()
 		self.mainWindow = MainWindow(window)
+		window.resized.connect(self.resize)
 		window.show()
 
 		# Setup filemanager
@@ -49,15 +59,20 @@ class MainController(QObject):
 		# Setup simulation
 		self.setupSimulation()
 
-		# Setup plotter
+		# Setup plotters
+		self.mainWindow.setupGraphicsView()
 		self.long_plotter = PipeDrawing(self.mainWindow.long_GraphicsView)
-		self.long_plotter.drawOuterRect()
+		self.long_plotter.updateView()
+
+		self.cut_plotter = CutDrawing(self.mainWindow.cut_GraphicsView)
+		self.cut_plotter.updateView()
 
 		# Setup window
 		self.mainWindow.updateDrawings.connect(self.redrawGeometry)
 		self.mainWindow.setup()
 		self.mainWindow.startSimulation.connect(self.startSimulation)
 		self.mainWindow.stopSimulation.connect(self.forceQuit)
+		self.mainWindow.displayField_comboBox.currentTextChanged.connect(self.fillCells)
 
 		# Launch application
 		sys.exit(app.exec_())
@@ -67,7 +82,7 @@ class MainController(QObject):
 
 	def setupSimulation(self):
 		print('Setup simulation')
-
+		self.simulation = None
 		self.simulation = Simulation()
 		self.simulationThread = QThread()
 		self.simulation.moveToThread(self.simulationThread)
@@ -106,8 +121,14 @@ class MainController(QObject):
 	def handleSimulationResults(self, results):
 		print('Simulation finished')
 
+		self.results = results
+		plot_boiler(results['Th'], results['Ph'], results['Tc'], results['Pc'], results['xc'], 
+			results['eps'], self.geom['n'], self.geom['Nt'])
+		plot_xc_pipe(results['xc'], self.geom['n'], self.geom['Nt'])
+		PostProcess_calc(self.opCond, self.geom, results['Q'], results['OtherData'])
+
 		# Display results
-		self.fillCells(results)
+		self.fillCells()
 
 		# Check if we need to make another parametric simulation
 		if self.checkSimulation():
@@ -123,6 +144,7 @@ class MainController(QObject):
 			self.current_Th = 0
 			self.current_Ph = 0
 			self.current_step = 1
+			self.setupSimulation()
 
 
 	# Calculate parameters for the next simulation: returns true if it needs to continue
@@ -200,22 +222,75 @@ class MainController(QObject):
 
 	## DRAWING MANAGEMENT
 
+	def resize(self):
+		self.redrawGeometry(None)
+
+
 	def redrawGeometry(self, geom):
-		self.geom = geom
-		self.redrawLongitudinalPipes()
+		if geom is not None:
+			self.geom = geom
+		
+		if self.geom is not None:
+			self.redrawLongitudinalPipes()
+			self.redrawTransversalPipes()
+
+		
 
 	def redrawLongitudinalPipes(self):
 		geom = self.geom
-		self.long_plotter.scene.clear()
-		self.long_plotter.drawOuterRect()
-		self.long_plotter.drawPipes(geom['Nt'])
-		self.coordinates = self.long_plotter.drawCells(geom['Nt'], geom['n'])
-		print('Drawing finished')
+		if self.long_plotter is not None:
+			self.long_plotter.view = self.mainWindow.long_GraphicsView
+			self.long_plotter.scene.clear()
+			self.long_plotter.drawOuterRect()
+			self.long_plotter.drawPipes(geom['Nt'])
+			self.coordinates = self.long_plotter.drawCells(geom['Nt'], geom['n'])
+			self.fillCells()
+			#print('Drawing finished')
+
+	def redrawTransversalPipes(self):
+		geom = self.geom
+		if self.cut_plotter:
+			if self.forceCorrectGeom():
+				self.cut_plotter.drawScheme(geom)
+
+	def forceCorrectGeom(self):
+		print(self.geom['s']*self.geom['Nt'])
+		print(self.geom['Ds'])
+		if (self.geom['s']*self.geom['Nt'] >= \
+			self.geom['Ds']*math.cos(math.asin(self.geom['Nt_col']*self.geom['sh']/self.geom['Ds']))):
+			self.mainWindow.Nt_spinBox.setValue(round(self.geom['Ds']*math.cos(math.asin(self.geom['Nt_col']*self.geom['sh']/self.geom['Ds']))/self.geom['s']))
+			return False
+		elif (self.geom['sh']*self.geom['Nt_col'] >= \
+			self.geom['Ds']*math.sin(math.acos(self.geom['Nt']*self.geom['s']/self.geom['Ds']))):
+			self.mainWindow.Nt_col_spinBox.setValue(round(self.geom['Ds']*math.sin(math.acos(self.geom['Nt']*self.geom['s']/self.geom['Ds']))/self.geom['sh']))
+			return False
+		else:
+			return True
 
 
-	def fillCells(self, results):
+	def fillCells(self):
 
-		self.long_plotter.fillCells(self.coordinates, results['Th'])
+		results = self.results
+
+		if results is not None:
+			userChoice = self.mainWindow.displayField_comboBox.currentText()
+			self.chooseResult(userChoice)
+			self.long_plotter.fillCells(self.coordinates, results[self.currentResult])
+
+
+	def chooseResult(self, comboText):
+
+		if comboText is not None:
+			if comboText == 'Water temperature':
+				self.currentResult = 'Th'
+			elif comboText == 'Working fluid pressure':
+				self.currentResult = 'Pc'
+			elif comboText == 'Working fluid vapor quality':
+				self.currentResult = 'xc'
+			elif comboText == 'Working fluid temperature':
+				self.currentResult = 'Tc'
+			elif comboText == 'Water pressure':
+				self.currentResult = 'Ph'
 
 
 	### THREADING
@@ -224,6 +299,13 @@ class MainController(QObject):
 		if self.simulationThread.isRunning():
 			self.simulationThread.terminate()
 			self.simulationThread.wait()
+
+class QResizableMainWindow(QMainWindow):
+
+	resized = pyqtSignal()
+
+	def resizeEvent(self, resizeEvent):
+		self.resized.emit()
 
 
 if __name__ == '__main__':
