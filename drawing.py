@@ -5,11 +5,13 @@ from PyQt5.QtWidgets import *
 import numpy as np
 import math
 
+
 class PipeDrawing(object):
 	'''
 	This class manages all the drawings of the pipe 
 	and the rendition of the simulation resutls
 	'''
+	cells = None
 
 	def __init__(self, graphicsView):
 
@@ -27,6 +29,17 @@ class PipeDrawing(object):
 		self.cellPen = QPen(Qt.DotLine)
 		self.fillPen = QPen(Qt.NoPen)
 
+	def updateView(self):
+		# The scene containing all the drawing
+		sceneRect = QRectF(self.view.geometry())
+		self.scene = QGraphicsScene(sceneRect)
+
+		# Clear the scene
+		self.scene.clear()
+
+		# ReDraw rectangle
+		self.drawOuterRect()
+
 	def drawOuterRect(self):
 		''' 
 		Draws the outer rectangle, which will be the boundary of our system 
@@ -34,6 +47,7 @@ class PipeDrawing(object):
 		'''
 		# Setup geometry
 		baseRect = QRectF(self.view.geometry())
+		self.scene.setSceneRect(baseRect)
 		origin = QPointF(baseRect.x()+20, baseRect.y()+20)
 		size = QSizeF(baseRect.width()-40, baseRect.height()-40)
 		outerRect = QRectF(origin, size)
@@ -136,6 +150,13 @@ class PipeDrawing(object):
 
 	def fillCells(self, coordinates, field):
 
+		if self.cells is not None:
+			for i in range(1, len(self.cells)):
+				self.scene.removeItem(self.cells[i])
+			del self.cells[:]
+		else:
+			self.cells = []
+
 		coordinates_x = coordinates[0]
 		coordinates_y = coordinates[1]
 
@@ -163,13 +184,218 @@ class PipeDrawing(object):
 
 				# Get right color
 				''' /!\ To be corrected !!! '''
-				val = (field[j,i]-minVal)/(maxVal-minVal)/5
-				print(val)
+				val = (field[j,i]-minVal)/(maxVal-minVal)/5 + 0.7
 				color = QColor()
 				color.setHsvF(val, 0.5,0.5,0.5)
 				brush = QBrush(color, Qt.Dense2Pattern)
 
 				# Draw the rectangle
-				self.scene.addRect(rect, self.fillPen, brush)
+				cell = self.scene.addRect(rect, self.fillPen, brush)
+				self.cells.append(cell)
 
 
+class CutDrawing(object):
+	'''
+	This class manages all the drawings of the cut graph
+	'''
+
+	def __init__(self, graphicsView):
+
+		# The view in which to draw
+		self.view = graphicsView
+
+		# The scene containing all the drawing
+		sceneRect = QRectF(self.view.geometry()) 
+		self.scene = QGraphicsScene(sceneRect)
+
+		# Appearance of different lines
+		self.outerRectPen = QPen(Qt.DashLine)
+		self.pipeLinePen = QPen(Qt.SolidLine)
+		self.axisLine = QPen(Qt.DashDotLine)
+		self.pipeFillingBrush = QBrush(Qt.Dense7Pattern)
+
+	def updateView(self):
+		# The scene containing all the drawing
+		sceneRect = QRectF(self.view.geometry())
+		self.scene = QGraphicsScene(sceneRect)
+
+		# Clear the scene
+		self.scene.clear()
+
+		# ReDraw rectangle
+		self.drawOuterRect()
+
+	def drawOuterRect(self):
+		''' 
+		Draws the outer rectangle, which will be the boundary of our system 
+		/!\ Call this method before all other drawing methods, at best in init /!\
+		'''
+		# Setup geometry
+		baseRect = QRectF(self.view.geometry())
+		self.scene.setSceneRect(baseRect)
+		origin = QPointF(baseRect.x()+20, baseRect.y()+20)
+		size = QSizeF(baseRect.width()-40, baseRect.height()-40)
+		outerRect = QRectF(origin, size)
+
+		# Save Bound constants whith the margins
+		margin = 0.85
+		self.viewTop = outerRect.y()+ outerRect.height()*(1-margin)/2
+		self.viewBottom = self.viewTop + outerRect.height()*margin
+		self.viewLeft = outerRect.x() + outerRect.width()*(1-margin)/2
+		self.viewRight = self.viewLeft + outerRect.width()*margin
+		self.viewHeight = outerRect.height()*margin
+		self.viewWidth = outerRect.width()*margin
+
+		# Draw the rectangle (inner)
+		innerRect = QRectF(QPointF(self.viewLeft,self.viewTop ), QSizeF(self.viewWidth, self.viewHeight))
+		self.scene.addRect(innerRect, self.outerRectPen)
+		# self.addPoint(QPointF(self.viewLeft, self.viewTop))
+
+		# Draw the rectangle
+		self.scene.addRect(outerRect, self.outerRectPen)
+		self.view.setScene(self.scene)
+
+	def drawScheme(self, geom):
+		self.geom = geom
+
+		# Update graph
+		self.updateView()
+
+		# Setup ratio
+		self.heightMax = self.geom['Ds']
+		self.widthMax =  self.geom['Ds']
+
+		if self.viewHeight/self.heightMax < self.viewWidth/self.widthMax :
+			self.ratio = self.viewHeight/self.heightMax
+		else:
+			self.ratio = self.viewWidth/self.widthMax
+
+		#Change all inputs according to ratio
+		self.shellDiam = self.geom['Ds']*self.ratio
+		self.pipeDiam = self.geom['D']*self.ratio
+		self.verPitch = self.geom['s']*self.ratio
+		self.horPitch = self.geom['sh']*self.ratio
+		self.Ncol = self.geom['Nt_col']
+		self.Nrow = self.geom['Nt']
+
+		# Draw shell
+		self.drawShellCircle()
+
+		# Draw the pipes
+		self.drawPipesStaggered()
+
+		# Draw axis
+		self.drawAxis()
+
+
+	def drawShellCircle(self):
+		xHalfView = self.viewLeft + self.viewWidth/2
+		yHalfView = self.viewTop + self.viewHeight/2
+
+		origin = QPointF(xHalfView-self.shellDiam/2, yHalfView-self.shellDiam/2)
+		size = QSizeF(self.shellDiam, self.shellDiam)
+		shellCircle = QRectF(origin, size)
+
+		self.scene.addEllipse(shellCircle, self.pipeLinePen)
+
+	def drawAPipe(self, position):
+		self.scene.addEllipse(position.x()-self.pipeDiam/2, position.y()-self.pipeDiam/2, \
+			self.pipeDiam, self.pipeDiam,	self.pipeLinePen, self.pipeFillingBrush)
+
+	def drawPipesInline(self):
+		# Start point
+		xHalfView = self.viewLeft + self.viewWidth/2
+		yHalfView = self.viewTop + self.viewHeight/2
+
+		if self.Ncol % 2 != 0:
+			xStart = xHalfView-(self.Ncol-1)/2*self.horPitch
+		else:
+			xStart = xHalfView-(self.Ncol/2)*self.horPitch+self.horPitch/2
+		if self.Nrow % 2 != 0:
+			yStart = yHalfView-(self.Nrow-1)/2*self.verPitch
+		else:
+			yStart = yHalfView-(self.Nrow/2)*self.verPitch+self.verPitch/2
+		
+		xPoint = xStart
+		yPoint = yStart
+
+		for i in range(self.Ncol):
+			xPoint = xStart + self.horPitch*i
+			for j in range(self.Nrow):
+				yPoint = yStart + self.verPitch*j
+				point = QPointF(xPoint, yPoint)
+				self.drawAPipe(point)
+			yPoint = yStart 
+
+	def drawPipesStaggered(self):
+		# Start point
+		xHalfView = self.viewLeft + self.viewWidth/2
+		yHalfView = self.viewTop + self.viewHeight/2
+
+		if self.Ncol % 2 != 0:
+			xStart = xHalfView-(self.Ncol-1)/2*self.horPitch
+		else:
+			xStart = xHalfView-(self.Ncol/2)*self.horPitch+self.horPitch/2
+		if self.Nrow % 2 != 0:
+			yStart = yHalfView-(self.Nrow-1)/2*self.verPitch
+		else:
+			yStart = yHalfView-(self.Nrow/2)*self.verPitch+self.verPitch/2
+		
+		xPoint = xStart
+		yPoint = yStart
+		left = True
+
+		a = self.horPitch/self.pipeDiam
+		b = self.verPitch/self.pipeDiam
+
+		#Horizontal staggered detection :
+		if (b >= 0.5*math.sqrt(2*a+1)):
+			for j in range(self.Nrow):
+				yPoint = yStart + self.verPitch*j
+				for i in range(self.Ncol):
+					xPoint = xStart + self.horPitch*i
+					point = QPointF(xPoint, yPoint)
+					self.drawAPipe(point)
+				if left:
+					xStart += self.horPitch/2
+					left = False
+				else:
+					xStart -= self.horPitch/2
+					left = True
+		else :
+			for i in range(self.Ncol):
+					xPoint = xStart + self.horPitch*i
+					for j in range(self.Nrow):
+						yPoint = yStart + self.verPitch*j
+						point = QPointF(xPoint, yPoint)
+						self.drawAPipe(point)
+					if left:
+						yStart += self.verPitch/2
+						left = False
+					else:
+						yStart -= self.verPitch/2
+						left = True
+
+	
+
+	def drawAxis(self):
+		xHalfView = self.viewLeft + self.viewWidth/2
+		yHalfView = self.viewTop + self.viewHeight/2
+
+		# y-axis
+		startLine = QPointF(xHalfView, self.viewTop)
+		endLine = QPointF(xHalfView, self.viewBottom)
+		line = QLineF(startLine, endLine)
+		self.scene.addLine(line, self.axisLine)
+
+		# x-axis
+		startLine = QPointF(xHalfView-self.shellDiam/2, yHalfView)
+		endLine = QPointF(xHalfView+self.shellDiam/2, yHalfView)
+		line = QLineF(startLine, endLine)
+		self.scene.addLine(line, self.axisLine)
+
+
+	def addPoint(self, point):
+		radius = 1.5
+		self.scene.addEllipse(point.x()-radius, point.y()-radius, 2.0*radius, 2.0*radius,\
+			self.pipeLinePen)

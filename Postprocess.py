@@ -1,4 +1,5 @@
 
+import time
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -36,6 +37,7 @@ def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt):
     b = Arrow3D([1,Nt],[n/2.0,n/2.0],[np.max(Th),np.max(Th)], mutation_scale=20, lw=1, arrowstyle="-|>", color="b")
     ax.add_artist(b)
     ax.view_init(elev=40, azim=-145)
+    f.savefig('')
     f.show()
 
     g=plt.figure(2)
@@ -109,11 +111,11 @@ def plot_xc_pipe(xc, n, Nt):
     This lots an average vapor quality per pipe
     '''
 
-    x_pipe_avg=[0 for i in range(0,Nt)]
-    x_pipe_max=[0 for i in range(0,Nt)]
-    for i in range(1,Nt+1):
-        x_pipe_avg[i-1] = 1/n*np.sum(xc[i-1,1:n+1])
-        x_pipe_max[i-1] = np.max(xc[i-1,1:n+1])
+    x_pipe_avg=[0 for i in range(Nt)]
+    x_pipe_max=[0 for i in range(Nt)]
+    for i in range(Nt):
+        x_pipe_avg[i] = 1/(n)*np.sum(xc[i+1,1:n+1])
+        x_pipe_max[i] = np.max(xc[i+1,1:n+1])
 
 
     l=plt.figure(7)
@@ -125,18 +127,26 @@ def plot_xc_pipe(xc, n, Nt):
     plt.legend(loc=2)
     l.show()
 
+# def setSimName(plotName):
+#     time = time.strftime("%Y%m%H%M")
+#     self.simName = (time + "_" + plotName)
+
 
 def PostProcess_calc(opCond, geom, Q, OtherData):
-    q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N']*geom['Nt_col'])
+    q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N'])
 
-    alpha_a_tot = 0
+    alpha_a_tot = 0.0
+    alpha_i_tot = 0
     for i in range(1, geom['Nt']+1):
         for j in range(1, geom['n']+1):
             alpha_a_tot += OtherData[i,j]['alpha_a']
+            alpha_i_tot += OtherData[i,j]['alpha_i']
 
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
+    alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
 
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
-    print('Average heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
+    print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
+    print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
