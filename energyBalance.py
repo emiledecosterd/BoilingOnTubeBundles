@@ -4,6 +4,7 @@ import numpy as np
 from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 from heatTransferCoefficient import*
+from error import Error
 
 '''
 #### Energy balance function used to solve Th_out with the newton method ####
@@ -23,12 +24,14 @@ def EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 	mdot_h = opCond['mdot_h']*1/4*math.pi*(geom['D']-2*geom['t'])**2 # [kg/s]
 	cp_hi = PropsSI('C','T',Th_in,'Q',0.0,'Water') # [J/kg/K]
 
-	# Inner heat transfer coefficient
-	alpha_i,f = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
+	try:
+		# Inner heat transfer coefficient
+		alpha_i,f = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
 
-	# Outer heat tranfer coefficient
-	alpha_a = outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
-
+		# Outer heat tranfer coefficient
+		alpha_a = outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
+	except Exception as e:
+		raise Error('alpha_i or alpha_a computation', e+'PropsSI failed, temperature not compatible')
 
 	if opCond['TubeMat'] == 'copper':
 		lam = 410 # [W/m/K]
@@ -44,9 +47,11 @@ def EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 	+geom['D']/(2*lam)*math.log(geom['D']/(geom['D']-2*geom['t']))\
 	+1/alpha_a)**(-1) # [W/m^2/K] calculation of U
 
-
-	LMTD = ((Th_out-Tc_out)-(Th_in-Tc_in))/\
-	(math.log((Th_out-Tc_out)/(Th_in-Tc_in))) # [K] calculation of LMTD
+	try:
+		LMTD = ((Th_out-Tc_out)-(Th_in-Tc_in))/\
+		(math.log((Th_out-Tc_out)/(Th_in-Tc_in))) # [K] calculation of LMTD
+	except Exception as e:
+		raise Error('Error in LMTD (energyBalance)', 'cell size is likely to be too large. Advice: increase n')
 
 
 	# Tests :

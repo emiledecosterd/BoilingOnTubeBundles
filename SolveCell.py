@@ -12,6 +12,9 @@ from energyBalance import deriv_EnergyBalance
 from q_dnb import q_dnb
 from heatTransferCoefficient import*
 
+from error import Error
+
+
 
 
 
@@ -69,24 +72,29 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 			# Initial guess on the temperature
 			prevTh_out = Th_in*0.99
 
-			while (errest > tol and kt < ktmax):
+			try:
 
-				#print(prevTh_out)
-				#print(EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out))
-				#print(deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h))
+				while (errest > tol and kt < ktmax):
 
-				Th_out = prevTh_out - EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out)['balance']\
-					/deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h)
+					#print(prevTh_out)
+					#print(EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out))
+					#print(deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h))
 
-				errest = abs(Th_out - prevTh_out)
-				prevTh_out = Th_out
-				kt = kt + 1
+					Th_out = prevTh_out - EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out)['balance']\
+						/deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h)
 
-			if (kt == ktmax):
-				print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
-				print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
-			else:
-				print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
+					errest = abs(Th_out - prevTh_out)
+					prevTh_out = Th_out
+					kt = kt + 1
+
+				if (kt == ktmax):
+					print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
+					print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
+				else:
+					print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
+
+			except Exception as e:
+				raise Error('Newton',e)
 
 		'''
 		#### 2) Vapor Quality calculation ####

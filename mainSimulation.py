@@ -16,6 +16,10 @@ from Postprocess import *
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
+
+from error import Error
+
+
 class Simulation(QObject):
 
     # A signal emitted when progress has been updated
@@ -125,7 +129,13 @@ class Simulation(QObject):
                 progress = currentLoop/total
                 self.progressUpdated.emit(progress)
 
-                [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+                try:
+
+                    [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+
+                except Exception as e:
+                    raise Error('Solvecell', e)
+
                 Qtot += Q
 
                 np.set_printoptions(precision=3)
