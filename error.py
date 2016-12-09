@@ -1,6 +1,4 @@
-##	@ error
-#	Part of the BoilingOnTubeBundles project	
-#	
+##	@package error
 #	A generic error to be used throughout the code
 
 ##	Error

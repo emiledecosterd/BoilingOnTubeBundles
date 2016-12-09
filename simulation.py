@@ -1,7 +1,5 @@
 ##	@package simulation
-#	Part of the BoilingOnTubeBundles project	
-#	
-#	Link between the solver script and the GUI
+#	Link between the solver script and the GUI	
 
 # Packages for the simulation
 import math
@@ -16,7 +14,10 @@ from Postprocess import *
 from PyQt5.QtCore import QObject, pyqtSignal
 from error import Error
 
-
+##	Simulation
+#
+#	This class launches the simulation.
+#	It will be run on a parallel thread and communicate through signals.
 class Simulation(QObject):
 
 	# Signals

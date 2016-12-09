@@ -198,7 +198,7 @@ class MainWindow(Ui_MainWindow):
 		self.cut_GraphicsView.setVisible(False)
 
 		# Setup signals
-		self.long_GraphicsView.clicked.connect(self.toggleGraphicsView)
+		self.long_GraphicsView.clicked.connect(self.toggleGraphicsView) 
 		self.cut_GraphicsView.clicked.connect(self.toggleGraphicsView)
 
 
