@@ -109,12 +109,14 @@ class Simulation(QObject):
 		Q=Qtot*geom['Nt_col'] # [kW]
 
 		self.results = {
-		'Th' : Th,
-		'Ph' : Ph,
-		'Tc' : Tc,
-		'Pc' : Pc,
-		'xc' : xc,
-		'Q': Q
+			'Th' : Th,
+			'Ph' : Ph,
+			'Tc' : Tc,
+			'Pc' : Pc,
+			'xc' : xc,
+			'Q': Q,
+			'eps' : eps,
+			'OtherData' : OtherData
 		}
 		self.simulationCompleted.emit(self.results)
 		return

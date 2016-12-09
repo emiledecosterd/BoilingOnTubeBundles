@@ -7,15 +7,14 @@ from PyQt5.QtWidgets import *
 from mainWindow import MainWindow
 from drawing import *
 import numpy as np
-<<<<<<< HEAD
 #from mainSimulation import Simulation
 
 from simulation import Simulation
 from error import Error
-=======
-from mainSimulation import Simulation
+
+#from mainSimulation import Simulation
 from Postprocess import *
->>>>>>> master
+
 
 '''
 /!\
