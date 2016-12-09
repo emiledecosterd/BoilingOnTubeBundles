@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_MainWindow(QtWidgets.QMainWindow):
+class Ui_MainWindow(QtWidgets.QWidget):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1142, 697)
@@ -35,7 +35,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -312, 451, 896))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 451, 896))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -347,6 +347,9 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
+        self.showPlotsButton = QtWidgets.QPushButton(self.centralwidget)
+        self.showPlotsButton.setObjectName("showPlotsButton")
+        self.horizontalLayout_2.addWidget(self.showPlotsButton)
         spacerItem37 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem37)
         self.label_32 = QtWidgets.QLabel(self.centralwidget)
@@ -464,6 +467,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
 "inlet temperature"))
         self.PhCheckBox.setText(_translate("MainWindow", "Hot fluid \n"
 "inletpressure"))
+        self.showPlotsButton.setText(_translate("MainWindow", "Show plots"))
         self.label_32.setText(_translate("MainWindow", "Field to display"))
         self.displayFieldComboBox.setItemText(0, _translate("MainWindow", "Hot fluid temperature"))
         self.displayFieldComboBox.setItemText(1, _translate("MainWindow", "Hot fluid pressure"))

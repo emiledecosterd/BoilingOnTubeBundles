@@ -43,7 +43,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-312</y>
+         <y>0</y>
          <width>451</width>
          <height>896</height>
         </rect>
@@ -1002,6 +1002,13 @@ inletpressure</string>
      <layout class="QVBoxLayout" name="verticalLayout" stretch="0,60,0,10">
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="showPlotsButton">
+          <property name="text">
+           <string>Show plots</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <spacer name="horizontalSpacer_38">
           <property name="orientation">
