@@ -7,7 +7,10 @@ from PyQt5.QtWidgets import *
 from mainWindow import MainWindow
 from drawing import PipeDrawing
 import numpy as np
-from mainSimulation import Simulation
+#from mainSimulation import Simulation
+
+from simulation import Simulation
+from error import Error
 
 '''
 /!\
@@ -71,14 +74,18 @@ class MainController(QObject):
 		self.simulation = Simulation()
 		self.simulationThread = QThread()
 		self.simulation.moveToThread(self.simulationThread)
-		self.simulate.connect(self.simulation.startSimulation)
-		self.simulation.simulationComplete.connect(self.handleSimulationResults)
+		self.simulate.connect(self.simulation.run)
+		self.simulation.simulationCompleted.connect(self.handleSimulationResults)
 		self.simulation.progressUpdated.connect(self.on_updateProgress)
+		self.simulation.errorOccured.connect(self.handleError)
 		self.progressUpdated.connect(self.mainWindow.on_updateProgress)
 		self.simulationThread.start()
 
 		self.parent().aboutToQuit.connect(self.forceQuit)
 
+
+	def handleError(self, err):
+		print(err.message)
 
 	def startSimulation(self, configuration):
 		print('Sarting simulation')
