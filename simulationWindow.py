@@ -188,10 +188,12 @@ class SimulationWindow(Ui_MainWindow):
 		print('Input changed')
 		self.changesOccured.emit()
 
+	##	Called whenever the user chooses another field to display
 	def sendChosenResult(self):
 		print('ChosenResult changed')
 		result = self.results[self.chosenResultComboBox.currentIndex()]
 		self.chosenResultChanged.emit(result)
+
 
 	##	Check if the tube material is defined. If so, disable the thermal
 	#	conductivity line edit (for a given material, this k is fixed)

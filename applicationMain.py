@@ -60,6 +60,9 @@ class MainController(QtCore.QObject):
 		sys.exit(app.exec_())
 
 
+	##	updatePlots()
+	#	Reads the user inputs from the main window and plots the geometry
+	#	@param	None
 	def updatePlots(self):
 
 		configuration = self.mainWindow.readConfiguration()
@@ -69,6 +72,9 @@ class MainController(QtCore.QObject):
 			self.transvPlotter.drawScheme(configuration['geom'])
 
 
+	##	togglePlotter()
+	#	Change the plot we want to display
+	#	@param	None
 	def togglePlotter(self):
 		if self.isLongPlotter:
 			self.isLongPlotter = False
