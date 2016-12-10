@@ -281,7 +281,7 @@ class TransvPipePlotter(PipePlotter):
 		self.drawShellCircle()
 
 		# Draw the pipes depending on the layout
-		if self.geom['layout'] = 'InLine' :
+		if self.geom['layout'] == 'InLine' :
 			self.drawPipesInline()
 		else:
 			self.drawPipesStaggered()
