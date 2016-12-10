@@ -162,6 +162,6 @@ def defaultConfiguration():
 		'geom' : geom,
 		'flowInputs' : flowInputs 
 	}
-
+	return configuration
 
 
