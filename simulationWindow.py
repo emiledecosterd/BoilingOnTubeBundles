@@ -3,10 +3,14 @@
 #	Handles everything related to user input
 
 import sys
+
 from PyQt5 import QtGui, QtCore, QtWidgets
+from numpy import linspace, array
+
 from simulationWindowGUI import  Ui_MainWindow
 from simulation import defaultConfiguration
 from error import Error
+
 
 ##	SimulationWindow
 #
@@ -30,7 +34,7 @@ class SimulationWindow(Ui_MainWindow):
 		Ui_MainWindow.__init__(self)
 		self.window = window
 		self.setupUi(window)
-		
+
 
 	##	Sets up the content and behaviour of the main window
 	#	@param 	None
@@ -111,9 +115,83 @@ class SimulationWindow(Ui_MainWindow):
 			print('No configuration passed')
 
 
+	##	Reads all the fields in the GUI 
+	#	@return	configuration A configuration dictionary
 	def readConfiguration(self):
 			print('Reading current fields')
 
+			# Operating conditions fields
+			opCond = {}
+			opCond['FluidType'] = self.workingFluids[self.fluidTypeComboBox.currentIndex()]
+			opCond['mfr_h'] = float(self.mfr_hLineEdit.text())
+			opCond['mfr_c'] = float(self.mfr_cLineEdit.text())
+			opCond['TubeMat'] = self.tubeMaterials[self.tubeMatComboBox.currentIndex()]
+			opCond['TubeThermalConductivity'] = float(self.tubeThermalConductivityLineEdit.text())
+
+			# Geometry fields
+			geom = {}
+			geom['Ds'] = float(self.DsLineEdit.text())
+			geom['D'] = float(self.DLineEdit.text())
+			geom['Nt'] = self.NtSpinBox.value()
+			geom['Nt_col'] = self.Nt_colSpinBox.value()
+			geom['L'] = float(self.LLineEdit.text())
+			geom['s'] = float(self.sLineEdit.text())
+			geom['sh'] = float(self.shLineEdit.text())
+			geom['t'] = float(self.tLineEdit.text())
+			geom['layout'] = self.layouts[self.layoutComboBox.currentIndex()]
+			geom['e_i'] = float(self.e_iLineEdit.text())
+			geom['e_o'] = float(self.e_oLineEdit.text())
+			geom['n'] = self.nSpinBox.value()
+			geom['corr'] = self.correlationsHTC[self.corrComboBox.currentIndex()]
+			geom['corrPD'] = self.correlationsPD[self.corrPDComboBox.currentIndex()]
+			geom['chosenResult'] = self.results[self.chosenResultComboBox.currentIndex()]
+
+			# Flow inputs
+			flowInputs = {}
+			flowInputs['xc_in'] = float(self.xcLineEdit.text())
+
+			# Calculate the lists
+			Tc = []
+			Th = []
+			Ph = []
+			if self.paramCheckBox.isChecked():
+				val = self.paraSpinBox.value()
+				TcStart = float(self.TcStartLineEdit.text())
+				TcEnd = float(self.TcEndLineEdit.text())
+				ThStart = float(self.ThStartLineEdit.text())
+				ThEnd = float(self.ThEndLineEdit.text())
+				PhStart = float(self.PhStartLineEdit.text())
+				PhEnd = float(self.PhEndLineEdit.text())
+				if TcEnd > TcStart:
+					values = linspace(TcStart, TcEnd, val)
+					Tc = values.tolist()
+					flowInputs['param'] = 'Tc'
+				elif ThEnd > ThStart:
+					values = linspace(ThStart, ThEnd, val)
+					Th = values.tolist()
+					flowInputs['param'] = 'Th'
+				elif PhEnd > PhStart:
+					values = linspace(PhStart, PhEnd, val)
+					Ph = values.tolist()
+					flowInputs['param'] = 'Ph'
+
+			else:
+				Tc = [float(self.TcStartLineEdit.text())]
+				Th = [float(self.ThStartLineEdit.text())]
+				Ph = [float(self.PhStartLineEdit.text())]
+				flowInputs['param'] = None
+
+			flowInputs['Tc'] = Tc
+			flowInputs['Th'] = Th
+			flowInputs['Ph'] = Ph
+
+			configuration = {'opCond': opCond, 'geom': geom, 'flowInputs': flowInputs}
+
+			return configuration
+
+
+	##	Print the given text to the console in the GUI
+	#	@param 	text 	The text to print
 	def printToConsole(self, text):
 		self.console.addItem(str(text))
 

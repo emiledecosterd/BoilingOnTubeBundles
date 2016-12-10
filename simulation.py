@@ -123,7 +123,7 @@ class Simulation(QObject):
 
 
 ##	defaultConfiguration()
-#	Returns default parameters for the simulation so it does not have to be loaded each time
+#	@return	configuration Default parameters for the simulation so it does not have to be loaded each time
 def defaultConfiguration():
 
 	opCond = {

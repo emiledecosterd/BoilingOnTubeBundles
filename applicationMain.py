@@ -34,10 +34,13 @@ class MainController(QtCore.QObject):
 
 		# Create the connexions
 		self.console.printOccured.connect(self.mainWindow.printToConsole)
-		
+
 		# Show the window
 		self.mainWindow.setup()
 		window.show()
+
+		configuration = self.mainWindow.readConfiguration()
+		print(configuration)
 
 		# Launch application
 		# For more details: 

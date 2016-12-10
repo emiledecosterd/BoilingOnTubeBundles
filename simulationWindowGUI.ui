@@ -43,7 +43,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-312</y>
          <width>451</width>
          <height>896</height>
         </rect>
@@ -1069,7 +1069,11 @@ inletpressure</string>
        <widget class="QGraphicsView" name="graphicsView"/>
       </item>
       <item>
-       <widget class="QListWidget" name="console"/>
+       <widget class="QListWidget" name="console">
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAsNeeded</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
