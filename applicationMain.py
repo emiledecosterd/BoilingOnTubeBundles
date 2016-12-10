@@ -8,6 +8,7 @@ import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
 
 # Our classes
+from pipePlotter import LongPipePlotter, TransvPipePlotter
 from simulationWindow import SimulationWindow, QResizableMainWindow
 from simulation import Simulation
 from error import Error
@@ -35,6 +36,8 @@ class MainController(QtCore.QObject):
 		self.mainWindow.setup()
 
 		# Create the plotters
+		self.longPlotter = LongPipePlotter(self.mainWindow.graphicsView)
+		self.transvPlotter = TransvPipePlotter(self.mainWindow.graphicsView)
 
 		# Setup the redirectioning of stdout to console
 		self.console = Console()

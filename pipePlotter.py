@@ -24,12 +24,12 @@ class PipePlotter(QtCore.QObject):
 
 		# The scene containing all the drawing
 		sceneRect = QtCore.QRectF(self.view.geometry()) 
-		self.scene = QGraphicsScene(sceneRect)
+		self.scene = QtWidgets.QGraphicsScene(sceneRect)
 
 		# Appearance of different lines
 		self.outerRectPen = QtGui.QPen(QtCore.Qt.DashLine)
 		self.pipeLinePen = QtGui.QPen(QtCore.Qt.SolidLine)
-		self.pipeFillingBrush = QBrush(QtCore.Qt.Dense7Pattern)
+		self.pipeFillingBrush = QtGui.QBrush(QtCore.Qt.Dense7Pattern)
 		self.cellPen = QtGui.QPen(QtCore.Qt.DotLine)
 		self.fillPen = QtGui.QPen(QtCore.Qt.NoPen)
 	
