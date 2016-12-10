@@ -20,7 +20,7 @@ from error import Error
 class MainController(QtCore.QObject):
 
 	# Instance variables
-	isLongPlotter = QtCore.pyqtSignal(bool)
+	isLongPlotter = True
 	currentSimulationConfiguration = None
 	results = None
 
@@ -45,6 +45,11 @@ class MainController(QtCore.QObject):
 
 		# Create the connexions
 		self.console.printOccured.connect(self.mainWindow.printToConsole)
+		self.mainWindow.changesOccured.connect(self.resetResults)
+		self.mainWindow.changesOccured.connect(self.updatePlots)
+		self.mainWindow.chosenResultChanged.connect(self.updatePlots)
+		self.mainWindow.graphicsView.clicked.connect(self.togglePlotter)
+		window.resized.connect(self.updatePlots)
 
 		# Show the window
 		window.show()
@@ -53,6 +58,28 @@ class MainController(QtCore.QObject):
 		# For more details: 
 		# http://stackoverflow.com/questions/25075954/using-sys-exit-with-app-exec-in-pyqt
 		sys.exit(app.exec_())
+
+
+	def updatePlots(self):
+
+		configuration = self.mainWindow.readConfiguration()
+		if self.isLongPlotter:
+			self.longPlotter.drawScheme(configuration['geom'], self.results)
+		else:
+			self.transvPlotter.drawScheme(configuration['geom'])
+
+
+	def togglePlotter(self):
+		if self.isLongPlotter:
+			self.isLongPlotter = False
+		else:
+			self.isLongPlotter = True
+		self.updatePlots()	
+
+
+	def resetResults(self):
+		self.results = None
+
 
 
 ##	Console

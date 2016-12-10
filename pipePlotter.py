@@ -32,6 +32,7 @@ class PipePlotter(QtCore.QObject):
 		self.pipeFillingBrush = QtGui.QBrush(QtCore.Qt.Dense7Pattern)
 		self.cellPen = QtGui.QPen(QtCore.Qt.DotLine)
 		self.fillPen = QtGui.QPen(QtCore.Qt.NoPen)
+		self.axisLine = QtGui.QPen(QtCore.Qt.DashDotLine)
 	
 	##	drawOuterRect()
 	#	Draw the basis rectangle on the graphics view
@@ -43,6 +44,7 @@ class PipePlotter(QtCore.QObject):
 		origin = QtCore.QPointF(baseRect.x()+20, baseRect.y()+20)
 		size = QtCore.QSizeF(baseRect.width()-40, baseRect.height()-40)
 		outerRect = QtCore.QRectF(origin, size)
+		self.bounds = outerRect
 
 		# Save Bound constants whith the margins
 		margin = 0.85
@@ -55,7 +57,7 @@ class PipePlotter(QtCore.QObject):
 
 		# Draw the rectangle (inner)
 		innerRect = QtCore.QRectF(QtCore.QPointF(self.viewLeft,self.viewTop ), QtCore.QSizeF(self.viewWidth, self.viewHeight))
-		self.scene.addRect(innerRect, self.outerRectPen)
+		# self.scene.addRect(innerRect, self.outerRectPen)
 		# self.addPoint(QtCore.QPointF(self.viewLeft, self.viewTop))
 
 		# Draw the rectangle
@@ -89,6 +91,10 @@ class PipePlotter(QtCore.QObject):
 #	Subclass of PipePlotter for the longitudinal view scheme
 class LongPipePlotter(PipePlotter):
 
+	def __init__(self, view):
+		super(LongPipePlotter, self).__init__(view)
+		
+
 	##	drawScheme()
 	#	Draw the longitudinal scheme on the graphics view 
 	#	@param geom The geometrical inputs taken from the GUI
@@ -108,7 +114,9 @@ class LongPipePlotter(PipePlotter):
 		self.coordinates = self.drawCells(geom['Nt'], geom['n'])
 
 		# Fill the cells
-		self.fillCells(self, coordinates, results[geom['chosenResult']])
+		if results:
+			self.fillCells(self, coordinates, results[geom['chosenResult']])
+
 
 	##	drawCells()
 	#	Draw the cells discretized and save the coordinates
@@ -250,6 +258,10 @@ class LongPipePlotter(PipePlotter):
 ##	TransvPipePlotter
 #	Subclass of PipePlotter for the transversal view scheme
 class TransvPipePlotter(PipePlotter):
+
+	def __init__(self, view):
+		super(TransvPipePlotter, self).__init__(view)
+
 
 	##	drawScheme()
 	#	Draw the transversal scheme on the graphics view 

@@ -6,6 +6,7 @@ import sys
 
 from PyQt5 import QtGui, QtCore, QtWidgets
 from numpy import linspace, array
+import math
 
 from simulationWindowGUI import  Ui_MainWindow
 from simulation import defaultConfiguration
@@ -28,6 +29,7 @@ class SimulationWindow(Ui_MainWindow):
 
 	# Signals
 	changesOccured = QtCore.pyqtSignal()
+	chosenResultChanged = QtCore.pyqtSignal(str)
 
 	##	The constructor
 	#	@param	window	The reference to a QMainWindow object
@@ -147,6 +149,9 @@ class SimulationWindow(Ui_MainWindow):
 		self.ThCheckBox.stateChanged.connect(self.checkParam)
 		self.PhCheckBox.stateChanged.connect(self.checkParam)
 
+		# For the plots
+		self.chosenResultComboBox.currentIndexChanged.connect(self.sendChosenResult)
+
 
 	##	setupRules()
 	#	Sets up the validators and other formatting or behavioural rules
@@ -183,6 +188,10 @@ class SimulationWindow(Ui_MainWindow):
 		print('Input changed')
 		self.changesOccured.emit()
 
+	def sendChosenResult(self):
+		print('ChosenResult changed')
+		result = self.results[self.chosenResultComboBox.currentIndex()]
+		self.chosenResultChanged.emit(result)
 
 	##	Check if the tube material is defined. If so, disable the thermal
 	#	conductivity line edit (for a given material, this k is fixed)
@@ -272,7 +281,7 @@ class SimulationWindow(Ui_MainWindow):
 			geom['chosenResult'] = self.results[self.chosenResultComboBox.currentIndex()]
 			geom['N'] = geom['Nt']*geom['Nt_col']
 
-			# Calculate mdot
+			# Calculate mdotdot
 			opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
 			opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
