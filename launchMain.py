@@ -22,11 +22,13 @@ flowInputs = {}
 # Operating Conditions
 opCond['FluidType'] = 'Propane'
 opCond['mfr_c'] = 8
+
 # opCond['mdot_h'] = 103.0 # Need to guess it
 opCond['TubeMat'] = 'copper'
 opCond['TubeThermalConductivity']= 400
 
 # Geometrical Inputs
+
 geom['Nt'] = 11
 geom['Nt_col'] = 11
 geom['L'] = 3.0
@@ -34,8 +36,8 @@ geom['n'] = 15
 geom['s'] = 45e-3
 geom['sh'] = 45e-3
 geom['D'] = 30e-3
-geom['e_i'] =20e-6
-geom['e_o'] = 20e-6
+geom['e_i'] =200e-6
+geom['e_o'] = 200e-6
 geom['t'] = 3e-3
 geom['corr'] = 'Cooper'
 geom['corrPD'] = 'Gaddis'
@@ -51,7 +53,7 @@ flowInputs['xc_in'] = 0.05
 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
 
-opCond['mfr_h'] = 15.0 #mfr_hGuess
+opCond['mfr_h'] = 30.0 #mfr_hGuess
 opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
 opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
