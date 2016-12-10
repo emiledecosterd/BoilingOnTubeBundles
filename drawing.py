@@ -20,7 +20,7 @@ class PipeDrawing(object):
 
 		# The scene containing all the drawing
 		sceneRect = QRectF(self.view.geometry()) 
-		self.scene = graphicsView(sceneRect)
+		self.scene = QGraphicsScene(sceneRect)
 
 		# Appearance of different lines
 		self.outerRectPen = QPen(Qt.DashLine)

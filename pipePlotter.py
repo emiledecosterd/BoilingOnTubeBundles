@@ -24,7 +24,7 @@ class PipePlotter(QtCore.QObject):
 
 		# The scene containing all the drawing
 		sceneRect = QtCore.QRectF(self.view.geometry()) 
-		self.scene = graphicsView(sceneRect)
+		self.scene = QGraphicsScene(sceneRect)
 
 		# Appearance of different lines
 		self.outerRectPen = QtGui.QPen(QtCore.Qt.DashLine)

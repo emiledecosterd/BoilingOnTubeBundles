@@ -14,6 +14,7 @@ from error import Error
 
 #from mainSimulation import Simulation
 from Postprocess import *
+from postProcessor import *
 
 
 '''
@@ -107,6 +108,7 @@ class MainController(QObject):
 
 	def startSimulation(self, configuration):
 		print('Sarting simulation')
+		self.configuration = configuration
 
 		# Store the current configuration for the simulation
 		self.flowInputs = configuration['flowInputs']
@@ -131,11 +133,8 @@ class MainController(QObject):
 	def handleSimulationResults(self, results):
 		print('Simulation finished')
 
-		self.results = results
-		plot_boiler(results['Th'], results['Ph'], results['Tc'], results['Pc'], results['xc'], 
-			results['eps'], self.geom['n'], self.geom['Nt'])
-		plot_xc_pipe(results['xc'], self.geom['n'], self.geom['Nt'])
-		PostProcess_calc(self.opCond, self.geom, results['Q'], results['OtherData'])
+		postProcessor = PostProcessor(self.configuration, results)
+
 
 		# Display results
 		self.fillCells()

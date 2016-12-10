@@ -19,9 +19,13 @@ class ResultsDialog(Ui_Dialog):
 	
 	##	Default constructor
 	#	@param dialog QtWidgets.QDialog
-	def __init__(self, dialog, results):
+	def __init__(self, dialog, config, results):
 		Ui_Dialog.__init__(self) 
 		self.setupUi(dialog) 
+
+		# Global variables
+		self.config = config
+		self.results = results
 
 		# Setup
 		self.setupLists()
@@ -32,6 +36,7 @@ class ResultsDialog(Ui_Dialog):
 		# Initialize layout
 		self.addNewPlot(0,0)
 
+	#	SETUP METHODS
 
 	def setupLists(self):
 
@@ -40,14 +45,16 @@ class ResultsDialog(Ui_Dialog):
 		self.layoutVertList = []
 		self.comboBoxList = []
 		self.graphicsViewList = []
+		self.imagesList = []
 
 		# Setup Plot Label (Pretty)
 		self.prettyPlotName = ['Plot Th', 'Plot Tc', 'Plot x']
-		self.plotName = ['Th', 'Tc', 'x']
+		self.plotName = ['T_w','T_w','T_wf','P_wf','x_wf', 'eps']
 
 		# Setup Plot Layout indexes
 		self.nPlots = [1, 4, 6]
 		
+	#	PLOTS METHODS
 
 	def addNewPlot(self, row, column):
 
@@ -90,7 +97,21 @@ class ResultsDialog(Ui_Dialog):
 				self.addNewPlot(i,j)
 				self.comboBoxList[-1].setCurrentIndex(j+(nPlots/2)*i)
 
-	def fillGUI(self,)
+	def setPlotImage(self):
+
+		#	Create scene according to the Qgraphicsview size
+		sceneRect = QtCore.QRectF(self.graphicsViewList[-1].geometry()) 
+		scene = QGraphicsScene(sceneRect)
+
+		#	Set the 
+
+	#	 LOAD DATA
+
+	# def loadData(self, directoryName):
+
+
+
+	# def fillGUI(self,)
 
 
 
