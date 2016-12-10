@@ -124,7 +124,7 @@ class SimulationWindow(Ui_MainWindow):
 			print('No configuration passed')
 
 
-	##	SetupConnections
+	##	setupConnections()
 	#	Sets up the connexions and signals
 	#	@param None
 	def setupConnections(self):
@@ -148,9 +148,34 @@ class SimulationWindow(Ui_MainWindow):
 		self.PhCheckBox.stateChanged.connect(self.checkParam)
 
 
-	##	Sets up the validators
+	##	setupRules()
+	#	Sets up the validators and other formatting or behavioural rules
+	#	@param 	None
 	def setupRules(self):
 		self.console.setReadOnly(False)
+
+		# Validators
+		validator = QtGui.QDoubleValidator(0,1e9,2)
+		validator.setLocale(QtCore.QLocale('Suisse'))
+		self.mfr_hLineEdit.setValidator(validator)
+		self.mfr_cLineEdit.setValidator(validator)
+		self.tubeThermalConductivityLineEdit.setValidator(validator)
+		self.DsLineEdit.setValidator(validator)
+		self.DLineEdit.setValidator(validator)
+		self.LLineEdit.setValidator(validator)
+		self.sLineEdit.setValidator(validator)
+		self.shLineEdit.setValidator(validator)
+		self.tLineEdit.setValidator(validator)
+		self.e_iLineEdit.setValidator(validator)
+		self.e_oLineEdit.setValidator(validator)
+		self.xcLineEdit.setValidator(validator)
+		self.TcStartLineEdit.setValidator(validator)
+		self.TcEndLineEdit.setValidator(validator)
+		self.ThStartLineEdit.setValidator(validator)
+		self.ThEndLineEdit.setValidator(validator)
+		self.PhStartLineEdit.setValidator(validator)
+		self.PhEndLineEdit.setValidator(validator)
+
 
 
 	##	Bridge between the signals from the fields and the maincontroller
@@ -245,6 +270,11 @@ class SimulationWindow(Ui_MainWindow):
 			geom['corr'] = self.correlationsHTC[self.corrComboBox.currentIndex()]
 			geom['corrPD'] = self.correlationsPD[self.corrPDComboBox.currentIndex()]
 			geom['chosenResult'] = self.results[self.chosenResultComboBox.currentIndex()]
+			geom['N'] = geom['Nt']*geom['Nt_col']
+
+			# Calculate mdot
+			opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
+			opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
 			# Flow inputs
 			flowInputs = {}
