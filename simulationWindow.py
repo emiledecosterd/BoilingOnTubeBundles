@@ -11,7 +11,6 @@ from simulationWindowGUI import  Ui_MainWindow
 from simulation import defaultConfiguration
 from error import Error
 
-
 ##	SimulationWindow
 #
 #	The main window of the programm 
@@ -27,6 +26,9 @@ class SimulationWindow(Ui_MainWindow):
 	correlationsPD = []
 	results = []
 
+	# Signals
+	changesOccured = QtCore.pyqtSignal()
+
 	##	The constructor
 	#	@param	window	The reference to a QMainWindow object
 	def __init__(self, window):
@@ -41,7 +43,8 @@ class SimulationWindow(Ui_MainWindow):
 	def setup(self):
 		self.setupLists()
 		self.setupInputs(defaultConfiguration())
-
+		self.setupConnections()
+		self.setupRules()
 
 	##	Fills the lists for all the comboboxes
 	#	@param	None
@@ -93,7 +96,8 @@ class SimulationWindow(Ui_MainWindow):
 
 				# flowInputs
 				self.xcLineEdit.setText(str(flowInputs['xc_in']))
-				self.paramCheckBox.setChecked(str(flowInputs['param']) is not None)
+				print(flowInputs['param'])
+				self.paramCheckBox.setChecked(flowInputs['param'] is not None )
 				Tc = flowInputs['Tc']
 				Th = flowInputs['Th']
 				Ph = flowInputs['Ph']
@@ -111,8 +115,102 @@ class SimulationWindow(Ui_MainWindow):
 			except Exception as e:
 				raise Error('simulationWindow.setupInputs()', e)
 
+			# Gray out fields depending on configuration
+			self.checkTubeMaterial()
+			self.checkCorrPD()
+			self.checkParam()
+
 		else:
 			print('No configuration passed')
+
+
+	##	SetupConnections
+	#	Sets up the connexions and signals
+	#	@param None
+	def setupConnections(self):
+
+		# Everything that could alter the plot
+		self.DsLineEdit.editingFinished.connect(self.inputsChanged)
+		self.DLineEdit.editingFinished.connect(self.inputsChanged)
+		self.NtSpinBox.valueChanged.connect(self.inputsChanged)
+		self.Nt_colSpinBox.valueChanged.connect(self.inputsChanged)
+		self.sLineEdit.editingFinished.connect(self.inputsChanged)
+		self.shLineEdit.editingFinished.connect(self.inputsChanged)
+		self.layoutComboBox.currentIndexChanged.connect(self.inputsChanged)
+		self.nSpinBox.valueChanged.connect(self.inputsChanged)
+
+		# Everything that need verification
+		self.tubeMatComboBox.currentIndexChanged.connect(self.checkTubeMaterial)
+		self.corrPDComboBox.currentIndexChanged.connect(self.checkCorrPD)
+		self.paramCheckBox.stateChanged.connect(self.checkParam)
+		self.TcCheckBox.stateChanged.connect(self.checkParam)
+		self.ThCheckBox.stateChanged.connect(self.checkParam)
+		self.PhCheckBox.stateChanged.connect(self.checkParam)
+
+
+	def setupRules(self):
+		self.console.setReadOnly(False)
+
+
+	def inputsChanged(self):
+		print('Input changed')
+		print(self.readConfiguration())
+		self.changesOccured.emit()
+
+
+	##	Check if the tube material is defined. If so, disable the thermal
+	#	conductivity line edit (for a given material, this k is fixed)
+	#	@param 	None
+	def checkTubeMaterial(self):
+		if self.tubeMaterials[self.tubeMatComboBox.currentIndex()] == 'other':
+			self.tubeThermalConductivityLineEdit.setEnabled(True)
+		else:
+			self.tubeThermalConductivityLineEdit.setEnabled(False)
+
+
+	##	Checks if some inputs have to be enabled depending on the correlation
+	#	chosen for the pressure drop
+	#	@param 	None
+	def checkCorrPD(self):
+		if self.correlationsPD[self.corrPDComboBox.currentIndex()] == 'Gaddis':
+			self.shLineEdit.setEnabled(True)
+			self.layoutComboBox.setEnabled(True)
+		else:
+			self.shLineEdit.setEnabled(False)
+			self.layoutComboBox.setEnabled(False)
+
+
+	currentCheckBox = None
+
+	##	Checks which fields have to be enabled or disabled depending on the 
+	#	user input for the parametric simulation
+	#	@param 	None
+	def checkParam(self):
+
+		checkBoxes = [self.TcCheckBox, self.ThCheckBox, self.PhCheckBox]
+		lineEdits = [self.TcEndLineEdit, self.ThEndLineEdit, self.PhEndLineEdit]
+		checkedIndex = None;
+		if self.paramCheckBox.isChecked():
+			self.paraSpinBox.setEnabled(True)
+			for i in range(0, len(checkBoxes)):
+				checkBoxes[i].setEnabled(True)
+				if self.currentCheckBox is not None:
+					if self.currentCheckBox == checkBoxes[i]:
+						checkBoxes[i].setChecked(False)
+						self.currentCheckBox = None
+				if checkBoxes[i].isChecked():
+					checkedIndex = i
+					for j in range(0,len(checkBoxes)):
+						if i!=j:
+							lineEdits[j].setEnabled(False)
+			if checkedIndex is not None:
+				self.currentCheckBox = checkBoxes[currentIndex]
+		else:
+			self.paraSpinBox.setEnabled(False)
+			for i in range(0, len(checkBoxes)):
+				checkBoxes[i].setEnabled(False)
+				checkBoxes[i].setChecked(False)
+				lineEdits[i].setEnabled(False)
 
 
 	##	Reads all the fields in the GUI 
@@ -186,17 +284,18 @@ class SimulationWindow(Ui_MainWindow):
 			flowInputs['Ph'] = Ph
 
 			configuration = {'opCond': opCond, 'geom': geom, 'flowInputs': flowInputs}
-
+			print(configuration)
 			return configuration
 
 
 	##	Print the given text to the console in the GUI
 	#	@param 	text 	The text to print
 	def printToConsole(self, text):
-		strippedText = text.strip('\n')
-		strippedText = strippedText.strip('\r')
-		self.console.addItem(str(text))
-		self.console.scrollToBottom()
+		cursor = self.console.textCursor()
+		cursor.movePosition(QtGui.QTextCursor.End)
+		cursor.insertText(text)
+		self.console.setTextCursor(cursor)
+		self.console.ensureCursorVisible()
 
 
 ##	QResizableMainWindow

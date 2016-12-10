@@ -153,7 +153,7 @@ def defaultConfiguration():
 	flowInputs = {
 		'Tc' : [273.15],
 		'Th' : [273.15],
-		'Ph' : [1e55],
+		'Ph' : [1e5],
 		'xc_in' : 0.13,
 		'param' : None
 	}
