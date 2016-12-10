@@ -30,11 +30,11 @@ class MainController(QtCore.QObject):
 
 		# Setup the redirectioning of stdout to console
 		self.console = Console()
-		self.console.printOccured.connect(self.mainWindow.printToConsole)
 		sys.stdout = self.console
 
 		# Create the connexions
-		#self.consoleStream.printOccured.connect(self.mainWindow.printToConsole)
+		self.console.printOccured.connect(self.mainWindow.printToConsole)
+		
 		# Show the window
 		self.mainWindow.setup()
 		window.show()
