@@ -193,7 +193,10 @@ class SimulationWindow(Ui_MainWindow):
 	##	Print the given text to the console in the GUI
 	#	@param 	text 	The text to print
 	def printToConsole(self, text):
+		strippedText = text.strip('\n')
+		strippedText = strippedText.strip('\r')
 		self.console.addItem(str(text))
+		self.console.scrollToBottom()
 
 
 

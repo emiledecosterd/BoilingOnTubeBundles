@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_MainWindow(QtWidgets.QWidget):
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1142, 697)
@@ -35,7 +35,7 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -312, 451, 896))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 451, 896))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -365,11 +365,16 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.chosenResultComboBox.addItem("")
         self.horizontalLayout_2.addWidget(self.chosenResultComboBox)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
-        self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
+        self.graphicsView = QClickableGraphicsView(self.centralwidget)
         self.graphicsView.setObjectName("graphicsView")
         self.verticalLayout.addWidget(self.graphicsView)
         self.console = QtWidgets.QListWidget(self.centralwidget)
         self.console.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.console.setMovement(QtWidgets.QListView.Static)
+        self.console.setResizeMode(QtWidgets.QListView.Fixed)
+        self.console.setLayoutMode(QtWidgets.QListView.SinglePass)
+        self.console.setGridSize(QtCore.QSize(0, 10))
+        self.console.setUniformItemSizes(True)
         self.console.setObjectName("console")
         self.verticalLayout.addWidget(self.console)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -479,3 +484,4 @@ class Ui_MainWindow(QtWidgets.QWidget):
         self.runButton.setText(_translate("MainWindow", "Run"))
         self.label.setText(_translate("MainWindow", "Boiling on tube bundles"))
 
+from clickableGraphicsView import QClickableGraphicsView
