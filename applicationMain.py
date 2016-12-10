@@ -18,6 +18,11 @@ from error import Error
 #	Launches the simulation, handles results and errors
 class MainController(QtCore.QObject):
 
+	# Instance variables
+	isLongPlotter = QtCore.pyqtSignal(bool)
+	currentSimulationConfiguration = None
+	results = None
+
 	##	The constructor
 	#	@param app The application created in '__main__'
 	def __init__(self, app):
@@ -27,6 +32,9 @@ class MainController(QtCore.QObject):
 		# Create simulation window
 		window = QResizableMainWindow()
 		self.mainWindow = SimulationWindow(window)
+		self.mainWindow.setup()
+
+		# Create the plotters
 
 		# Setup the redirectioning of stdout to console
 		self.console = Console()
@@ -36,11 +44,7 @@ class MainController(QtCore.QObject):
 		self.console.printOccured.connect(self.mainWindow.printToConsole)
 
 		# Show the window
-		self.mainWindow.setup()
 		window.show()
-
-		configuration = self.mainWindow.readConfiguration()
-		print(configuration)
 
 		# Launch application
 		# For more details: 

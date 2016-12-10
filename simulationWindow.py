@@ -199,8 +199,6 @@ class SimulationWindow(Ui_MainWindow):
 		self.console.scrollToBottom()
 
 
-
-
 ##	QResizableMainWindow
 #
 #	This class catches the resize event from the 'QMainWindow' class
