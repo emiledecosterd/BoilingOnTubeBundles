@@ -9,8 +9,13 @@ from PyQt5 import QtGui, QtCore, QtWidgets
 
 # Our classes
 from simulationWindow import SimulationWindow, QResizableMainWindow
+from simulation import Simulation
 from error import Error
 
+##	MainController
+#
+#	Manages all the programm.
+#	Launches the simulation, handles results and errors
 class MainController(QtCore.QObject):
 
 	##	The constructor

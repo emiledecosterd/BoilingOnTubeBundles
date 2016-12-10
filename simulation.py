@@ -8,7 +8,6 @@ from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
-from Postprocess import *
 
 # Qt and GUI packages
 from PyQt5.QtCore import QObject, pyqtSignal
@@ -121,3 +120,48 @@ class Simulation(QObject):
 		}
 		self.simulationCompleted.emit(self.results)
 		return
+
+
+##	defaultConfiguration()
+#	Returns default parameters for the simulation so it does not have to be loaded each time
+def defaultConfiguration():
+
+	opCond = {
+		'FluidType' : 'R134a',
+		'mfr_c' : 5.3,
+		'mfr_h' : 15,
+		'TubeMat' : 'steel',
+		'TubeThermalConductivity' : 400
+	}
+	geom = {
+		'Ds' : 0.5,
+		'D' : 15e-3,
+		'Nt' : 5,
+		'Nt_col' : 5,
+		'L' : 3.0,
+		's' : 70e-3,
+		'sh' : 70e-3,
+		't' : 5e-3,
+		'layout' : 'Staggered',
+		'e_i' : 3e-6,
+		'e_o' : 3e-6,
+		'n' : 10,
+		'corr' : 'Mostinski',
+		'corrPD' : 'Gaddis',
+		'chosenResult' : 'xc'
+	}
+	flowInputs = {
+		'Tc' : [273.15],
+		'Th' : [273.15],
+		'Ph' : [1e55],
+		'xc_in' : 0.13,
+		'param' : None
+	}
+	configuration = {
+		'opCond' : opCond,
+		'geom' : geom,
+		'flowInputs' : flowInputs 
+	}
+
+
+

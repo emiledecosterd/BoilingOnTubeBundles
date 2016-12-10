@@ -43,7 +43,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-312</y>
          <width>451</width>
          <height>896</height>
         </rect>
@@ -1030,7 +1030,7 @@ inletpressure</string>
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="displayFieldComboBox">
+         <widget class="QComboBox" name="chosenResultComboBox">
           <item>
            <property name="text">
             <string>Hot fluid temperature</string>
