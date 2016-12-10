@@ -148,13 +148,14 @@ class SimulationWindow(Ui_MainWindow):
 		self.PhCheckBox.stateChanged.connect(self.checkParam)
 
 
+	##	Sets up the validators
 	def setupRules(self):
 		self.console.setReadOnly(False)
 
 
+	##	Bridge between the signals from the fields and the maincontroller
 	def inputsChanged(self):
 		print('Input changed')
-		print(self.readConfiguration())
 		self.changesOccured.emit()
 
 
@@ -204,7 +205,8 @@ class SimulationWindow(Ui_MainWindow):
 						if i!=j:
 							lineEdits[j].setEnabled(False)
 			if checkedIndex is not None:
-				self.currentCheckBox = checkBoxes[currentIndex]
+				self.currentCheckBox = checkBoxes[checkedIndex]
+				lineEdits[checkedIndex].setEnabled(True)
 		else:
 			self.paraSpinBox.setEnabled(False)
 			for i in range(0, len(checkBoxes)):
@@ -284,7 +286,6 @@ class SimulationWindow(Ui_MainWindow):
 			flowInputs['Ph'] = Ph
 
 			configuration = {'opCond': opCond, 'geom': geom, 'flowInputs': flowInputs}
-			print(configuration)
 			return configuration
 
 
