@@ -28,13 +28,38 @@ class MainController(QtCore.QObject):
 		window = QResizableMainWindow()
 		self.mainWindow = SimulationWindow(window)
 
+		# Setup the redirectioning of stdout to console
+		self.console = Console()
+		self.console.printOccured.connect(self.mainWindow.printToConsole)
+		sys.stdout = self.console
+
+		# Create the connexions
+		#self.consoleStream.printOccured.connect(self.mainWindow.printToConsole)
 		# Show the window
+		self.mainWindow.setup()
 		window.show()
 
 		# Launch application
 		# For more details: 
 		# http://stackoverflow.com/questions/25075954/using-sys-exit-with-app-exec-in-pyqt
 		sys.exit(app.exec_())
+
+
+##	Console
+#
+#	This class is meant to replace stdout to capture the 'print's
+class Console(QtCore.QObject):
+
+    printOccured = QtCore.pyqtSignal(str)
+
+    ##	Takes the output and sends it via an emitted signal
+    def write(self, text):
+        self.printOccured.emit(str(text))
+
+    ##	To replace stdout, must implement this
+    #	http://stackoverflow.com/questions/20525587/python-logging-in-multiprocessing-attributeerror-logger-object-has-no-attrib
+    def flush(self):
+    	pass
 
 
 if __name__ == '__main__':

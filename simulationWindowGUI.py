@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_MainWindow(QtWidgets.QMainWindow):
+class Ui_MainWindow(QtWidgets.QWidget):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1142, 697)
@@ -35,7 +35,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, -312, 451, 896))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 451, 896))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
@@ -368,7 +368,7 @@ class Ui_MainWindow(QtWidgets.QMainWindow):
         self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
         self.graphicsView.setObjectName("graphicsView")
         self.verticalLayout.addWidget(self.graphicsView)
-        self.console = QtWidgets.QListView(self.centralwidget)
+        self.console = QtWidgets.QListWidget(self.centralwidget)
         self.console.setObjectName("console")
         self.verticalLayout.addWidget(self.console)
         self.horizontalLayout = QtWidgets.QHBoxLayout()

@@ -30,6 +30,11 @@ class SimulationWindow(Ui_MainWindow):
 		Ui_MainWindow.__init__(self)
 		self.window = window
 		self.setupUi(window)
+		
+
+	##	Sets up the content and behaviour of the main window
+	#	@param 	None
+	def setup(self):
 		self.setupLists()
 		self.setupInputs(defaultConfiguration())
 
@@ -49,7 +54,7 @@ class SimulationWindow(Ui_MainWindow):
 	#	@param	configuration	A dictionary containing all the values for the fields
 	#	@throw	error	An error with the name of the method and the exception message
 	def setupInputs(self, configuration):
-
+		print('setupInputs')
 		if configuration:
 			try:
 				# Recover each dictionnary in the configuration
@@ -104,6 +109,15 @@ class SimulationWindow(Ui_MainWindow):
 
 		else:
 			print('No configuration passed')
+
+
+	def readConfiguration(self):
+			print('Reading current fields')
+
+	def printToConsole(self, text):
+		self.console.addItem(str(text))
+
+
 
 
 ##	QResizableMainWindow
