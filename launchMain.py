@@ -20,38 +20,38 @@ geom = {}
 flowInputs = {}
 
 # Operating Conditions
-opCond['FluidType'] = 'R134a'
-opCond['mfr_c'] = 15
+opCond['FluidType'] = 'Propane'
+opCond['mfr_c'] = 8
 # opCond['mdot_h'] = 103.0 # Need to guess it
 opCond['TubeMat'] = 'copper'
 opCond['TubeThermalConductivity']= 400
 
 # Geometrical Inputs
-geom['Nt'] = 5
-geom['Nt_col'] = 5
+geom['Nt'] = 11
+geom['Nt_col'] = 11
 geom['L'] = 3.0
-geom['n'] = 10
-geom['s'] = 70e-3
-geom['sh'] = 70e-3
-geom['D'] = 50e-3
-geom['e_i'] =3e-6
-geom['e_o'] = 3e-6
-geom['t'] = 5e-3
-geom['corr'] = 'Gorenflo'
+geom['n'] = 15
+geom['s'] = 45e-3
+geom['sh'] = 45e-3
+geom['D'] = 30e-3
+geom['e_i'] =20e-6
+geom['e_o'] = 20e-6
+geom['t'] = 3e-3
+geom['corr'] = 'Cooper'
 geom['corrPD'] = 'Gaddis'
 geom['layout'] = 'Staggered'
 geom['N'] = geom['Nt']*geom['Nt_col']
 
 
 # Flow Inputs
-flowInputs['Tc_in'] = 0 + 273.15
+flowInputs['Tc_in'] = 5 + 273.15
 flowInputs['Th_in'] = 25+ 273.15
 flowInputs['Ph_in'] = 1e5
 flowInputs['xc_in'] = 0.05
 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
 
-opCond['mfr_h'] = 20.0 #mfr_hGuess
+opCond['mfr_h'] = 15.0 #mfr_hGuess
 opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
 opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
