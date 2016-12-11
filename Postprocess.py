@@ -77,20 +77,28 @@ def plot_xc_pipe(xc, n, Nt, show):
 
 
 def PostProcess_calc(opCond, geom, Q, OtherData):
-    q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N'])
+    q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
 
     alpha_a_tot = 0.0
-    alpha_i_tot = 0
+    alpha_i_tot = 0.0
+    U_tot = 0.0
     for i in range(1, geom['Nt']+1):
         for j in range(1, geom['n']+1):
             alpha_a_tot += OtherData[i,j]['alpha_a']
             alpha_i_tot += OtherData[i,j]['alpha_i']
-
+            U_tot += OtherData[i,j]['U']
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
     alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
-
+    U_avg = U_tot/(geom['n']*geom['Nt'])
+    R_a = 1/alpha_a_avg
+    R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
+    R_w = OtherData[1,1]['R_w']
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
+    print('Average Overall heat transfer coefficient [W/m^2/K] %.3f: ' %U_avg)
+    print('Inner thermal resistance [W/m^2/K]^-1 %.10f: ' %R_i)
+    print('Outer thermal resistance [W/m^2/K]^-1 %.10f: ' %R_a)
+    print('Wall thermal resistance [W/m^2/K]^-1 %.10f: ' %R_w)

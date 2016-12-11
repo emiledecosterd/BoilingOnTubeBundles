@@ -43,7 +43,7 @@ def EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 	U = (geom['D']/((geom['D']-2*geom['t'])*alpha_i)\
 	+geom['D']/(2*lam)*math.log(geom['D']/(geom['D']-2*geom['t']))\
 	+1/alpha_a)**(-1) # [W/m^2/K] calculation of U
-
+	R_w = geom['D']/(2*lam)*math.log(geom['D']/(geom['D']-2*geom['t']))
 
 	LMTD = ((Th_out-Tc_out)-(Th_in-Tc_in))/\
 	(math.log((Th_out-Tc_out)/(Th_in-Tc_in))) # [K] calculation of LMTD
@@ -56,9 +56,11 @@ def EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 	#print('alpha_i : %.3f, alpha_a : %.3f, U : %.3f' %(alpha_i, alpha_a, U))
 	output={}
 	output['alpha_a']=alpha_a
-	#output['alpha_i']=alpha_i
+	output['alpha_i']=alpha_i
 	output['balance']=U*A*LMTD-mdot_h*cp_hi*(Th_in-Th_out)
 	# add here other information to send to solvecell
+	output['U']=U
+	output['R_w']=R_w
 
 
 	return output # [W]-[W]
