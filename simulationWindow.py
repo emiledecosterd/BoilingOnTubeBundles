@@ -304,15 +304,15 @@ class SimulationWindow(Ui_MainWindow):
 				TcEnd = float(self.TcEndLineEdit.text())
 				ThEnd = float(self.ThEndLineEdit.text())
 				PhEnd = float(self.PhEndLineEdit.text())
-				if TcEnd > TcStart:
+				if TcEnd > TcStart and self.TcEndLineEdit.isEnabled():
 					values = linspace(TcStart, TcEnd, val)
 					Tc = values.tolist()
 					flowInputs['param'] = 'Tc'
-				elif ThEnd > ThStart:
+				elif ThEnd > ThStart and self.ThEndLineEdit.isEnabled():
 					values = linspace(ThStart, ThEnd, val)
 					Th = values.tolist()
 					flowInputs['param'] = 'Th'
-				elif PhEnd > PhStart:
+				elif PhEnd > PhStart and self.PhEndLineEdit.isEnabled():
 					values = linspace(PhStart, PhEnd, val)
 					Ph = values.tolist()
 					flowInputs['param'] = 'Ph'
