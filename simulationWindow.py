@@ -160,7 +160,7 @@ class SimulationWindow(Ui_MainWindow):
 		self.console.setReadOnly(False)
 
 		# Validators
-		validator = QtGui.QDoubleValidator(0,1e9,2)
+		validator = QtGui.QDoubleValidator(0,1e9,4)
 		validator.setLocale(QtCore.QLocale('Suisse'))
 		self.mfr_hLineEdit.setValidator(validator)
 		self.mfr_cLineEdit.setValidator(validator)
@@ -186,6 +186,7 @@ class SimulationWindow(Ui_MainWindow):
 	##	Bridge between the signals from the fields and the maincontroller
 	def inputsChanged(self):
 		print('Input changed')
+		print(self.readConfiguration())
 		self.changesOccured.emit()
 
 	##	Called whenever the user chooses another field to display
@@ -292,14 +293,15 @@ class SimulationWindow(Ui_MainWindow):
 			flowInputs['xc_in'] = float(self.xcLineEdit.text())
 
 			# Calculate the lists
-			Tc = []
-			Th = []
-			Ph = []
+			TcStart = float(self.TcStartLineEdit.text())
+			ThStart = float(self.ThStartLineEdit.text())
+			PhStart = float(self.PhStartLineEdit.text())
+			Tc = [TcStart]
+			Th = [ThStart]
+			Ph = [PhStart]
 			if self.paramCheckBox.isChecked():
 				val = self.paraSpinBox.value()
-				TcStart = float(self.TcStartLineEdit.text())
 				TcEnd = float(self.TcEndLineEdit.text())
-				ThStart = float(self.ThStartLineEdit.text())
 				ThEnd = float(self.ThEndLineEdit.text())
 				PhStart = float(self.PhStartLineEdit.text())
 				PhEnd = float(self.PhEndLineEdit.text())
@@ -333,6 +335,8 @@ class SimulationWindow(Ui_MainWindow):
 	##	Print the given text to the console in the GUI
 	#	@param 	text 	The text to print
 	def printToConsole(self, text):
+		if text != '\n':
+			text = '>>> ' + text
 		cursor = self.console.textCursor()
 		cursor.movePosition(QtGui.QTextCursor.End)
 		cursor.insertText(text)

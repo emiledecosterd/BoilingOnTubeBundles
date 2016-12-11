@@ -6,6 +6,9 @@
 #	Generic error that can be used from everywhere throughout the code
 class Error(Exception):
 
+	functionName = ''
+	message = ''
+	
 	##	The constructor
 	#	@param	functionName	The name of the function in which the error occured
 	#	@param	message			The error message to give more details about the error			
