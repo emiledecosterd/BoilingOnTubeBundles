@@ -133,6 +133,15 @@ class Simulation(QObject):
 
                     [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
 
+                except Error as e:
+                    if e.functionName == 'Error in LMTD (energyBalance)':
+                        configuration['geom']['n'] =  2*configuration['geom']['n']
+                        print('Space discretization too coarse, restarting simulation with ', configuration['geom']['n'], 'cells')
+                        self.startSimulation(configuration)
+                    else:
+                        print('error fct name', e.functionName)
+                        raise Error('Solvecell','Error in Solvecell')
+
                 except Exception as e:
                     raise Error('Solvecell', e)
 

@@ -21,31 +21,31 @@ flowInputs = {}
 
 # Operating Conditions
 opCond['FluidType'] = 'R134a'
-opCond['mfr_c'] = 15
+opCond['mfr_c'] = 5
 # opCond['mdot_h'] = 103.0 # Need to guess it
 opCond['TubeMat'] = 'copper'
 opCond['TubeThermalConductivity']= 400
 
 # Geometrical Inputs
-geom['Nt'] = 5
+geom['Nt'] = 10
 geom['Nt_col'] = 5
-geom['L'] = 3.0
-geom['n'] = 2
+geom['L'] = 5
+geom['n'] = 3
 geom['s'] = 70e-3
 geom['sh'] = 70e-3
 geom['D'] = 50e-3
 geom['e_i'] =3e-6
 geom['e_o'] = 3e-6
 geom['t'] = 5e-3
-geom['corr'] = 'Mostinki'
+geom['corr'] = 'Cooper'
 geom['corrPD'] = 'Gaddis'
-geom['layout'] = 'Staggered'
+geom['layout'] = 'InLine'
 geom['N'] = geom['Nt']*geom['Nt_col']
 
 
 # Flow Inputs
-flowInputs['Tc_in'] = 0 + 273.15
-flowInputs['Th_in'] = 25+ 273.15
+flowInputs['Tc_in'] = 15 + 273.15
+flowInputs['Th_in'] = 15+ 273.15
 flowInputs['Ph_in'] = 1e5
 flowInputs['xc_in'] = 0.05
 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
@@ -94,4 +94,10 @@ eps[:,0] = -1
 configuration = {'opCond': opCond, 'geom': geom, 'flowInputs':flowInputs}
 
 simu = Simulation()
-simu.startSimulation(configuration)
+
+try:
+    simu.startSimulation(configuration)
+
+except Exception as e:
+
+    print('\n An unexpected error has occured, check inputs \n \n \n \n \n or just stop messing with our code Jackson')
