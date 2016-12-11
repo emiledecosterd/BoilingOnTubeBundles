@@ -93,6 +93,8 @@ class PipePlotter(QtCore.QObject):
 #	Subclass of PipePlotter for the longitudinal view scheme
 class LongPipePlotter(PipePlotter):
 
+	cells = None
+
 	def __init__(self, view):
 		super(LongPipePlotter, self).__init__(view)
 		
@@ -102,7 +104,7 @@ class LongPipePlotter(PipePlotter):
 	#	@param geom The geometrical inputs taken from the GUI
 	#	@param results Thermodynamics fields value send when the calculation is finished. Equal to 
 	#	None otherwise.
-	def drawScheme(self, geom, results):
+	def drawScheme(self, geom, result):
 		# Save the geom inputs
 		self.geom = geom
 
@@ -116,13 +118,10 @@ class LongPipePlotter(PipePlotter):
 		self.coordinates = self.drawCells(geom['Nt'], geom['n'])
 
 		# Fill the cells
-		if results is not None:
-
+		if result is not None:
 			try:
-				print('TEST')
-				self.fillCells(self.coordinates, results[geom['chosenResult']])
+				self.fillCells(self.coordinates, result)
 			except Exception as e:
-				print('Error filling cells')
 				raise Error('LongPipePlotter.fillCells', e)
 
 	##	drawCells()
@@ -218,14 +217,12 @@ class LongPipePlotter(PipePlotter):
 	#	@param coordinates The coordinates of the pipes on the plot
 	#	@param field The thermodynamical field chosen by the user in the GUI
 	def fillCells(self, coordinates, field):
-		print('TESTSTART')
 		if self.cells is not None:
 			for i in range(1, len(self.cells)):
 				self.scene.removeItem(self.cells[i])
 			del self.cells[:]
 		else:
 			self.cells = []
-		print('TESTEND')
 
 		coordinates_x = coordinates[0]
 		coordinates_y = coordinates[1]
@@ -255,9 +252,9 @@ class LongPipePlotter(PipePlotter):
 				# Get right color
 				''' /!\ To be corrected !!! '''
 				val = (field[j,i]-minVal)/(maxVal-minVal)/5 + 0.7
-				color = QColor()
+				color = QtGui.QColor()
 				color.setHsvF(val, 0.5,0.5,0.5)
-				brush = QBrush(color, QtCore.Qt.Dense2Pattern)
+				brush = QtGui.QBrush(color, QtCore.Qt.Dense2Pattern)
 
 				# Draw the rectangle
 				cell = self.scene.addRect(rect, self.fillPen, brush)
