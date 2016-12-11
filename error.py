@@ -8,11 +8,14 @@ class Error(Exception):
 
 	functionName = ''
 	message = ''
-	
+
 	##	The constructor
 	#	@param	functionName	The name of the function in which the error occured
 	#	@param	message			The error message to give more details about the error			
 	def __init__(self, functionName, message):
 		self.functionName = functionName
 		self.message = message;
+
+	def __str__(self):
+		return 'ERROR: in %s. >>> MSG: %s' %(self.functionName, self.message)
 

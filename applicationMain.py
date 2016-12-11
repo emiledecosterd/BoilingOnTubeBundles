@@ -25,6 +25,9 @@ class MainController(QtCore.QObject):
 	results = None
 	running = False
 
+	# Signals
+	runSimulationRequested = QtCore.pyqtSignal(dict)
+
 	##	The constructor
 	#	@param app The application created in '__main__'
 	def __init__(self, app):
@@ -51,7 +54,7 @@ class MainController(QtCore.QObject):
 		self.mainWindow.chosenResultChanged.connect(self.updatePlots)
 		self.mainWindow.graphicsView.clicked.connect(self.togglePlotter)
 		self.mainWindow.showPlotsButton.clicked.connect(self.showPlots)
-		self.mainWindow.runButton.clicked.connect(self.runSimulation)
+		self.mainWindow.runButton.clicked.connect(self.startSimulation)
 		window.resized.connect(self.updatePlots)
 
 		# Show the window
@@ -63,20 +66,61 @@ class MainController(QtCore.QObject):
 		sys.exit(app.exec_())
 
 
-	##	runSimulation()
-	#	Stores the fact that a simulation is running and changes the ui accordingly
+	##	startSimulation()
+	#	Lauches the simulation after some verifications
 	#	@param 	None
-	def runSimulation(self):
+	def startSimulation(self):
 		if self.running:
 			print('INFO: Stopping simulation')
 			self.running = False
 			self.mainWindow.progressBar.setProperty('visible', False)
 			self.mainWindow.runButton.setText('Run')
 		else:
+			# Load the current inputs in the GUI
+			self.currentSimulationConfiguration = self.mainWindow.readConfiguration()
+			try:
+				# Store the number of simulations to do
+				if self.currentSimulationConfiguration['flowInputs']['param'] is not None:
+					Tc = len(self.currentSimulationConfiguration['flowInputs']['Tc'])
+					Th = len(self.currentSimulationConfiguration['flowInputs']['Th'])
+					Ph = len(self.currentSimulationConfiguration['flowInputs']['Ph'])
+					self.currentSimulationConfiguration['flowInputs']['Nparam'] = max(Tc, Th, Ph)
+				else:
+					self.currentSimulationConfiguration['flowInputs']['Nparam'] = 1
+			except Exception as e:
+				error = Error('mainController.startSimulation', e)
+				print(error)
+				self.running = False
+				self.mainWindow.progressBar.setProperty('visible', False)
+				self.mainWindow.runButton.setText('Run')
+				return
+
+			# Let the simulation begin!
 			self.running = True
+			print(self.currentSimulationConfiguration)
 			print('INFO: Starting simulation')
 			self.mainWindow.progressBar.setProperty('visible', True)
 			self.mainWindow.runButton.setText('Stop')
+			self.runSimulationRequested.emit(self.currentSimulationConfiguration)
+		
+
+	##	updateProgress()
+	#	Updates the progress bar in the GUI
+	#	@param 	progress 	The progress in range [0-1]
+	def updateProgress(self, progress):
+		try:
+			N = self.currentSimulationConfiguration['flowInputs']['Nparam']
+		except Exception as e:
+			error = Error('mainController.updateProgress', e)
+			print('ERROR: %s' % e)
+
+		fraction = 100/N
+		Tc = len(self.currentSimulationConfiguration['flowInputs']['Tc'])
+		Th = len(self.currentSimulationConfiguration['flowInputs']['Th'])
+		Ph = len(self.currentSimulationConfiguration['flowInputs']['Ph'])
+		n = max(Tc, Th, Ph)
+		progress = (N-n)*fraction + progress
+		self.mainWindow.progressBar.setProperty('value', progress)
 
 
 	##	updatePlots()
