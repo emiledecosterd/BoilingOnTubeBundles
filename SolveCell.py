@@ -52,56 +52,60 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 
 		Q_rest = 0.0
 
-		if 1:
 
-			'''
-			#### 1) Water Temperature calculation ####
-			The output water temperature (Th_out) is calculated using the newton method.
-			The stopping criterion is based on the error between Th_out and the previous
-			iteration.
-			'''
 
-			# Newton method used to solve Th_out
-			ktmax = 1000
-			tol = 1e-6
+		'''
+		#### 1) Water Temperature calculation ####
+		The output water temperature (Th_out) is calculated using the newton method.
+		The stopping criterion is based on the error between Th_out and the previous
+		iteration.
+		'''
 
-			errest = 10
-			h=0.01
-			kt = 0
+		# Newton method used to solve Th_out
+		ktmax = 1000
+		tol = 1e-6
 
-			# Initial guess on the temperature
-			prevTh_out = Th_in*0.99
+		errest = 10
+		h=0.01
+		kt = 0
 
-			try:
+		# Initial guess on the temperature
+		prevTh_out = Th_in*0.99
 
-				while (errest > tol and kt < ktmax):
 
-					#print(prevTh_out)
-					#print(EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out))
-					#print(deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h))
 
-					Th_out = prevTh_out - EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out)['balance']\
-						/deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h)
+		while (errest > tol and kt < ktmax):
 
-					errest = abs(Th_out - prevTh_out)
-					prevTh_out = Th_out
-					kt = kt + 1
+			#print(prevTh_out)
+			#print(EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out))
+			#print(deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h))
 
-				if (kt == ktmax):
-					print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
-					print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
-				else:
-					print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
+			Th_out = prevTh_out - EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out)['balance']\
+				/deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h)
 
-			except Exception as e:
-				raise Error('Newton',e)
+			errest = abs(Th_out - prevTh_out)
+			prevTh_out = Th_out
+			kt = kt + 1
+
+		if (kt == ktmax):
+			print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
+			print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
+		else:
+			print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
+
+
 
 		'''
 		#### 2) Vapor Quality calculation ####
 		'''
 
-		[xc_out, hc_in, hc_out, Q_rest] = cell_vaporQuality(opCond, geom, Th_in, Th_out, Tc_in, xc_in )
-		print('Working fluid vapor quality value (xc_out): %.5f. \n' %(xc_out))
+		try:
+
+			[xc_out, hc_in, hc_out, Q_rest] = cell_vaporQuality(opCond, geom, Th_in, Th_out, Tc_in, xc_in )
+			print('Working fluid vapor quality value (xc_out): %.5f. \n' %(xc_out))
+
+		except Exception as e:
+			raise Error('cell_vaporQuality', e + 'Error in Vapor quaity calculation')
 
 		if Q_rest>0:
 			Th_out = Th_out + 1e3*Q_rest/(opCond['mdot_h']*1/4*math.pi*(geom['D']-2*geom['t'])**2*PropsSI('C','T',Th_out,'Q',0.0,'Water'))
@@ -110,19 +114,32 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 		#### 3) Void Fraction calculation ####
 		'''
 
-		eps_out = cell_voidFraction(opCond, geom, xc_out, Tc_out, eps_in )
+		try:
+
+			eps_out = cell_voidFraction(opCond, geom, xc_out, Tc_out, eps_in )
+
+		except Exception as e:
+			raise Error('cell_voidFraction',e+'Error in void fraction calculation')
+
 		print('Working fluid void fraction value (eps_out): %.3f. \n' %(eps_out))
 
 		'''
 		#### 4) Pressure drop calculation inside the cell ####
 		'''
-		[Ph_out, Pc_out] = cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_out, xc_out)
+		try:
+			[Ph_out, Pc_out] = cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_out, xc_out)
+		except Exception as e:
+			raise Error('cell_pressureDrop',e+'Error in Pressure drop calculation')
+
 		print('Working fluid pressure value at output (Pc_out): %.3f. \n' %(Pc_out))
 
 		'''
 		#### 5) Compute working fluid temperature using the pressure drop calculated ####
 		'''
-		Tc_out = PropsSI('T','P',Pc_out,'Q',xc_out,opCond['FluidType'])
+		try:
+			Tc_out = PropsSI('T','P',Pc_out,'Q',xc_out,opCond['FluidType'])
+		except Exception as e:
+			raise Error('Coolprop', e+'Error in update of Tc_out')
 		print('Tc_out: %.5f \n' %Tc_out)
 
 
