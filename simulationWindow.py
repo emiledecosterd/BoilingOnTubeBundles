@@ -53,7 +53,7 @@ class SimulationWindow(Ui_MainWindow):
 	def setupLists(self):
 		self.workingFluids = ['R134a', 'Propane', 'Ammonia']
 		self.tubeMaterials = ['copper', 'aluminium', 'steel', 'other']
-		self.layouts = ['Staggered', 'Inline']
+		self.layouts = ['Inline','Staggered']
 		self.correlationsHTC = ['Mostinski', 'Cooper', 'Gorenflo']
 		self.correlationsPD = ['Gaddis', 'Zukauskas']
 		self.results = ['Th', 'Ph', 'Tc', 'Pc', 'xc', 'eps']
@@ -303,7 +303,6 @@ class SimulationWindow(Ui_MainWindow):
 				val = self.paraSpinBox.value()
 				TcEnd = float(self.TcEndLineEdit.text())
 				ThEnd = float(self.ThEndLineEdit.text())
-				PhStart = float(self.PhStartLineEdit.text())
 				PhEnd = float(self.PhEndLineEdit.text())
 				if TcEnd > TcStart:
 					values = linspace(TcStart, TcEnd, val)
