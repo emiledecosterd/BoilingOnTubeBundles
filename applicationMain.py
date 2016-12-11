@@ -23,6 +23,7 @@ class MainController(QtCore.QObject):
 	isLongPlotter = True
 	currentSimulationConfiguration = None
 	results = None
+	running = False
 
 	##	The constructor
 	#	@param app The application created in '__main__'
@@ -50,6 +51,7 @@ class MainController(QtCore.QObject):
 		self.mainWindow.chosenResultChanged.connect(self.updatePlots)
 		self.mainWindow.graphicsView.clicked.connect(self.togglePlotter)
 		self.mainWindow.showPlotsButton.clicked.connect(self.showPlots)
+		self.mainWindow.runButton.clicked.connect(self.runSimulation)
 		window.resized.connect(self.updatePlots)
 
 		# Show the window
@@ -59,6 +61,22 @@ class MainController(QtCore.QObject):
 		# For more details: 
 		# http://stackoverflow.com/questions/25075954/using-sys-exit-with-app-exec-in-pyqt
 		sys.exit(app.exec_())
+
+
+	##	runSimulation()
+	#	Stores the fact that a simulation is running and changes the ui accordingly
+	#	@param 	None
+	def runSimulation(self):
+		if self.running:
+			print('INFO: Stopping simulation')
+			self.running = False
+			self.mainWindow.progressBar.setProperty('visible', False)
+			self.mainWindow.runButton.setText('Run')
+		else:
+			self.running = True
+			print('INFO: Starting simulation')
+			self.mainWindow.progressBar.setProperty('visible', True)
+			self.mainWindow.runButton.setText('Stop')
 
 
 	##	updatePlots()
@@ -74,7 +92,7 @@ class MainController(QtCore.QObject):
 				self.transvPlotter.drawScheme(configuration['geom'])
 
 		except Exception as e:
-			print('Error plotting the tube bundles. \nCheck your parameters (perhaps you put something to 0)')
+			print('ERROR: Error plotting the tube bundles. \nCheck your parameters (perhaps you put something to 0)')
 
 
 	##	showPlots()

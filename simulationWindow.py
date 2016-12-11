@@ -150,8 +150,9 @@ class SimulationWindow(Ui_MainWindow):
 		self.ThCheckBox.stateChanged.connect(self.checkParam)
 		self.PhCheckBox.stateChanged.connect(self.checkParam)
 
-		# Other buttons
-
+		# Other setup
+		self.progressBar.setProperty('value', 0)
+		self.progressBar.setProperty('visible', False)
 
 
 	##	setupRules()
@@ -181,7 +182,6 @@ class SimulationWindow(Ui_MainWindow):
 		self.ThEndLineEdit.setValidator(validator)
 		self.PhStartLineEdit.setValidator(validator)
 		self.PhEndLineEdit.setValidator(validator)
-
 
 
 	##	Bridge between the signals from the fields and the maincontroller
