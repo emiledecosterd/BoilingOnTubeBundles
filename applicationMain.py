@@ -3,6 +3,7 @@
 #	The link between GUI, Simulation and PostProcessing
 
 import sys
+from copy import copy
 
 # PyQt classes
 from PyQt5 import QtGui, QtCore, QtWidgets
@@ -24,9 +25,11 @@ class MainController(QtCore.QObject):
 	currentSimulationConfiguration = None
 	results = None
 	running = False
+	simulationThread = None
 
 	# Signals
 	runSimulationRequested = QtCore.pyqtSignal(dict)
+
 
 	##	The constructor
 	#	@param app The application created in '__main__'
@@ -47,6 +50,17 @@ class MainController(QtCore.QObject):
 		self.console = Console()
 		sys.stdout = self.console
 
+		# Create the simulation and its thread
+		simulation = Simulation()
+		self.simulationThread = QtCore.QThread()
+		simulation.moveToThread(self.simulationThread)
+		self.simulationThread.finished.connect(simulation.deleteLater)
+		simulation.progressUpdated.connect(self.updateProgress)
+		simulation.simulationCompleted.connect(self.handleResults)
+		simulation.errorOccured.connect(self.handleError)
+		self.runSimulationRequested.connect(simulation.run)
+		self.simulationThread.start()
+
 		# Create the connexions
 		self.console.printOccured.connect(self.mainWindow.printToConsole)
 		self.mainWindow.changesOccured.connect(self.resetResults)
@@ -65,6 +79,12 @@ class MainController(QtCore.QObject):
 		# http://stackoverflow.com/questions/25075954/using-sys-exit-with-app-exec-in-pyqt
 		sys.exit(app.exec_())
 
+	##	The destructor
+	def __del__(self):
+		print('INFO: Quitting... Wait for thread to finish')
+		self.simulationThread.quit()
+		self.simulationThread.wait()
+
 
 	##	startSimulation()
 	#	Lauches the simulation after some verifications
@@ -78,13 +98,12 @@ class MainController(QtCore.QObject):
 		else:
 			# Load the current inputs in the GUI
 			self.currentSimulationConfiguration = self.mainWindow.readConfiguration()
+			flowInputs = copy(self.currentSimulationConfiguration['flowInputs'])
 			try:
 				# Store the number of simulations to do
-				if self.currentSimulationConfiguration['flowInputs']['param'] is not None:
-					Tc = len(self.currentSimulationConfiguration['flowInputs']['Tc'])
-					Th = len(self.currentSimulationConfiguration['flowInputs']['Th'])
-					Ph = len(self.currentSimulationConfiguration['flowInputs']['Ph'])
-					self.currentSimulationConfiguration['flowInputs']['Nparam'] = max(Tc, Th, Ph)
+				if flowInputs['param'] is not None:
+					n = len(flowInputs[flowInputs['param']])
+					self.currentSimulationConfiguration['flowInputs']['Nparam'] = n
 				else:
 					self.currentSimulationConfiguration['flowInputs']['Nparam'] = 1
 			except Exception as e:
@@ -95,14 +114,42 @@ class MainController(QtCore.QObject):
 				self.mainWindow.runButton.setText('Run')
 				return
 
+			# Change arrays to floats for the simulation. 
+			# Take the last element of array so we can pop it at the end of the simulation.
+			flowInputs['Tc_in'] = flowInputs['Tc'][-1]
+			flowInputs['Th_in'] = flowInputs['Th'][-1]
+			flowInputs['Ph_in'] = flowInputs['Ph'][-1]
+
+			# Replace them in the configuration that will be sent to the solver.
+			# Copy so that self.currentSimulationConfiguration does not change
+			simulationConfiguration = copy(self.currentSimulationConfiguration)
+			simulationConfiguration['flowInputs'] = flowInputs
+
 			# Let the simulation begin!
 			self.running = True
-			print(self.currentSimulationConfiguration)
+			#print(self.currentSimulationConfiguration)
+			#print(simulationConfiguration)
 			print('INFO: Starting simulation')
 			self.mainWindow.progressBar.setProperty('visible', True)
 			self.mainWindow.runButton.setText('Stop')
-			self.runSimulationRequested.emit(self.currentSimulationConfiguration)
+			self.runSimulationRequested.emit(simulationConfiguration)
 		
+
+	##	checkParam()
+	#	Checks if a new simulation has to be launched based on the parametrization
+	#	@return 	A boolean determining if yes or no a new simulation has to be started
+	def checkParam(self):
+
+		if self.currentSimulationConfiguration['param'] is None:
+			return False
+		else:
+			flowInputs = self.currentSimulationConfiguration['flowInputs']
+			n = len(flowInputs[flowInputs['param']])
+			if n >= 1:
+				return True
+			else:
+				return False
+
 
 	##	updateProgress()
 	#	Updates the progress bar in the GUI
@@ -115,12 +162,42 @@ class MainController(QtCore.QObject):
 			print('ERROR: %s' % e)
 
 		fraction = 100/N
-		Tc = len(self.currentSimulationConfiguration['flowInputs']['Tc'])
-		Th = len(self.currentSimulationConfiguration['flowInputs']['Th'])
-		Ph = len(self.currentSimulationConfiguration['flowInputs']['Ph'])
-		n = max(Tc, Th, Ph)
+		if self.currentSimulationConfiguration['flowInputs']['param'] is not None:
+			n = len(self.currentSimulationConfiguration['flowInputs']
+				[self.currentSimulationConfiguration['param']])
+		else:
+			n = 1
 		progress = (N-n)*fraction + progress
 		self.mainWindow.progressBar.setProperty('value', progress)
+
+
+	def handleResults(self, results):
+		# Post process, no GUI
+		self.results = results
+
+		# Plot the result
+		self.isLongPlotter = True
+		self.mainWindow.setupInputs(self.currentSimulationConfiguration)
+		self.updatePlots()
+
+		# Update the parameters (remove the parameter for the just finished
+		# simulation) and check if a new simulation should be launched
+		param = self.currentSimulationConfiguration['flowInputs']['param']
+		if param is not None:
+			self.currentSimulationConfiguration['flowInputs'][self.currentSimulationConfiguration[param]].pop()
+		if self.checkParam:
+			self.runSimulationRequested.emit(self.currentSimulationConfiguration)
+		else:
+			print('INFO: Simulation finished!')
+			self.showPlots()
+
+
+	def handleError(self, error):
+		print(error)
+		print('INFO: Stopping simulation')
+		self.running = False
+		self.mainWindow.progressBar.setProperty('visible', False)
+		self.mainWindow.runButton.setText('Run')
 
 
 	##	updatePlots()
