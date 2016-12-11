@@ -140,6 +140,7 @@ class SimulationWindow(Ui_MainWindow):
 		self.shLineEdit.editingFinished.connect(self.inputsChanged)
 		self.layoutComboBox.currentIndexChanged.connect(self.inputsChanged)
 		self.nSpinBox.valueChanged.connect(self.inputsChanged)
+		self.chosenResultComboBox.currentIndexChanged.connect(self.sendChosenResult)
 
 		# Everything that need verification
 		self.tubeMatComboBox.currentIndexChanged.connect(self.checkTubeMaterial)
@@ -149,8 +150,8 @@ class SimulationWindow(Ui_MainWindow):
 		self.ThCheckBox.stateChanged.connect(self.checkParam)
 		self.PhCheckBox.stateChanged.connect(self.checkParam)
 
-		# For the plots
-		self.chosenResultComboBox.currentIndexChanged.connect(self.sendChosenResult)
+		# Other buttons
+
 
 
 	##	setupRules()

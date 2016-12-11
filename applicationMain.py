@@ -49,6 +49,7 @@ class MainController(QtCore.QObject):
 		self.mainWindow.changesOccured.connect(self.updatePlots)
 		self.mainWindow.chosenResultChanged.connect(self.updatePlots)
 		self.mainWindow.graphicsView.clicked.connect(self.togglePlotter)
+		self.mainWindow.showPlotsButton.clicked.connect(self.showPlots)
 		window.resized.connect(self.updatePlots)
 
 		# Show the window
@@ -74,6 +75,14 @@ class MainController(QtCore.QObject):
 
 		except Exception as e:
 			print('Error plotting the tube bundles. \nCheck your parameters (perhaps you put something to 0)')
+
+
+	##	showPlots()
+	#	Shows the resultsDialog to browse through all the plots
+	#	@param 	None
+	def showPlots(self):
+
+		print('INFO: No plots available. Run a simulation to have some')
 
 
 	##	togglePlotter()
