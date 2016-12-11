@@ -65,11 +65,15 @@ class MainController(QtCore.QObject):
 	#	@param	None
 	def updatePlots(self):
 
-		configuration = self.mainWindow.readConfiguration()
-		if self.isLongPlotter:
-			self.longPlotter.drawScheme(configuration['geom'], self.results)
-		else:
-			self.transvPlotter.drawScheme(configuration['geom'])
+		try:
+			configuration = self.mainWindow.readConfiguration()
+			if self.isLongPlotter:
+				self.longPlotter.drawScheme(configuration['geom'], self.results)
+			else:
+				self.transvPlotter.drawScheme(configuration['geom'])
+
+		except Exception as e:
+			print('Error plotting the tube bundles. \nCheck your parameters (perhaps you put something to 0)')
 
 
 	##	togglePlotter()

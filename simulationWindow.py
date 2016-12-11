@@ -186,6 +186,9 @@ class SimulationWindow(Ui_MainWindow):
 	##	Bridge between the signals from the fields and the maincontroller
 	def inputsChanged(self):
 		print('Input changed')
+		color = '#ffffff' # White
+		self.NtSpinBox.setStyleSheet('QSpinBox { background-color: %s }' % color)
+		self.Nt_colSpinBox.setStyleSheet('QSpinBox { background-color: %s}' % color)
 		print(self.readConfiguration())
 		self.changesOccured.emit()
 
@@ -285,8 +288,16 @@ class SimulationWindow(Ui_MainWindow):
 			geom['N'] = geom['Nt']*geom['Nt_col']
 
 			# Calculate mdotdot
-			opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
-			opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+			try:
+				opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
+				opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+			except Exception as e:
+				color = '#f6989d' # red
+				if geom['Nt'] == 0:
+					self.NtSpinBox.setStyleSheet('QSpinBox { background-color: %s }' % color)
+				elif geom['Nt_col'] == 0:
+					self.Nt_colSpinBox.setStyleSheet('QSpinBox { background-color: %s}' % color)
+				print('ERROR: division by zero! Number of tubes must be > 0!')
 
 			# Flow inputs
 			flowInputs = {}
