@@ -36,7 +36,12 @@ class Simulation(QObject):
 
 		# Compute missing parameters
 		geom['N'] = geom['Nt']*geom['Nt_col']
-		Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
+
+		try:
+			Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
+		except Exception as e:
+			self.errorOccured.emit(Error('Simulation.run', e))
+			return
 
 		# Initialisation
 		np.set_printoptions(precision=2)
@@ -90,6 +95,7 @@ class Simulation(QObject):
 					Qtot += Q
 				except Error as e:
 					self.errorOccured.emit(e)
+					return
 
 					np.set_printoptions(precision=3)
 				#print(xc)
@@ -136,8 +142,8 @@ def defaultConfiguration():
 	geom = {
 		'Ds' : 0.5,
 		'D' : 15e-3,
-		'Nt' : 5,
-		'Nt_col' : 5,
+		'Nt' : 3,
+		'Nt_col' : 2,
 		'L' : 3.0,
 		's' : 70e-3,
 		'sh' : 70e-3,
@@ -145,14 +151,14 @@ def defaultConfiguration():
 		'layout' : 'Staggered',
 		'e_i' : 3e-6,
 		'e_o' : 3e-6,
-		'n' : 10,
+		'n' : 8,
 		'corr' : 'Mostinski',
 		'corrPD' : 'Gaddis',
 		'chosenResult' : 'xc'
 	}
 	flowInputs = {
 		'Tc' : [273.15],
-		'Th' : [273.15],
+		'Th' : [293.15],
 		'Ph' : [1e5],
 		'xc_in' : 0.13,
 		'param' : None

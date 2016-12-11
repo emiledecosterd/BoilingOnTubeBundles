@@ -14,6 +14,8 @@ from simulationWindow import SimulationWindow, QResizableMainWindow
 from simulation import Simulation
 from error import Error
 
+import pdb
+
 ##	MainController
 #
 #	Manages all the programm.
@@ -59,7 +61,6 @@ class MainController(QtCore.QObject):
 		simulation.simulationCompleted.connect(self.handleResults)
 		simulation.errorOccured.connect(self.handleError)
 		self.runSimulationRequested.connect(simulation.run)
-		self.simulationThread.start()
 
 		# Create the connexions
 		self.console.printOccured.connect(self.mainWindow.printToConsole)
@@ -127,11 +128,12 @@ class MainController(QtCore.QObject):
 
 			# Let the simulation begin!
 			self.running = True
-			#print(self.currentSimulationConfiguration)
-			#print(simulationConfiguration)
+			print(self.currentSimulationConfiguration)
+			print(simulationConfiguration)
 			print('INFO: Starting simulation')
 			self.mainWindow.progressBar.setProperty('visible', True)
 			self.mainWindow.runButton.setText('Stop')
+			self.simulationThread.start()
 			self.runSimulationRequested.emit(simulationConfiguration)
 		
 
@@ -140,7 +142,8 @@ class MainController(QtCore.QObject):
 	#	@return 	A boolean determining if yes or no a new simulation has to be started
 	def checkParam(self):
 
-		if self.currentSimulationConfiguration['param'] is None:
+		print(self.currentSimulationConfiguration)
+		if self.currentSimulationConfiguration['flowInputs']['param'] is None:
 			return False
 		else:
 			flowInputs = self.currentSimulationConfiguration['flowInputs']
@@ -164,14 +167,15 @@ class MainController(QtCore.QObject):
 		fraction = 100/N
 		if self.currentSimulationConfiguration['flowInputs']['param'] is not None:
 			n = len(self.currentSimulationConfiguration['flowInputs']
-				[self.currentSimulationConfiguration['param']])
+				[self.currentSimulationConfiguration['flowInputs']['param']])
 		else:
 			n = 1
-		progress = (N-n)*fraction + progress
+		progress = 100*((N-n)*fraction + progress/N)
 		self.mainWindow.progressBar.setProperty('value', progress)
 
 
 	def handleResults(self, results):
+
 		# Post process, no GUI
 		self.results = results
 
@@ -183,13 +187,20 @@ class MainController(QtCore.QObject):
 		# Update the parameters (remove the parameter for the just finished
 		# simulation) and check if a new simulation should be launched
 		param = self.currentSimulationConfiguration['flowInputs']['param']
+		flowInputs = self.currentSimulationConfiguration['flowInputs']
 		if param is not None:
-			self.currentSimulationConfiguration['flowInputs'][self.currentSimulationConfiguration[param]].pop()
-		if self.checkParam:
+			flowInputs[flowInputs['param']].pop()
+		if self.checkParam():
 			self.runSimulationRequested.emit(self.currentSimulationConfiguration)
+			flowInputs['Tc_in'] = flowInputs['Tc'][-1]
+			flowInputs['Th_in'] = flowInputs['Th'][-1]
+			flowInputs['Ph_in'] = flowInputs['Ph'][-1]
 		else:
 			print('INFO: Simulation finished!')
 			self.showPlots()
+			self.running = False
+			self.mainWindow.progressBar.setProperty('visible', False)
+			self.mainWindow.runButton.setText('Run')
 
 
 	def handleError(self, error):
@@ -207,11 +218,16 @@ class MainController(QtCore.QObject):
 
 		try:
 			configuration = self.mainWindow.readConfiguration()
+			result = None
+			if self.results:
+				result = self.results[configuration['geom']['chosenResult']]
+				print(result)
 			if self.isLongPlotter:
-				self.longPlotter.drawScheme(configuration['geom'], self.results)
+				self.longPlotter.drawScheme(configuration['geom'], result)
 			else:
 				self.transvPlotter.drawScheme(configuration['geom'])
-
+		except Error as er:
+			print(er)
 		except Exception as e:
 			print('ERROR: Error plotting the tube bundles. \nCheck your parameters (perhaps you put something to 0)')
 

@@ -11,6 +11,8 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 
+from error import Error
+
 ##	PipePlotter
 #	General class used to plot on the GUI GraphicsView
 class PipePlotter(QtCore.QObject):
@@ -114,9 +116,14 @@ class LongPipePlotter(PipePlotter):
 		self.coordinates = self.drawCells(geom['Nt'], geom['n'])
 
 		# Fill the cells
-		if results:
-			self.fillCells(self, coordinates, results[geom['chosenResult']])
+		if results is not None:
 
+			try:
+				print('TEST')
+				self.fillCells(self.coordinates, results[geom['chosenResult']])
+			except Exception as e:
+				print('Error filling cells')
+				raise Error('LongPipePlotter.fillCells', e)
 
 	##	drawCells()
 	#	Draw the cells discretized and save the coordinates
@@ -211,13 +218,14 @@ class LongPipePlotter(PipePlotter):
 	#	@param coordinates The coordinates of the pipes on the plot
 	#	@param field The thermodynamical field chosen by the user in the GUI
 	def fillCells(self, coordinates, field):
-
+		print('TESTSTART')
 		if self.cells is not None:
 			for i in range(1, len(self.cells)):
 				self.scene.removeItem(self.cells[i])
 			del self.cells[:]
 		else:
 			self.cells = []
+		print('TESTEND')
 
 		coordinates_x = coordinates[0]
 		coordinates_y = coordinates[1]

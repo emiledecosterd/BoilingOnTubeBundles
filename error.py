@@ -16,6 +16,7 @@ class Error(Exception):
 		self.functionName = functionName
 		self.message = message;
 
+	##	Formatting in order to print the error nicely
 	def __str__(self):
 		return 'ERROR: in %s. >>> MSG: %s' %(self.functionName, self.message)
 
