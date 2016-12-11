@@ -174,6 +174,7 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	q = Q/(math.pi*geom['D']*geom['dx'])
 	if q > q_dnb(opCond, geom, Tc_out):
 		print('WARNING : departure from nucleate boiling reached (q : %.3f, q_dnb : %.3f)' %(q,q_dnb(opCond, geom, Tc_out)))
+		raise Error('q_dnb','Departure from nucleate boiling reached')
 	else:
 		print('q : %.3f, q_dnb : %.3f' %(q,q_dnb(opCond, geom, Tc_out)))
 
