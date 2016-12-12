@@ -72,5 +72,5 @@ class PostProcessor(QObject):
 		for key in miscNames :
 			# outputFileName = './figures/' + self.config['initTime'] + '/results_'+ names[resultsNames.index(key)]+'.out'
 			value = str('%-7.2f' %(self.results[key]))
-			file.write(key + ' = ' + value + '\n' )
+			file.write(key + '=' + value + '\n' )
 		file.close()

@@ -7,6 +7,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
+from PIL import Image
+from PIL.ImageQt import ImageQt
+
 def makeFigure(Field, FieldName, config, show, k):
     n = config['geom']['n']
     Nt = config['geom']['Nt']
@@ -32,6 +35,8 @@ def makeFigure(Field, FieldName, config, show, k):
         f.show()
     else:
         f.savefig('./figures/'+ config['initTime']+ '/plot'+ FieldName)
+        Image.open('./figures/'+ config['initTime']+ '/plot'+ FieldName +'.png')\
+            .save('./figures/'+ config['initTime']+ '/plot'+ FieldName+'.jpg','JPEG')
 
 
 def plot_boiler(config, results, show):
@@ -78,6 +83,8 @@ def plot_xc_pipe(config, results, show):
         l.show()
     else:
         l.savefig('./figures/' + config['initTime'] + '/plot_avg_xc')
+        Image.open('./figures/' + config['initTime'] + '/plot_avg_xc.png')\
+            .save('./figures/' + config['initTime'] + '/plot_avg_xc.jpg','JPEG')
 
 
 def PostProcess_calc(config, results):

@@ -5,12 +5,17 @@
 
 # Package for the results dialog
 
-import sys
+import sys, os
+import tkinter as tk
+from tkinter import filedialog
+
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from resultsDialogGUI import Ui_Dialog
 
+from PIL import Image
+from PIL.ImageQt import ImageQt
 
 
 ##	ResultsDialog
@@ -19,24 +24,36 @@ class ResultsDialog(Ui_Dialog):
 	
 	##	Default constructor
 	#	@param dialog QtWidgets.QDialog
-	def __init__(self, dialog, config, results):
+	def __init__(self, dialog, config):
 		Ui_Dialog.__init__(self) 
 		self.setupUi(dialog) 
 
-		# Global variables
-		self.config = config
-		self.results = results
+		self.dialog = dialog
 
+		# Global variables
+		directoryName = ('./figures/' + config['initTime'])
+
+		# Setup the view
+		self.setupView(directoryName)
+
+
+	#	SETUP METHODS
+
+	def setupView(self, directoryName):
 		# Setup
 		self.setupLists()
 
+		# Load images 
+		self.loadImages(directoryName)
+		self.loadData(directoryName)
+
 		# Setup signals
 		self.comboBoxPlotView.currentIndexChanged.connect(self.updatePlotLayout)
+		self.pushButton.clicked.connect(self.changeOutput)
 
 		# Initialize layout
 		self.addNewPlot(0,0)
 
-	#	SETUP METHODS
 
 	def setupLists(self):
 
@@ -48,24 +65,33 @@ class ResultsDialog(Ui_Dialog):
 		self.imagesList = []
 
 		# Setup Plot Label (Pretty)
-		self.prettyPlotName = ['Plot Th', 'Plot Tc', 'Plot x']
-		self.plotName = ['T_w','T_w','T_wf','P_wf','x_wf', 'eps']
+		self.prettyPlotName = ['Plot Tw', 'Plot Pw', 'Plot Twf', 'Plot Pwf', 'Plot x wf', 'Plot eps']
+		self.plotName = ['T_w','P_w','T_wf','P_wf','x_wf', 'eps']
 
-		# Setup Plot Layout indexes
 		self.nPlots = [1, 4, 6]
+		# Setup Plot Layout indexes
+
+	def loadImages(self, directoryName):
+
+		for key in self.plotName:
+			imagePath = (directoryName + '/plot' + key + '.png')
+
+			self.imagesList.append(QtGui.QPixmap(imagePath))
+			print(self.imagesList[-1])
 		
 	#	PLOTS METHODS
 
 	def addNewPlot(self, row, column):
 
 		# Create new objects
-		self.layoutHorList.append(QtWidgets.QHBoxLayout())
+		self.layoutHorList.append(QtWidgets.QHBoxLayout(self.dialog))
 		spacer = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
 		self.layoutHorList[-1].addItem(spacer)
-		self.comboBoxList.append(QtWidgets.QComboBox())
+		self.comboBoxList.append(QtWidgets.QComboBox(self.dialog))
 		self.layoutHorList[-1].addWidget(self.comboBoxList[-1])
 		self.layoutVertList.append(QtWidgets.QVBoxLayout())
-		self.graphicsViewList.append(QResizableGraphicsView())
+		self.graphicsViewList.append(QResizableGraphicsView(self.dialog))
+		# self.graphicsViewList.append(QtWidgets.QLabel(self.dialog))
 		self.layoutVertList[-1].addWidget(self.graphicsViewList[-1])
 		self.layoutVertList[-1].addLayout(self.layoutHorList[-1])
 		self.gridLayout.addLayout(self.layoutVertList[-1], row, column)
@@ -76,9 +102,10 @@ class ResultsDialog(Ui_Dialog):
 		for item in range(len(self.prettyPlotName)) :
 			self.comboBoxList[-1].addItem('')
 			self.comboBoxList[-1].setItemText(item, self.prettyPlotName[item])
+		self.comboBoxList[-1].currentIndexChanged.connect(self.setPlotImage)
 		
 
-	def updatePlotLayout(self, index):
+	def updatePlotLayout(self, layoutIndex):
 		# Clear all plots
 		for i in range(len(self.graphicsViewList)):
 			self.layoutHorList[i].setParent(None)
@@ -87,7 +114,7 @@ class ResultsDialog(Ui_Dialog):
 			self.graphicsViewList[i].setParent(None)
 
 		# Number of plots to displays
-		nPlots = self.nPlots[index]
+		nPlots = self.nPlots[layoutIndex]
 
 		# Add plot to the gridlayout
 		if nPlots == 1:
@@ -97,21 +124,78 @@ class ResultsDialog(Ui_Dialog):
 				self.addNewPlot(i,j)
 				self.comboBoxList[-1].setCurrentIndex(j+(nPlots/2)*i)
 
-	def setPlotImage(self):
+	def setPlotImage(self, imageIndex):
+		# Find the sender
+		comboBoxSender = self.dialog.sender()
+
+		plotIndex = self.comboBoxList.index(comboBoxSender)
 
 		#	Create scene according to the Qgraphicsview size
 		sceneRect = QtCore.QRectF(self.graphicsViewList[-1].geometry()) 
-		scene = QGraphicsScene(sceneRect)
+		scene = QtWidgets.QGraphicsScene(sceneRect)
 
-		#	Set the 
+		#	Set the image to plot
+		pixItem =  QtWidgets.QGraphicsPixmapItem(self.imagesList[imageIndex])
+		scene.addItem(pixItem)
+
+		self.graphicsViewList[-1].fitInView(pixItem)
+		self.graphicsViewList[-1].show()
+
+		# scaledPixmap = self.imagesList[imageIndex].scaled(self.graphicsViewList[plotIndex].size(), QtCore.Qt.KeepAspectRatio)
+		# self.graphicsViewList[plotIndex].setPixmap(scaledPixmap)
+
+
 
 	#	 LOAD DATA
 
-	# def loadData(self, directoryName):
+	def changeOutput(self):
+		#Get the path of the desired directory
+		root = tk.Tk()
+		root.withdraw()
+		directoryName = filedialog.askdirectory()
 
+		if not directoryName:
+			pass
+		else:
+			self.setupView(directoryName)
+			
 
+	def loadData(self, directoryName):
 
-	# def fillGUI(self,)
+		# Read data
+		file = open(directoryName + '/results_misc.out', 'r')
+		lines = file.readlines()
+		file.close()
+
+		# Pasing the txt file to get the results
+		results = {}
+		for i, line in enumerate(lines):
+			print(line)
+			key = []
+			value = []
+			inValue = False
+			for c in line:
+				if c == '=':
+					inValue = True
+				elif c ==' ':
+					pass
+				elif c == '\n':
+					inValue = False
+				else:
+					if inValue:
+						value.append(c)
+					else:
+						key.append(c)
+			Key = "".join(key)
+			Value = "".join(value)
+			results[Key] = float(Value)
+
+		# Set the Q value inside the lineEdit
+		self.lineEditCapacity.setText(str(results['Q']))
+
+		# Edit the pushButton
+		self.pushButton.setText(os.path.basename(directoryName))
+
 
 
 
@@ -133,8 +217,13 @@ if __name__ == '__main__':
 
 	app = QtWidgets.QApplication(sys.argv)
 	dialog = QtWidgets.QDialog()
+
+	config = {}
+	results = {}
+	config['initTime'] = '201612192002'
+	results['Q'] = 10
  
-	resultsDialog = ResultsDialog(dialog)
+	resultsDialog = ResultsDialog(dialog, config)
  	
  	# Fire results dialog
 	dialog.show()

@@ -13,9 +13,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QLabel" name="label">
        <property name="font">
@@ -48,7 +48,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditSimFolder"/>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="Line" name="line_2">
@@ -65,7 +69,20 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEditCapacity"/>
+        <widget class="QLineEdit" name="lineEditCapacity">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>70</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="Line" name="line_3">
@@ -81,7 +98,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
+           <width>108</width>
            <height>20</height>
           </size>
          </property>
