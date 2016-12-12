@@ -90,3 +90,12 @@ def PostProcess_calc(opCond, geom, Q, OtherData):
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
+
+    f=open('./Param/Results_Parametric.txt', 'a')
+
+    f.write('\n Heat transfer Q [kW] : '+str(Q))
+    f.write('\n Average heat flux q [kW/m^2] : '+str(q_avg))
+    f.write('\n Average outer heat transfer coefficient [W/m^2/K]: ' +str(alpha_a_avg))
+    f.write('\n Average inner heat transfer coefficient [W/m^2/K]: ' +str(alpha_i_avg))
+
+    f.close()

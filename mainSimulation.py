@@ -10,9 +10,14 @@ from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
+
 from Postprocess import *
 
+
 from PyQt5.QtCore import QObject, pyqtSignal
+
+
+
 
 class Simulation(QObject):
 
@@ -123,36 +128,49 @@ class Simulation(QObject):
                 progress = currentLoop/total
                 self.progressUpdated.emit(progress)
 
-                [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+                try:
+
+                    [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+
+                except Error as e:
+                    if e.functionName == 'Error in LMTD (energyBalance)':
+                        configuration['geom']['n'] =  2*configuration['geom']['n']
+                        print('Space discretization too coarse, restarting simulation with ', configuration['geom']['n'], 'cells')
+                        self.startSimulation(configuration)
+                    else:
+                        print('error fct name', e.functionName)
+                        raise Error('Solvecell','Error in Solvecell')
+
+                except Exception as e:
+                    raise Error('Solvecell', e)
+
                 Qtot += Q
 
                 np.set_printoptions(precision=3)
-                #print(xc)
-                #print(eps)
+                print(xc)
+                print(eps)
                 #print(OtherData)
-
+                #print(Th)
 
         print('Calculation complete !\n')
-        #print(Th)
+
 
         Ph_drop = Ph[ geom['Nt'],geom['n']]-flowInputs['Ph_in']
         Pc_drop = Pc[ geom['Nt'],geom['n']]-Pc_in
         Th_drop = Th[ geom['Nt'],geom['n']]-flowInputs['Th_in']
         Tc_drop = Tc[ geom['Nt'],geom['n']]-flowInputs['Tc_in']
         xc_drop = xc[ geom['Nt'],geom['n']]-flowInputs['xc_in']
-        print('xc')
-        print(xc)
-        print('Th')
-        print(Th)
+
         # q = Qtot/(geom['Nt']*math.pi*geom['D']*geom['L'])  # [kW/m²]
         Q=Qtot*geom['Nt_col'] # [kW]
+
 
         print('Ph_drop')
         print(Ph_drop)
         print('Pc_drop')
         print(Pc_drop)
-        print('Th_drop')
-        print(Th_drop)
+        #print('Th_drop')
+        #print(Th_drop)
         #print('Tc_drop')
         #print(Tc_drop)
         #print('xc_drop')
@@ -162,20 +180,18 @@ class Simulation(QObject):
         ################################################################################
         #               Postprocessing
 
-        plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'],0)
-        plot_xc_pipe(xc, geom['n'], geom['Nt'], 0)
         PostProcess_calc(opCond, geom, Q, OtherData)
-
-        input()
-
-
+        '''
         self.results = {
             'Th' : Th,
             'Ph' : Ph,
             'Tc' : Tc,
             'Pc' : Pc,
             'xc' : xc,
-            'Q': Q
+            'Q': Q,
+            'eps' : eps,
+            'OtherData' : OtherData
         }
         self.simulationComplete.emit(self.results)
+        '''
         return
