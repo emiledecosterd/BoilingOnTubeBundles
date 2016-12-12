@@ -14,6 +14,8 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 from mainSimulation import Simulation
 
+from time import gmtime, strftime
+
 
 ################################################################################
 ###                     EDIT BASE CONFIGURATION HERE                         ###
@@ -74,7 +76,7 @@ for var in variable:
 
     f=open('./Param/Results_Parametric.txt', 'a')
 
-    f.write('\n' +Param+' = '+str(var))
+    f.write('\n' +Param+' = '+str(var)+'\n Time: '+strftime("%Y-%m-%d %H:%M:%S", gmtime()))
     f.close()
 
     simu = Simulation()
