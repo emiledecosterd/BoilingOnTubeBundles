@@ -13,6 +13,7 @@ from pipePlotter import LongPipePlotter, TransvPipePlotter
 from simulationWindow import SimulationWindow, QResizableMainWindow
 from simulation import Simulation
 from error import Error
+from simulationThread import SimulationThread
 
 import pdb
 
@@ -31,6 +32,7 @@ class MainController(QtCore.QObject):
 
 	# Signals
 	runSimulationRequested = QtCore.pyqtSignal(dict)
+	stopSimulationRequested = QtCore.pyqtSignal()
 
 
 	##	The constructor
@@ -54,7 +56,7 @@ class MainController(QtCore.QObject):
 
 		# Create the simulation and its thread
 		simulation = Simulation()
-		self.simulationThread = QtCore.QThread()
+		self.simulationThread = SimulationThread()
 		simulation.moveToThread(self.simulationThread)
 		self.simulationThread.finished.connect(simulation.deleteLater)
 		simulation.progressUpdated.connect(self.updateProgress)
@@ -64,6 +66,7 @@ class MainController(QtCore.QObject):
 
 		# Create the connexions
 		self.console.printOccured.connect(self.mainWindow.printToConsole)
+		self.stopSimulationRequested.connect(self.simulationThread.stopSimulation)
 		self.mainWindow.changesOccured.connect(self.resetResults)
 		self.mainWindow.changesOccured.connect(self.updatePlots)
 		self.mainWindow.chosenResultChanged.connect(self.updatePlots)
@@ -96,6 +99,7 @@ class MainController(QtCore.QObject):
 			self.running = False
 			self.mainWindow.progressBar.setProperty('visible', False)
 			self.mainWindow.runButton.setText('Run')
+			self.stopSimulationRequested.emit()
 		else:
 			# Load the current inputs in the GUI
 			self.currentSimulationConfiguration = self.mainWindow.readConfiguration()
@@ -178,6 +182,9 @@ class MainController(QtCore.QObject):
 
 		# Post process, no GUI
 		self.results = results
+		if results == {}:
+			print('INFO: No results. Stopped by user')
+			self.results = None
 
 		# Plot the result
 		self.isLongPlotter = True

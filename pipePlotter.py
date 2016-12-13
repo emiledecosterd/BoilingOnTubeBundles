@@ -245,7 +245,7 @@ class LongPipePlotter(PipePlotter):
 
 				# Get right color
 				''' /!\ To be corrected !!! '''
-				val = (field[j,i]-minVal)/(maxVal-minVal)/4 + 0.8
+				val = ((field[j,i]-minVal)/(maxVal-minVal)/5 + 0.9)%1
 				color = QtGui.QColor()
 				color.setHsvF(val, 0.5,0.5,0.5)
 				brush = QtGui.QBrush(color, QtCore.Qt.Dense2Pattern)

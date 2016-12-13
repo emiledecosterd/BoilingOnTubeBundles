@@ -10,7 +10,7 @@ from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
 
 # Qt and GUI packages
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, QThread
 from error import Error
 
 ##	Simulation
@@ -23,6 +23,7 @@ class Simulation(QObject):
 	progressUpdated = pyqtSignal(float)
 	simulationCompleted = pyqtSignal(dict)
 	errorOccured = pyqtSignal(Error)
+	resetSimulationStatusRequested = pyqtSignal()
 
 	##	run()
 	#	This method launches the simulation
@@ -83,6 +84,13 @@ class Simulation(QObject):
 		# ForLoop over the domain to compute T, x, and eps
 		for i in range(1, geom['Nt']+1):
 			for j in range(1, geom['n']+1):
+
+				# Check if simulation should stop
+				currentThread = QThread.currentThread()
+				if currentThread.stopSimulationRequested:
+					currentThread.reset()
+					self.simulationCompleted.emit({})
+					return
 
 				# Send current progress to controller
 				currentLoop = currentLoop+1
