@@ -217,12 +217,6 @@ class LongPipePlotter(PipePlotter):
 	#	@param coordinates The coordinates of the pipes on the plot
 	#	@param field The thermodynamical field chosen by the user in the GUI
 	def fillCells(self, coordinates, field):
-		if self.cells is not None:
-			for i in range(1, len(self.cells)):
-				self.scene.removeItem(self.cells[i])
-			del self.cells[:]
-		else:
-			self.cells = []
 
 		coordinates_x = coordinates[0]
 		coordinates_y = coordinates[1]
@@ -251,14 +245,13 @@ class LongPipePlotter(PipePlotter):
 
 				# Get right color
 				''' /!\ To be corrected !!! '''
-				val = (field[j,i]-minVal)/(maxVal-minVal)/5 + 0.7
+				val = (field[j,i]-minVal)/(maxVal-minVal)/4 + 0.8
 				color = QtGui.QColor()
 				color.setHsvF(val, 0.5,0.5,0.5)
 				brush = QtGui.QBrush(color, QtCore.Qt.Dense2Pattern)
 
 				# Draw the rectangle
 				cell = self.scene.addRect(rect, self.fillPen, brush)
-				self.cells.append(cell)
 
 ##	TransvPipePlotter
 #	Subclass of PipePlotter for the transversal view scheme
