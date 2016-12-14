@@ -26,37 +26,39 @@ flowInputs = {}
 
 # Operating Conditions
 opCond['FluidType'] = 'R134a'
-opCond['mfr_c'] = 5
+#opCond['mfr_c'] = #[kg/s]
 # opCond['mdot_h'] = 103.0 # Need to guess it
-opCond['TubeMat'] = 'copper'
+opCond['TubeMat'] = 'Copper'
 opCond['TubeThermalConductivity']= 400
 
 # Geometrical Inputs
-geom['Nt'] = 10
-geom['Nt_col'] = 5
-geom['L'] = 5
-geom['n'] = 3
-geom['s'] = 70e-3
-geom['sh'] = 70e-3
-geom['D'] = 50e-3
-geom['e_i'] =3e-6
-geom['e_o'] = 3e-6
-geom['t'] = 5e-3
+geom['Nt'] = 8
+geom['Nt_col'] = 2
+geom['L'] = 1.027
+geom['n'] = 10
+geom['s'] = 22.22e-3
+geom['sh'] = 22.22e-3
+geom['D'] = 18.87e-3
+geom['e_i'] =2.3e-6
+geom['e_o'] = 2.3e-6
+geom['t'] = 2.28e-3
 geom['corr'] = 'Cooper'
 geom['corrPD'] = 'Gaddis'
-geom['layout'] = 'InLine'
+geom['layout'] = 'Staggered'
 geom['N'] = geom['Nt']*geom['Nt_col']
 
 # Flow Inputs
-flowInputs['Tc_in'] = 0 + 273.15
-flowInputs['Th_in'] = 15+ 273.15
+flowInputs['Tc_in'] = 15 + 273.15
+flowInputs['Th_in'] = 20+ 273.15
 flowInputs['Ph_in'] = 1e5
-flowInputs['xc_in'] = 0.05
+flowInputs['xc_in'] = 0.2
 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
-opCond['mfr_h'] = 20.0 #mfr_hGuess
-opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
-opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+opCond['mfr_h'] = 0.5 #mfr_hGuess [kg/s]
+opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2) #[kg/m^2s]
+#opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+opCond['mdot_c'] = 10.0 #[kg/m^2s]
+
 
 configuration = {'opCond': opCond, 'geom': geom, 'flowInputs':flowInputs}
 
