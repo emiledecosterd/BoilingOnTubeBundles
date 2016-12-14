@@ -75,17 +75,22 @@ def plot_xc_pipe(xc, n, Nt, show):
 #     time = time.strftime("%Y%m%H%M")
 #     self.simName = (time + "_" + plotName)
 
-def PostProcess_calc(opCond, geom, Q, OtherData):
+def PostProcess_calc(opCond, geom, Q, OtherData, configuration):
     q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
 
     alpha_a_tot = 0.0
     alpha_i_tot = 0.0
     U_tot = 0.0
+    Delta_P_fric=0.0
+
     for i in range(1, geom['Nt']+1):
         for j in range(1, geom['n']+1):
             alpha_a_tot += OtherData[i,j]['alpha_a']
             alpha_i_tot += OtherData[i,j]['alpha_i']
             U_tot += OtherData[i,j]['U']
+
+        Delta_P_fric += OtherData[i,1]['deltaPc_f']
+
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
     alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
     U_avg = U_tot/(geom['n']*geom['Nt'])
@@ -102,16 +107,17 @@ def PostProcess_calc(opCond, geom, Q, OtherData):
     print('Outer thermal resistance [W/m^2/K]^-1 %.10f: ' %R_a)
     print('Wall thermal resistance [W/m^2/K]^-1 %.10f: ' %R_w)
 
-    f=open('./Param/Results_Parametric.txt', 'a')
+    f=open('./Param/'+configuration['filename'], 'a')
 
-    f.write('\n Heat transfer Q [kW] : '+str(Q))
-    f.write('\n Average heat flux q [kW/m^2] : '+str(q_avg))
-    f.write('\n Average outer heat transfer coefficient [W/m^2/K]: ' +str(alpha_a_avg))
-    f.write('\n Average inner heat transfer coefficient [W/m^2/K]: ' +str(alpha_i_avg))
-    f.write('\n Average Overall heat transfer coefficient [W/m^2/K]: ' +str(U_avg))
-    f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
-    f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
-    f.write('\n Wall thermal resistance [W/m^2/K]^-1: ' +str(R_w))
+    f.write('Q[kW] = '+str(Q)+'\n')
+    f.write('q[kW/m^2] = '+str(q_avg)+'\n')
+    f.write('a_a[W/m^2/K] = ' +str(alpha_a_avg)+'\n')
+    f.write('a_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
+    f.write('U[W/m^2/K] = ' +str(U_avg)+'\n')
+    f.write('Del_p_f[Pa] = ' + str(Delta_P_fric)+'\n')
+    #f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
+    #f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
+    #f.write('\n Wall thermal resistance [W/m^2/K]^-1: ' +str(R_w))
 
 
     f.close()

@@ -108,7 +108,10 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 		'''
 		#### 4) Pressure drop calculation inside the cell ####
 		'''
-		[Ph_out, Pc_out] = cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_out, xc_out)
+		P={}
+		P = cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_out, xc_out)
+		Pc_out = P['Pc_out']
+		Ph_out = P['Ph_out']
 		print('Working fluid pressure value at output (Pc_out): %.3f. \n' %(Pc_out))
 
 		'''
@@ -157,6 +160,7 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	Qcell = Q #[kW]
 	OtherData={}
 	OtherData = EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
+	OtherData['deltaPc_f'] = P['deltaPc_f']
 	#OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
 	#OtherData['kt']=kt
 	#OtherData['kp']=kp

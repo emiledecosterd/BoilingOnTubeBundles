@@ -181,4 +181,9 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     # Relative pressure at the output of the cell
     Ph_out = Ph_in - deltaPh_f
 
-    return(Ph_out, Pc_out)
+
+    P={}
+    P['Ph_out'] = Ph_out
+    P['Pc_out'] = Pc_out
+    P['deltaPc_f'] = deltaPc_f
+    return(P)
