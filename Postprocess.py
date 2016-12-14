@@ -108,7 +108,10 @@ def PostProcess_calc(opCond, geom, Q, OtherData):
     f.write('\n Average heat flux q [kW/m^2] : '+str(q_avg))
     f.write('\n Average outer heat transfer coefficient [W/m^2/K]: ' +str(alpha_a_avg))
     f.write('\n Average inner heat transfer coefficient [W/m^2/K]: ' +str(alpha_i_avg))
+    f.write('\n Average Overall heat transfer coefficient [W/m^2/K]: ' +str(U_avg))
+    f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
+    f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
+    f.write('\n Wall thermal resistance [W/m^2/K]^-1: ' +str(R_w))
+
 
     f.close()
-
-    
