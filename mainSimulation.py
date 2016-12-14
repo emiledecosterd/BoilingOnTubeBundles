@@ -183,12 +183,11 @@ class Simulation(QObject):
         #               Postprocessing
 
 
-        PostProcess_calc(opCond, geom, Q, OtherData)
-        '''
         plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'],0)
         plot_xc_pipe(xc, geom['n'], geom['Nt'], 0)
         PostProcess_calc(opCond, geom, Q, OtherData)
 
+        '''
         self.results = {
             'Th' : Th,
             'Ph' : Ph,
