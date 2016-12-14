@@ -114,7 +114,7 @@ def PostProcess_calc(opCond, geom, Q, OtherData, configuration):
     f.write('a_a[W/m^2/K] = ' +str(alpha_a_avg)+'\n')
     f.write('a_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
     f.write('U[W/m^2/K] = ' +str(U_avg)+'\n')
-    f.write('Del_p_f[Pa] = ' + str(Delta_P_fric)+'\n')
+    f.write('DelP_f[Pa] = ' + str(Delta_P_fric)+'\n')
     #f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
     #f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
     #f.write('\n Wall thermal resistance [W/m^2/K]^-1: ' +str(R_w))

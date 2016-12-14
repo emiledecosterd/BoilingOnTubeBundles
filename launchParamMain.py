@@ -26,6 +26,10 @@ Starts = [0.02, -10+273.15, 10]
 Ends = [0.06, 10+273.15, 50]
 Number_points = [2,3,4]
 
+Parameters_names = ['D_0', 'T_{sat}', 'm_{R123a}']
+# what you want written as xlabel in matlab, must NOT contain spcce
+# the latex interpreter is used
+
 sim=0
 
 for Param in Parameters:
@@ -86,7 +90,7 @@ for Param in Parameters:
 
         f=open('./Param/'+configuration['filename'], 'a')
 
-        f.write('\n' +Param+' = '+str(var)+'\n')
+        f.write('\n' +Parameters_names[sim]+' = '+str(var)+'\n')
         f.close()
 
         simu = Simulation()

@@ -1,0 +1,22 @@
+close all 
+clear all
+
+files = dir([pwd, '\*.txt']);
+
+param={};
+for i = 1:length(files)
+    Dat = importdata(files(i));
+    param(i) = Dat.textdata(1,1);
+    
+    index=zeros(1,length(dat.textdata));
+    for j = 1:length(dat.textdata)
+        index(j)=isequal(param, Dat.textdata(j,1));
+    end
+    
+    n_sim = sum(index);
+    n_outputs = length(dat.textdata)/n_sim;
+    
+    Data.(param)=
+    
+    
+end
