@@ -1,0 +1,10 @@
+*.html
+*.css
+*.js
+*.png
+*.tex
+*.eps
+*.pdf
+latex/doxygen.sty
+latex/Makefile
+
