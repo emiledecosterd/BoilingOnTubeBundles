@@ -2,7 +2,7 @@
 % Little script to get a fit for the flow pattern map curves
 
 % Get the image
-map = imread('FlowPatternMap/flow_pattern_map.png');
+map = imread('FlowPatternMap/flow_pattern_map_filtered.png');
 map = rgb2gray(map);
 figure();
 imshow(map);
