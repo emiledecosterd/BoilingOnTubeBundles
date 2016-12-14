@@ -31,12 +31,12 @@ fig2 = figure('name', 'Second curve image');
 imshow(map_2);
 
 map_3 = map(center(2):end, center(1):end);
-fig3 = figure('name', 'Third curve image');
+figfigure('name', 'Third curve image');
 imshow(map_3);
 
 %% Find fits
 
-fit_1 = imfit(map_1, 2, fig1)
+fit_1 = imfit(map_1, 4, fig1)
 fit_2 = imfit(map_2, 1, fig2)
 fit_3 = imfit(map_3, 1, fig3)
 
