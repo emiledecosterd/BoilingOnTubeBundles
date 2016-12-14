@@ -8,8 +8,15 @@ figure();
 imshow(map);
 
 % Threshold it
-map = 1-(map<100);
+map = 1-(map<110);
 figure();
 imshow(map)
 
+% Separate image
+[width, height] = size(map);
+first_map = map(1:width-215, height-75:height);
 
+
+% Get coordinates
+[x, y] = find(map);
+curve = polyfit
