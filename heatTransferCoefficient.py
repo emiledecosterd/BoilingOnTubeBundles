@@ -105,10 +105,6 @@ def outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 			nf = 0.9-0.3*p_r**0.3
 			alpha_a = alpha_0*F_pf*(q/q_0)**nf*(R_p/R_po)**0.133 # [W/m^2/K]
 
-	elif geom['Wolverine']:
-		q = mdot_h*cp_hi*(Th_in-Th_out)/A
-		alpha_a = 1.164*12026*q**(-0.082)
-
 	else : #default is Mostinski
 		p_r = Pc_in/p_crit
 		Fp = 1.8*p_r**0.17+4*p_r**1.2+10*p_r**10
