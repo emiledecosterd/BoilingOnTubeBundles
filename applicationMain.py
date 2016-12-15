@@ -56,7 +56,7 @@ class MainController(QtCore.QObject):
 
 		# Create the simulation and its thread
 		simulation = Simulation()
-		self.simulationThread = SimulationThread()
+		self.simulationThread = SimulationThread(self)
 		simulation.moveToThread(self.simulationThread)
 		self.simulationThread.finished.connect(simulation.deleteLater)
 		simulation.progressUpdated.connect(self.updateProgress)
@@ -87,7 +87,8 @@ class MainController(QtCore.QObject):
 	def __del__(self):
 		print('INFO: Quitting... Wait for thread to finish')
 		self.simulationThread.quit()
-		self.simulationThread.wait()
+		print('Quitted')
+		self.simulationThread.terminate()
 
 
 	##	startSimulation()
