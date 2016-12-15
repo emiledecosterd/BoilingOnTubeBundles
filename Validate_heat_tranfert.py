@@ -2,7 +2,6 @@ import math
 import numpy as np
 
 
-
 from CoolProp.CoolProp import PropsSI
 from heatTransferCoefficient import*
 
@@ -41,7 +40,7 @@ geom['N'] = geom['Nt']*geom['Nt_col']
 flowInputs['Tc_in'] = 10 + 273.15
 flowInputs['Th_in'] = 15+ 273.15
 flowInputs['Ph_in'] = 1e5
-flowInputs['xc_in'] = 0.05
+flowInputs['xc_in'] = 0.1
 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
 opCond['mfr_h'] = 20.0 #mfr_hGuess
@@ -56,19 +55,25 @@ configuration['flowInputs'] = flowInputs
 
 ################################################################################
 
-start = 14000
-end = 22000
+
+start = 5000
+end = 14000
 q_range = np.linspace(start, end, num=5)
 
 Th_in = flowInputs['Th_in']
 Th_out = 0.0
+
+opCond['mdot_h'] = 4
+opCond['mdot_c'] = 4
+flowInputs['Tc_in'] = 15 + 273.15
+
 
 geom['dx'] = geom['L']/geom['n'] # [m]
 A = math.pi*geom['D']*geom['dx'] # [m^2] external surface of tube section
 mdot_h = opCond['mdot_h']*0.25*math.pi*(geom['D']-2.0*geom['t'])**2.0 # [kg/s]
 cp_hi = PropsSI('C','T',Th_in,'Q',0.0,'Water') # [J/kg/K]
 
-correlation = ['Cooper','Mostinski','Gorelflo']
+correlation = ["Cooper","Mostinski","Gorenflo"]
 
 
 for corr in correlation:
@@ -77,7 +82,8 @@ for corr in correlation:
 
         Th_out = Th_in-q*A/(mdot_h*cp_hi)
 
-        a_a = outerHeatTransfer(opCond, geom, Th_in, flowInputs['Tc_in'], Pc_in, 0,Th_out, 0)
+        geom['corr'] = corr
+        a_a = outerHeatTransfer(opCond, geom, Th_in, flowInputs['Tc_in'], Pc_in, 0,Th_out, flowInputs['Tc_in'])
         f=open('./Validation/'+corr+'.txt','a')
-        f.write('Correlation = '+corr+'\nq = '+str(q)+'\na_a = '+str(a_a)+'\n\n')
+        f.write('q = '+str(q)+'\na_a = '+str(a_a)+'\n\n')
         f.close()

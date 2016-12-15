@@ -7,8 +7,8 @@ files = dir([pwd, '\*.txt']);
 for i = 1:length(files)
     Dat{i}=importdata([pwd,'\',getfield(files,{i},'name')]);
     
-    Data_plot{1,i}(1,:)=Dat{1,i}.data((1:2:end),:);
-    Data_plot{1,i}(2,:)=Dat{1,i}.data((2:2:end),:);
+    Data_plot{i}(1,:)=Dat{1,1}.data((1:2:end),:);
+    Data_plot{i}(2,:)=Dat{1,1}.data((2:2:end),:);
 end
 
 
@@ -36,8 +36,8 @@ Leg={};
 for i=1:length(files)
     plot(log(Data_plot{i}(1,:)), log(Data_plot{i}(2,:)),...
         'x--','Linewidth',width,'Color',color(i,:));
-    name=getfield(files,{i},'name');
-    Leg=[Leg,strcat('$',name(1:end-4),'$')];
+    name=
+    Leg=[Leg,strcat('$',getfield(files,{i},'name'),'$')];
 end
 
 xlabel('$ln(q_0)$')
@@ -45,7 +45,5 @@ ylabel('$ln(\alpha_{nb})$')
 legend(Leg)
 set (gca,'TicklabelInterpreter','LaTex')
 grid on
-
-%axis([8.5, 10.5, 7.5, 9.5])
 
 
