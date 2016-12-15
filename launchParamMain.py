@@ -23,22 +23,22 @@ import os
 
 
 # parameters 1 go on the x-axis
-Parameters_1 = ['D','xc_in']
-Dictionnaries_1 = ['geom','flowInputs']
-Starts_1 = [0.02, 0.05]
-Ends_1 = [0.06, 0.95]
-Number_points_1 = [2,3]
-Parameters_names_1 = ['D_0', 'x']
+Parameters_1 = ['xc_in']
+Dictionnaries_1 = ['flowInputs']
+Starts_1 = [0.05]
+Ends_1 = [0.95]
+Number_points_1 = [3]
+Parameters_names_1 = ['x']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
 # parameters 2 go in the legend
-Parameters_2 = ['mfr_c', 'Tc_in']
-Dictionnaries_2 = ['opCond', 'flowInputs']
-Starts_2 = [20,  0 + 273.15]
-Ends_2 = [50,  5 + 273.15]
-Number_points_2 = [2, 2]
-Parameters_names_2 = ['m_{R134a}', 'T_{sat}']
+Parameters_2 = ['Tc_in']
+Dictionnaries_2 = ['flowInputs']
+Starts_2 = [ 0 + 273.15]
+Ends_2 = [5 + 273.15]
+Number_points_2 = [2]
+Parameters_names_2 = ['T_{sat}']
 
 
 sim_1 = 0

@@ -6,7 +6,7 @@ clear all
 
 directory = uigetdir('./','Choose Folder containing data to process');
 
-files = dir([directory, '\*res.txt']);
+files = dir([directory, '/*res.txt']);
 
 Data=cell(length(files),1);
 
@@ -31,7 +31,7 @@ for i = 1:length(files)
         param_1{j} = Dat.textdata(j,1);
     end
     
-    [c1{i}, ia1{i}, ia2{i}] = unique([param_1{:,1}]);
+    [c1{i}, ia1{i}, ia2{i}] = unique([param_1{:,:}]);
     % counts the number of differents instances of e param_2, gives the
     % number of differents param_1, names are in c1, ia1 contains the
     % coordinate of param_1 changes
@@ -43,9 +43,12 @@ for i = 1:length(files)
     % Param_1_1  Param_1_2  ... Param_1_1  Param_1_2 ...
     % fields     fields         fields     fields
     
-    n_points_param_2 = length(unique(Data{i,1}(1,1:ia1{i}(2)-1)));
-    % counts number of points for Param_2
-    
+    if length(ia1{i}) == 1
+        n_points_param_2 = length(unique(Data{i,1}(1,1:end)));
+    else
+        n_points_param_2 = length(unique(Data{i,1}(1,1:ia1{i}(2)-1)));
+        % counts number of points for Param_2
+    end
     for j=1:length(ia1{i})
         if j == length(ia1{i})
             n_points_param_1{i}(j) = (n_sim+1-ia1{i}(j))/n_points_param_2;
@@ -113,7 +116,7 @@ for i=1:length(files) % loop on files (lines of Data_plot)
                 plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
                     'x--','Linewidth',width,'Color',color(l,:))
                 Leg=[Leg,strcat('$',param_2{i},'=',num2str(Data_plot{i,j}(1,1,l)),'$')];
-                               
+                
             end
             
             xlabel(strcat('$', c1{i}(j), '$'))
@@ -124,13 +127,13 @@ for i=1:length(files) % loop on files (lines of Data_plot)
             
             %removing all problematic signs from figure name
             
-            fig_name = regexprep(strcat('Fig_',c1{i}(i),'_',param_2{i},'_',fields{k}),'/','');
-            fig_name = regexprep(fig_name,'\','');
-
+            fig_name = regexprep(strcat('Fig_',c1{i}(j),'_',param_2{i},'_',fields{k}),'/','');
+            fig_name = regexprep(fig_name,'/','');
+            
             print('-f',  '-depsc', fullfile(directory,'figures',cell2mat(fig_name)))
             
         end
-    end 
+    end
 end
 
 close all
