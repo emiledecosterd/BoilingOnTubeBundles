@@ -62,14 +62,13 @@ for i=1:length(files)
     
     for j=3:n_outputs
         
-
+        figure()
+        hold on
         for k=1:length(c1{i})
-            figure()
-            hold on
             if k == length(c1{i})
                 plot(Data{i,1}(2,ia1{i}(k):end),Data{i,1}(j,ia1{i}(k):end),'x--','Linewidth',width,'Color',color(k,:));  
             else
-                plot(Data{i,1}(2,ia1{i}(k):ia1{i}(k+1)-1),Data{i,1}(j,ia1{i}(k):ia1{i}(k+1)-1),'x--','Linewidth',width,'Color',color(k,:));
+                plot(Data{i,1}(2,ia1{i}(k):ia1{i+1}-1),Data{i,1}(j,ia1{i}(k):ia1{i+1}-1),'x--','Linewidth',width,'Color',color(k,:));
             end
             
             xlabel(strcat('$', c1{i}(k), '$'))
