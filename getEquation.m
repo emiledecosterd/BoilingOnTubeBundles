@@ -17,7 +17,7 @@ imshow(map);
 % Put origin at the right place
 height = 272;
 width = 450;
-rect = [80, 0, height , width];
+rect = [80, 0, width , height];
 map = imcrop(map, rect);
 figure('name', 'Re-centered map');
 imshow(map);
@@ -52,11 +52,11 @@ fit_3 = imfit(map_3, 1, fig3)
 [y2o, x2o] = find(map_2==0);
 [y3o, x3o] = find(map_3==0);
 y1o = h1-y1o;
-% y2o = h-y2o; x2o = w2-x2o;
-% y3o = h3-y3o; x3o = w-x3o;
+y2o = h-y2o; 
+y3o = h3-y3o; x3o = w3 + x3o;
 x1 = 0:center(1); y1 = polyval(fit_1, x1);
-x2 = center(1):255; y2 = polyval(fit_2,x2)+170;
-x3 = center(1):320; y3 = polyval(fit_3, x3)+165;
+x2 = center(1):255; y2 = polyval(fit_2,x2)+180;
+x3 = center(1):320; y3 = polyval(fit_3, x3)+170;
 
 figure('name', 'Identified map');
 xlim([1 width]);
