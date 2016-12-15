@@ -16,26 +16,64 @@ param_2=cell(length(files));
 
 for i = 1:length(files)
     Dat = importdata([directory,'\',getfield(files,{i},'name')]);
-    param_2{i} = Dat.textdata(1,1);
+    param_2{i} = Dat.textdata(1,1);% gets param_2
     
     index_2=zeros(1,length(Dat.data));
     
     for j = 1:length(Dat.textdata)
-        index_2(j)=isequal(param_2{i}, Dat.textdata(j,1));
+        index_2(j)=isequal(param_2{i}, Dat.textdata(j,1));% counts instances of Param_2
     end
     
-    n_sim = sum(index_2);
-    n_outputs = length(Dat.textdata)/n_sim;
+    n_sim = sum(index_2);% number of instances of Param_2 i equal to nb of simulations
+    n_outputs = length(Dat.textdata)/n_sim; % number of outputs per sim if total nb of outputs/ nb of sim
     
-    for j = 2:n_outputs:length(Dat.textdata)
+    for j = 2:n_outputs:length(Dat.textdata)% reads all param_1 for each simulation
         param_1{j} = Dat.textdata(j,1);
     end
     
-    [c1{i}, ia1{i}, ia2{i}] = unique([param_1{:,1}]); % ia1 contains the coordinate of param_1 changes
+    [c1{i}, ia1{i}, ia2{i}] = unique([param_1{:,1}]);
+    % counts the number of differents instances of e param_2, gives the
+    % number of differents param_1, names are in c1, ia1 contains the
+    % coordinate of param_1 changes
     
     Data{i}=reshape(Dat.data, n_outputs, n_sim);
+    % reshapes matrix in order to have one simulation per column
+    % the order is :
+    % Param_2_1  Param_2_1  ... Param_2_2  Param_2_2 ...
+    % Param_1_1  Param_1_2  ... Param_1_1  Param_1_2 ...
+    % fields     fields         fields     fields
     
-    length_param2{i} = length(unique(Data{i,1}(1,1:ia1{i}-1)));
+    n_points_param_2 = length(unique(Data{i,1}(1,1:ia1{i}(2)-1)));
+    % counts number of points for Param_2
+    
+    for j=1:length(ia1{i})
+        if j == length(ia1{i})
+            n_points_param_1{i}(j) = (n_sim+1-ia1{i}(j))/n_points_param_2;
+            
+            Data_plot{i,j} = Data{i,1}(:,ia1{i}(j):end);
+            
+        else
+            n_points_param_1{i}(j) = (ia1{i}(j+1)-ia1{i}(j))/n_points_param_2;
+            % the number of points for param_1 is total number of simulation for
+            % param1/number of points for param_2
+            
+            Data_plot{i,j} = Data{i,1}(:,ia1{i}(j):ia1{i}(j+1)-1);
+            % separates all simulation according to param_1, for each j we
+            % change param_1
+        end
+        
+        Data_plot{i,j} = reshape(Data_plot{i,j}, n_outputs,...
+            n_points_param_1{i}(j), n_points_param_2);
+        % reshapes Data_plots{i,j} to have 3d matrices with each layer is
+        % Param_2_1  Param_2_1
+        % Param_1_1  Param_1_2
+        % fields     fields
+        
+        % this represents the first layer (Param_2_1<-)
+        
+    end
+    
+    
     
 end
 
@@ -58,35 +96,44 @@ set(0,'DefaultAxesFontSize',20);
 set(groot, 'DefaultTextInterpreter', 'LaTex')
 set(groot, 'DefaultLegendInterpreter', 'LaTex')
 
-for i=1:length(files)
+mkdir(directory,'figures')
+
+for i=1:length(files) % loop on files (lines of Data_plot)
     
-    for j=3:n_outputs
+    for j=1:length(c1{i}) % loop on diferents param_1
         
-        figure()
-        hold on
-        for k=1:length(c1{i})
-            if k == length(c1{i})
-                plot(Data{i,1}(2,ia1{i}(k):end),Data{i,1}(j,ia1{i}(k):end),'x--','Linewidth',width,'Color',color(k,:));  
-            else
-                plot(Data{i,1}(2,ia1{i}(k):ia1{i+1}-1),Data{i,1}(j,ia1{i}(k):ia1{i+1}-1),'x--','Linewidth',width,'Color',color(k,:));
+        for k=3:n_outputs% loop on field outputs
+            
+            figure()
+            hold on
+            Leg={};
+            
+            for l=1:n_points_param_2 % loops on param_2
+                
+                plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
+                    'x--','Linewidth',width,'Color',color(l,:))
+                Leg=[Leg,strcat('$',param_2{i},'=',num2str(Data_plot{i,j}(1,1,l)),'$')];
+                               
             end
             
-            xlabel(strcat('$', c1{i}(k), '$'))
-            ylabel(strcat('$', fields{j}, '$'))
+            xlabel(strcat('$', c1{i}(i), '$'))
+            ylabel(strcat('$', fields{k}, '$'))
+            legend(Leg,'Location','best' );
             set (gca,'TicklabelInterpreter','LaTex')
             grid on
             
-            % removing all problematic signs from figure name
+            %removing all problematic signs from figure name
             
-            %             fig_name = regexprep(strcat(param{i,1}{1,1},fields{j}),'/','');
-            %             fig_name = regexprep(fig_name,'\','');
-            %             fig_name = strcat('.\figures\Fig_',fig_name);
-            %
-            %             print('-f',fig_name,'-depsc')
+            fig_name = regexprep(strcat(c1{i}(i),'_',param_2{i},'_',fields{k}),'/','');
+            fig_name = regexprep(fig_name,'\','');
+            fig_name = regexprep(fig_name,'_','');
+            
+            fig_name = strcat(directory,'\figures\Fig_',fig_name);
+            
+            print('-f',  '-depsc', num2str(fig_name))
             
         end
-    end
-    
+    end 
 end
 
 
