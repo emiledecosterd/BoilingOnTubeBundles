@@ -44,6 +44,10 @@ geom['corrPD'] = 'Gaddis'
 geom['layout'] = 'Staggered'
 geom['N'] = geom['Nt']*geom['Nt_col']
 
+# Loop pipe pattern
+geom['nTurns'] = 2
+geom['nLoops'] = 1
+
 
 # Flow Inputs
 flowInputs['Tc_in'] = 5 + 273.15

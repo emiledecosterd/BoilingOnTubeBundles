@@ -23,22 +23,22 @@ import os
 
 
 # parameters 1 go on the x-axis
-Parameters_1 = ['mdot_c']
+Parameters_1 = ['Tc_in']
 Dictionnaries_1 = ['flowInputs']
-Starts_1 = [5]
-Ends_1 = [75]
-Number_points_1 = [15]
-Parameters_names_1 = ['G_{wf,in}[m^2/s]']
+Starts_1 = [-5+273.15]
+Ends_1 = [10+273.150]
+Number_points_1 = [4]
+Parameters_names_1 = ['T_{wf,in}[K]']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
 # parameters 2 go in the legend
-Parameters_2 = ['D']
+Parameters_2 = ['Th_in']
 Dictionnaries_2 = ['geom']
-Starts_2 = [0.010]
-Ends_2 = [0.018]
-Number_points_2 = [5]
-Parameters_names_2 = ['D[m]']
+Starts_2 = [15+273.15]
+Ends_2 = [25+273.15]
+Number_points_2 = [3]
+Parameters_names_2 = ['T_{w,in}[K]']
 
 
 sim_1 = 0
@@ -84,6 +84,7 @@ for Param_2 in Parameters_2:
         geom['corrPD'] = 'Gaddis'
         geom['layout'] = 'Staggered'
         geom['N'] = geom['Nt']*geom['Nt_col']
+
 
         # Flow Inputs
         flowInputs['Tc_in'] = 0 + 273.15
