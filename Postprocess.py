@@ -82,6 +82,7 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
     alpha_i_tot = 0.0
     U_tot = 0.0
     Delta_P_fric=0.0
+    Delta_P_hydro=0.0
 
     for i in range(1, geom['Nt']+1):
         for j in range(1, geom['n']+1):
