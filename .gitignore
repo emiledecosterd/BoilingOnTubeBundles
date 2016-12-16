@@ -4,6 +4,8 @@
 *.eps
 *.pdf
 *.js
+*.txt
+*.png
 latex/doxygen.sty
 latex/Makefile
 html/*
