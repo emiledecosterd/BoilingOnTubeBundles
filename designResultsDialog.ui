@@ -7,17 +7,23 @@
     <x>0</x>
     <y>0</y>
     <width>941</width>
-    <height>601</height>
+    <height>741</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="font">
         <font>
          <pointsize>20</pointsize>
@@ -135,7 +141,9 @@
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout"/>
+    <widget class="QWidget" name="plotWidget" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout_2"/>
+    </widget>
    </item>
   </layout>
  </widget>

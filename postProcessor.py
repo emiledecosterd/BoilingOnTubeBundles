@@ -30,6 +30,8 @@ class PostProcessor(QObject):
 
 		# Create the directory
 		os.makedirs('figures/' + self.config['initTime'])
+		os.makedirs('figures/' + self.config['initTime'] + '/mplt')
+		os.makedirs('figures/' + self.config['initTime'] + '/images')
 
 		# Save the plots
 		self.savePlots()
