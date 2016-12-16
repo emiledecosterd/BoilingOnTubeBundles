@@ -101,6 +101,8 @@ set(groot, 'DefaultLegendInterpreter', 'LaTex')
 
 mkdir(directory,'figures')
 
+plot_error = 1; % option to plot relative error to last term computed 0 when deactivated, 1 to activate
+
 for i=1:length(files) % loop on files (lines of Data_plot)
     
     for j=1:length(c1{i}) % loop on diferents param_1
@@ -113,14 +115,28 @@ for i=1:length(files) % loop on files (lines of Data_plot)
             
             for l=1:n_points_param_2 % loops on param_2
                 
-                plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
-                    'x--','Linewidth',width,'Color',color(l,:))
-                Leg=[Leg,strcat('$',param_2{i},'=',num2str(Data_plot{i,j}(1,1,l)),'$')];
+                if plot_error == 1
+                    
+                    plot(Data_plot{i,j}(2,:,l),...
+                        100*(Data_plot{i,j}(k,:,l)-Data_plot{i,j}(k,end,l))./Data_plot{i,j}(k,end,l),...
+                        'x--','Linewidth',width,'Color',color(l,:))
+                    Leg=[Leg,strcat('$',param_2{i},'=',num2str(Data_plot{i,j}(1,1,l)),'$')];
+                    
+                else
+                    plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
+                        'x--','Linewidth',width,'Color',color(l,:))
+                    Leg=[Leg,strcat('$',param_2{i},'=',num2str(Data_plot{i,j}(1,1,l)),'$')];
+                end
                 
             end
             
             xlabel(strcat('$', c1{i}(j), '$'))
-            ylabel(strcat('$', fields{k}, '$'))
+            
+            if plot_error == 1
+                ylabel(strcat('$', fields{k}(1:strfind(fields{k}, '[')-1),'\%', '$'))
+            else
+                ylabel(strcat('$', fields{k}, '$'))
+            end
             h=legend(Leg,'Location','best' );
             set(h,'FontSize',10);
             %set(h,'box','off')
