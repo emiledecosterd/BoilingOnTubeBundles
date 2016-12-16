@@ -163,6 +163,7 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
 	OtherData['alpha_a']= outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
 	OtherData['deltaPc_f'] = P['deltaPc_f']
+	OtherData['deltaPc_h'] = P['Ph_out']
 	#OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
 	#OtherData['kt']=kt
 	#OtherData['kp']=kp

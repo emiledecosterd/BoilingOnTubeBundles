@@ -75,7 +75,7 @@ def plot_xc_pipe(xc, n, Nt, show):
 #     time = time.strftime("%Y%m%H%M")
 #     self.simName = (time + "_" + plotName)
 
-def PostProcess_calc(opCond, geom, Q, Pc, xc, OtherData, configuration):
+def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
     q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
 
     alpha_a_tot = 0.0
@@ -90,6 +90,7 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, OtherData, configuration):
             #U_tot += OtherData[i,j]['U']
 
         Delta_P_fric += OtherData[i,1]['deltaPc_f']
+        Delta_P_hydro += OtherData[i,1]['deltaPc_h']
 
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
     alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
@@ -99,6 +100,7 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, OtherData, configuration):
     #R_w = OtherData[1,1]['R_w']
     Pc_drop = Pc[ 1, 1]-Pc[ geom['Nt'], 1]
     xc_drop = xc[ geom['Nt'],1]-xc[ 0, 1]
+    Th_drop = Th[1, 0] - Th[1, geom['n']]
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
@@ -117,8 +119,10 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, OtherData, configuration):
     f.write('\alpha_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
     #f.write('U[W/m^2/K] = ' +str(U_avg)+'\n')
     f.write('\Delta\,P_{frictional}[Pa] = ' + str(Delta_P_fric)+'\n')
+    f.write('\Delta\,P_{hydrostatic}[Pa] = ' + str(Delta_P_hydro)+'\n')
     f.write('\Delta\,P_{inlet}[Pa] = '+str(Pc_drop)+'\n')
     f.write('\Delta_x = '+str(xc_drop)+'\n')
+    f.write('\Delta\,T{water} = '+str(Th_drop)+'\n')
     f.write('\n')
     #f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
     #f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
