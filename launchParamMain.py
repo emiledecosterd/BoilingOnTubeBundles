@@ -23,22 +23,22 @@ import os
 
 
 # parameters 1 go on the x-axis
-Parameters_1 = ['n']
-Dictionnaries_1 = ['geom']
-Starts_1 = [10]
-Ends_1 = [30]
-Number_points_1 = [10]
-Parameters_names_1 = ['n']
+Parameters_1 = ['mdot_c']
+Dictionnaries_1 = ['flowInputs']
+Starts_1 = [5]
+Ends_1 = [75]
+Number_points_1 = [15]
+Parameters_names_1 = ['G_{wf,in}[m^2/s]']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
 # parameters 2 go in the legend
-Parameters_2 = ['L']
+Parameters_2 = ['D']
 Dictionnaries_2 = ['geom']
-Starts_2 = [1]
-Ends_2 = [3]
-Number_points_2 = [3]
-Parameters_names_2 = ['L[m]']
+Starts_2 = [0.010]
+Ends_2 = [0.018]
+Number_points_2 = [5]
+Parameters_names_2 = ['D[m]']
 
 
 sim_1 = 0
@@ -131,7 +131,7 @@ for Param_2 in Parameters_2:
 
                 # update dictionnaries
                 geom['N'] = geom['Nt']*geom['Nt_col']
-                Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
+                geom['sh'] = geom['s']
                 #opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
                 #opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
@@ -149,3 +149,6 @@ for Param_2 in Parameters_2:
 
     sim_2 += 1
     sim_1 = 0
+
+    f.open(configuration['filename'], 'a')
+    f.write('Simulation completed')
