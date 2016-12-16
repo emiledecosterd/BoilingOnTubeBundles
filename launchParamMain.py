@@ -23,28 +23,28 @@ import os
 
 
 # parameters 1 go on the x-axis
-Parameters_1 = ['mdot_c']
+Parameters_1 = ['Tc_in']
 Dictionnaries_1 = ['flowInputs']
-Starts_1 = [5]
-Ends_1 = [75]
-Number_points_1 = [15]
-Parameters_names_1 = ['G_{wf,in}[m^2/s]']
+Starts_1 = [0 + 273.15]
+Ends_1 = [5 + 273.5]
+Number_points_1 = [2]
+Parameters_names_1 = ['T_{sat}[K]']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
 # parameters 2 go in the legend
-Parameters_2 = ['D']
-Dictionnaries_2 = ['geom']
+Parameters_2 = ['FluidType']
+Dictionnaries_2 = ['opCond']
 Starts_2 = [0.010]
 Ends_2 = [0.018]
 Number_points_2 = [5]
-Parameters_names_2 = ['D[m]']
+Parameters_names_2 = ['FluidType']
 
 
 sim_1 = 0
 sim_2 = 0
 
-path='./Param/'+'Parametric_analysis'+'_'+strftime("%Y-%m-%d %H-%M-%S", gmtime())
+path='./Param/'+'Parametric_analysis'+'_'+strftime("%Y-%m-%d %H-%M-%S")
 os.makedirs(path)
 
 configuration={}
@@ -116,12 +116,18 @@ for Param_2 in Parameters_2:
 
         variable_1 = np.linspace(start_1, end_1, num=N_points_1)
 
-        Dico_2 = Dictionnaries_2[sim_2]
-        start_2 = Starts_2[sim_2]
-        end_2 = Ends_2[sim_2]
-        N_points_2 = Number_points_2[sim_2]
-        variable_2 = np.linspace(start_2, end_2, num=N_points_2)
+        if Param_2 == 'FluidType':
+            variable_2 = ['R134a','Ammonia','Propane']
+        else:
+            start_2 = Starts_2[sim_2]
+            end_2 = Ends_2[sim_2]
+            N_points_2 = Number_points_2[sim_2]
+            variable_2 = np.linspace(start_2, end_2, num=N_points_2)
 
+        Dico_2 = Dictionnaries_2[sim_2]
+
+
+        count = 0.0
         for var_2 in variable_2:
 
             for var_1 in variable_1:
@@ -137,7 +143,12 @@ for Param_2 in Parameters_2:
 
                 f=open(configuration['filename'], 'a')
 
-                f.write('\n' +Parameters_names_2[sim_2]+' = '+str(var_2)+'\n')
+                if Parameters_2 == ['FluidType']:
+                    f.write('\n' +Parameters_names_2[sim_2]+' = '+str(count)+'\n')
+
+                else:
+                    f.write('\n' +Parameters_names_2[sim_2]+' = '+str(var_2)+'\n')
+
                 f.write(Parameters_names_1[sim_1]+' = '+str(var_1)+'\n\n')
                 f.close()
 
@@ -145,10 +156,13 @@ for Param_2 in Parameters_2:
 
                 simu.startSimulation(configuration)
 
+            count +=1
+
         sim_1 += 1
 
     sim_2 += 1
     sim_1 = 0
 
-    f.open(configuration['filename'], 'a')
-    f.write('Simulation completed')
+
+f=open(configuration['filename']+'COMPLETE', 'a')
+f.write('Simulation completed')

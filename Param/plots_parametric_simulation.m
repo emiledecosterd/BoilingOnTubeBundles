@@ -101,7 +101,8 @@ set(groot, 'DefaultLegendInterpreter', 'LaTex')
 
 mkdir(directory,'figures')
 
-plot_error = 1; % option to plot relative error to last term computed 0 when deactivated, 1 to activate
+plot_error = 0; % option to plot relative error to last term computed 0 when deactivated, 1 to activate
+fluids = [{'R134a'},{'Ammonia'},{'Propane'}];
 
 for i=1:length(files) % loop on files (lines of Data_plot)
     
@@ -121,6 +122,11 @@ for i=1:length(files) % loop on files (lines of Data_plot)
                         100*(Data_plot{i,j}(k,:,l)-Data_plot{i,j}(k,end,l))./Data_plot{i,j}(k,end,l),...
                         'x--','Linewidth',width,'Color',color(l,:))
                     Leg=[Leg,strcat('$',param_2{i},'=',num2str(Data_plot{i,j}(1,1,l)),'$')];
+                    
+                elseif isequal(fields{1}, 'FluidType')
+                    plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
+                        'x--','Linewidth',width,'Color',color(l,:))
+                    Leg=[Leg,strcat('$',fluids(l),'$')];
                     
                 else
                     plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
