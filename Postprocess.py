@@ -75,7 +75,7 @@ def plot_xc_pipe(xc, n, Nt, show):
 #     time = time.strftime("%Y%m%H%M")
 #     self.simName = (time + "_" + plotName)
 
-def PostProcess_calc(opCond, geom, Q, OtherData, configuration):
+def PostProcess_calc(opCond, geom, Q, Pc, xc, OtherData, configuration):
     q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
 
     alpha_a_tot = 0.0
@@ -87,34 +87,39 @@ def PostProcess_calc(opCond, geom, Q, OtherData, configuration):
         for j in range(1, geom['n']+1):
             alpha_a_tot += OtherData[i,j]['alpha_a']
             alpha_i_tot += OtherData[i,j]['alpha_i']
-            U_tot += OtherData[i,j]['U']
+            #U_tot += OtherData[i,j]['U']
 
         Delta_P_fric += OtherData[i,1]['deltaPc_f']
 
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
     alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
-    U_avg = U_tot/(geom['n']*geom['Nt'])
-    R_a = 1/alpha_a_avg
-    R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
-    R_w = OtherData[1,1]['R_w']
+    #U_avg = U_tot/(geom['n']*geom['Nt'])
+    #R_a = 1/alpha_a_avg
+    #R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
+    #R_w = OtherData[1,1]['R_w']
+    Pc_drop = Pc[ 1, 1]-Pc[ geom['Nt'], 1]
+    xc_drop = xc[ geom['Nt'],1]-xc[ 0, 1]
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
-    print('Average Overall heat transfer coefficient [W/m^2/K] %.3f: ' %U_avg)
-    print('Inner thermal resistance [W/m^2/K]^-1 %.10f: ' %R_i)
-    print('Outer thermal resistance [W/m^2/K]^-1 %.10f: ' %R_a)
-    print('Wall thermal resistance [W/m^2/K]^-1 %.10f: ' %R_w)
+    #print('Average Overall heat transfer coefficient [W/m^2/K] %.3f: ' %U_avg)
+    #print('Inner thermal resistance [W/m^2/K]^-1 %.10f: ' %R_i)
+    #print('Outer thermal resistance [W/m^2/K]^-1 %.10f: ' %R_a)
+    #print('Wall thermal resistance [W/m^2/K]^-1 %.10f: ' %R_w)
 
     f=open(configuration['filename'], 'a')
 
     f.write('Q[kW] = '+str(Q)+'\n')
     f.write('q[kW/m^2] = '+str(q_avg)+'\n')
-    f.write('a_a[W/m^2/K] = ' +str(alpha_a_avg)+'\n')
-    f.write('a_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
-    f.write('U[W/m^2/K] = ' +str(U_avg)+'\n')
-    f.write('DelP_f[Pa] = ' + str(Delta_P_fric)+'\n\n')
+    f.write('\alpha_a[W/m^2/K] = ' +str(alpha_a_avg)+'\n')
+    f.write('\alpha_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
+    #f.write('U[W/m^2/K] = ' +str(U_avg)+'\n')
+    f.write('\Delta\,P_{frictional}[Pa] = ' + str(Delta_P_fric)+'\n')
+    f.write('\Delta\,P_{inlet}[Pa] = '+str(Pc_drop)+'\n')
+    f.write('\Delta_x = '+str(xc_drop)+'\n')
+    f.write('\n')
     #f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
     #f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
     #f.write('\n Wall thermal resistance [W/m^2/K]^-1: ' +str(R_w))

@@ -65,8 +65,7 @@ def outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 			alpha_a = 55*p_r**(0.12-0.08686*math.log(geom['e_o']*1e6))*\
 			(-0.4343*math.log(p_r))**-0.55*M**-0.5*abs(q)**0.67 # [W/m^2/K]
 
-			if opCond['TubeMat'] == 'copper':
-				alpha_a = 1.7*alpha_a
+
 
 	elif geom['corr'] == "Gorenflo":
 

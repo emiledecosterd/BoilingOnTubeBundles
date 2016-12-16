@@ -85,6 +85,7 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 			if (kt == ktmax):
 				print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
 				print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
+				raise Exception('Newton did not converge')
 			else:
 				print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
 
@@ -159,7 +160,8 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	# Capacity of the cell
 	Qcell = Q #[kW]
 	OtherData={}
-	OtherData = EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
+	OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
+	OtherData['alpha_a']= outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
 	OtherData['deltaPc_f'] = P['deltaPc_f']
 	#OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
 	#OtherData['kt']=kt

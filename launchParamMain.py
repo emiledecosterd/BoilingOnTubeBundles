@@ -18,27 +18,27 @@ from time import gmtime, strftime
 
 import os
 
-################################################################################
-###                         CHOOSE PARAEMETRIC RANGES                        ###
+###########################################################################
+###                   CHOOSE PARAEMETRIC RANGES                        ###
 
 
 # parameters 1 go on the x-axis
-Parameters_1 = ['xc_in']
-Dictionnaries_1 = ['flowInputs']
-Starts_1 = [0.05]
-Ends_1 = [0.95]
-Number_points_1 = [3]
-Parameters_names_1 = ['x']
+Parameters_1 = ['n']
+Dictionnaries_1 = ['geom']
+Starts_1 = [10]
+Ends_1 = [30]
+Number_points_1 = [10]
+Parameters_names_1 = ['n']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
 # parameters 2 go in the legend
-Parameters_2 = ['Tc_in']
-Dictionnaries_2 = ['flowInputs']
-Starts_2 = [ 0 + 273.15]
-Ends_2 = [5 + 273.15]
-Number_points_2 = [2]
-Parameters_names_2 = ['T_{sat}']
+Parameters_2 = ['L']
+Dictionnaries_2 = ['geom']
+Starts_2 = [1]
+Ends_2 = [3]
+Number_points_2 = [3]
+Parameters_names_2 = ['L[m]']
 
 
 sim_1 = 0
@@ -64,37 +64,40 @@ for Param_2 in Parameters_2:
 
         # Operating Conditions
         opCond['FluidType'] = 'R134a'
-        opCond['mfr_c'] = 25
+        # opCond['mfr_c'] = 25
         # opCond['mdot_h'] = 103.0 # Need to guess it
         opCond['TubeMat'] = 'copper'
         opCond['TubeThermalConductivity']= 400
 
         # Geometrical Inputs
-        geom['Nt'] = 10
-        geom['Nt_col'] = 5
-        geom['L'] = 5
-        geom['n'] = 3
-        geom['s'] = 70e-3
-        geom['sh'] = 70e-3
-        geom['D'] = 50e-3
-        geom['e_i'] =3e-6
-        geom['e_o'] = 3e-6
-        geom['t'] = 5e-3
+        geom['Nt'] = 4
+        geom['Nt_col'] = 3
+        geom['L'] = 1
+        geom['n'] = 6
+        geom['s'] = 22.22e-3
+        geom['sh'] = 22.22e-3
+        geom['D'] = 15e-3
+        geom['e_i'] = 3e-6
+        geom['e_o'] = 2.3e-6
+        geom['t'] = 2e-3
         geom['corr'] = 'Cooper'
         geom['corrPD'] = 'Gaddis'
-        geom['layout'] = 'InLine'
+        geom['layout'] = 'Staggered'
         geom['N'] = geom['Nt']*geom['Nt_col']
 
         # Flow Inputs
         flowInputs['Tc_in'] = 0 + 273.15
-        flowInputs['Th_in'] = 15+ 273.15
+        flowInputs['Th_in'] = 20+ 273.15
         flowInputs['Ph_in'] = 1e5
         flowInputs['xc_in'] = 0.05
         Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
-        opCond['mfr_h'] = 20.0 #mfr_hGuess
-        opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
-        opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+        #opCond['mfr_h'] = 0.5 #mfr_hGuess
+        #opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
+        #opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+
+        opCond['mdot_c'] = 20
+        opCond['mdot_h'] = 300
 
         configuration['opCond'] = opCond
         configuration['geom'] = geom
@@ -129,8 +132,8 @@ for Param_2 in Parameters_2:
                 # update dictionnaries
                 geom['N'] = geom['Nt']*geom['Nt_col']
                 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
-                opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
-                opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+                #opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
+                #opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
                 f=open(configuration['filename'], 'a')
 

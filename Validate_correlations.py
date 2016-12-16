@@ -4,6 +4,17 @@ import numpy as np
 
 from CoolProp.CoolProp import PropsSI
 from heatTransferCoefficient import*
+from feenstraCorrelation import cell_voidFraction
+
+import os
+import glob
+
+
+
+# delets all .txt files in folder
+files = glob.glob('./Validation/*.txt')
+for f in files:
+    os.remove(f)
 
 
 ################################################################################
@@ -40,7 +51,7 @@ geom['N'] = geom['Nt']*geom['Nt_col']
 flowInputs['Tc_in'] = 10 + 273.15
 flowInputs['Th_in'] = 15+ 273.15
 flowInputs['Ph_in'] = 1e5
-flowInputs['xc_in'] = 0.1
+flowInputs['xc_in'] = 0.8
 Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
 opCond['mfr_h'] = 20.0 #mfr_hGuess
@@ -65,7 +76,7 @@ Th_out = 0.0
 
 opCond['mdot_h'] = 4
 opCond['mdot_c'] = 4
-flowInputs['Tc_in'] = 15 + 273.15
+flowInputs['Tc_in'] = 10 + 273.15
 
 
 geom['dx'] = geom['L']/geom['n'] # [m]
@@ -84,6 +95,44 @@ for corr in correlation:
 
         geom['corr'] = corr
         a_a = outerHeatTransfer(opCond, geom, Th_in, flowInputs['Tc_in'], Pc_in, 0,Th_out, flowInputs['Tc_in'])
-        f=open('./Validation/'+corr+'.txt','a')
+        f=open('./Validation/'+corr+'_a_nb.txt','a')
         f.write('q = '+str(q)+'\na_a = '+str(a_a)+'\n\n')
+        f.close()
+
+
+
+################################################################################
+#                       Feenstra
+
+geom["s"] = 0.1
+geom["D"] = 0.05
+
+opCond["mdot_c"] = 0.0
+Tc_out = 15 +273.15
+
+start = -2
+end = 0
+x_range = np.logspace(start, end, num=30)
+
+eps_in = 0.1
+xc_out = 0.0
+
+start = 10
+end = 80
+mdot_c_range = np.linspace(start, end, num= 5)
+
+for mdot_c in mdot_c_range:
+
+    opCond["mdot_c"] = mdot_c
+
+    for x in x_range:
+
+        xc_out = x
+
+        eps = cell_voidFraction(opCond, geom, xc_out, Tc_out, eps_in )
+
+        eps_in = eps
+
+        f=open('./Validation/Feenstra_eps.txt','a')
+        f.write('x = '+str(x)+'\neps = '+str(eps)+'\n\n')
         f.close()

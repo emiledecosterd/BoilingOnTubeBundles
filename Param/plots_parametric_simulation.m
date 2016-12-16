@@ -121,16 +121,18 @@ for i=1:length(files) % loop on files (lines of Data_plot)
             
             xlabel(strcat('$', c1{i}(j), '$'))
             ylabel(strcat('$', fields{k}, '$'))
-            legend(Leg,'Location','best' );
+            h=legend(Leg,'Location','best' );
+            set(h,'FontSize',10);
+            %set(h,'box','off')
             set (gca,'TicklabelInterpreter','LaTex')
             grid on
             
             %removing all problematic signs from figure name
             
             fig_name = regexprep(strcat('Fig_',c1{i}(j),'_',param_2{i},'_',fields{k}),'/','');
-            fig_name = regexprep(fig_name,'/','');
+            fig_name = regexprep(fig_name,'\','');
             
-            print('-f',  '-depsc', fullfile(directory,'figures',cell2mat(fig_name)))
+            print('-f',  '-dpng', fullfile(directory,'figures',cell2mat(fig_name)))
             
         end
     end
