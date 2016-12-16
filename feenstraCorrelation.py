@@ -52,13 +52,13 @@ def cell_voidFraction(opCond, geom, xc_out, Tc_out, eps_in ):
     delta = 100
 
     # Get the Cold Flux properties values at the outlet of the cell :
-    mu_L = PropsSI('V','T',Tc_out,'Q',0.0,'R134a')
-    mu_G = PropsSI('V','T',Tc_out,'Q',1.0,'R134a')
+    mu_L = PropsSI('V','T',Tc_out,'Q',0.0,opCond['FluidType'])
+    mu_G = PropsSI('V','T',Tc_out,'Q',1.0,opCond['FluidType'])
 
-    rho_L = PropsSI('D','T',Tc_out,'Q',0.0,'R134a')
-    rho_G = PropsSI('D','T',Tc_out,'Q',1.0,'R134a')
+    rho_L = PropsSI('D','T',Tc_out,'Q',0.0,opCond['FluidType'])
+    rho_G = PropsSI('D','T',Tc_out,'Q',1.0,opCond['FluidType'])
 
-    sigma = PropsSI('I','T',Tc_out,'Q',1.0,'R134a')
+    sigma = PropsSI('I','T',Tc_out,'Q',1.0,opCond['FluidType'])
 
 
     while (k < kMax and  delta > tol ):
@@ -132,13 +132,13 @@ def ini_cell_voidFraction(opCond, geom, xc_in, Tc_in, eps_in ):
     delta = 100
 
     # Get the Cold Flux properties values at the inlet of the cell :
-    mu_L = PropsSI('V','T',Tc_in,'Q',0.0,'R134a')
-    mu_G = PropsSI('V','T',Tc_in,'Q',1.0,'R134a')
+    mu_L = PropsSI('V','T',Tc_in,'Q',0.0,opCond['FluidType'])
+    mu_G = PropsSI('V','T',Tc_in,'Q',1.0,opCond['FluidType'])
 
-    rho_L = PropsSI('D','T',Tc_in,'Q',0.0,'R134a')
-    rho_G = PropsSI('D','T',Tc_in,'Q',1.0,'R134a')
+    rho_L = PropsSI('D','T',Tc_in,'Q',0.0,opCond['FluidType'])
+    rho_G = PropsSI('D','T',Tc_in,'Q',1.0,opCond['FluidType'])
 
-    sigma = PropsSI('I','T',Tc_in,'Q',1.0,'R134a')
+    sigma = PropsSI('I','T',Tc_in,'Q',1.0,opCond['FluidType'])
 
 
     while (k < kMax and  delta > tol ):
