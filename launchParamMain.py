@@ -2,7 +2,6 @@ import sys
 import math
 import numpy as np
 
-from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
