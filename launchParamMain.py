@@ -23,22 +23,22 @@ import os
 
 
 # parameters 1 go on the x-axis
-Parameters_1 = ['Tc_in']
-Dictionnaries_1 = ['flowInputs']
-Starts_1 = [0 + 273.15]
-Ends_1 = [5 + 273.5]
+Parameters_1 = ['mdot_c']
+Dictionnaries_1 = ['opCond']
+Starts_1 = [4]
+Ends_1 = [10]
 Number_points_1 = [2]
-Parameters_names_1 = ['T_{sat}[K]']
+Parameters_names_1 = ['G_{R134a}[kg/s/m^2]']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
 # parameters 2 go in the legend
-Parameters_2 = ['FluidType']
-Dictionnaries_2 = ['opCond']
+Parameters_2 = ['layout']
+Dictionnaries_2 = ['geom']
 Starts_2 = [0.010]
 Ends_2 = [0.018]
 Number_points_2 = [5]
-Parameters_names_2 = ['FluidType']
+Parameters_names_2 = ['layout']
 
 
 sim_1 = 0
@@ -118,6 +118,10 @@ for Param_2 in Parameters_2:
 
         if Param_2 == 'FluidType':
             variable_2 = ['R134a','Ammonia','Propane']
+        elif Param_2 == 'corrPD':
+            variable_2 = ['Gaddis','Zukauskas']
+        elif Param_2 == 'layout':
+            variable_2 = ['Staggered','InLine']
         else:
             start_2 = Starts_2[sim_2]
             end_2 = Ends_2[sim_2]
@@ -143,7 +147,7 @@ for Param_2 in Parameters_2:
 
                 f=open(configuration['filename'], 'a')
 
-                if Parameters_2 == ['FluidType']:
+                if Parameters_2 == ['FluidType'] or Parameters_2 == ['corrPD'] or Parameters_2 == ['layout']:
                     f.write('\n' +Parameters_names_2[sim_2]+' = '+str(count)+'\n')
 
                 else:
@@ -164,5 +168,5 @@ for Param_2 in Parameters_2:
     sim_1 = 0
 
 
-f=open(configuration['filename']+'COMPLETE', 'a')
+f=open(path+'/status: COMPLETE', 'a')
 f.write('Simulation completed')
