@@ -99,7 +99,7 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
     #R_a = 1/alpha_a_avg
     #R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
     #R_w = OtherData[1,1]['R_w']
-    Pc_drop = Pc[ 1, 1]-Pc[ geom['Nt'], 1]
+    Pc_drop = Pc[ 0, 1]-Pc[ geom['Nt'], 1]
     xc_drop = xc[ geom['Nt'],1]-xc[ 0, 1]
     Th_drop = Th[1, 0] - Th[1, geom['n']]
 
@@ -123,7 +123,7 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
     f.write('\Delta\,P_{hydrostatic}[Pa] = ' + str(Delta_P_hydro)+'\n')
     f.write('\Delta\,P_{inlet}[Pa] = '+str(Pc_drop)+'\n')
     f.write('\Delta\,x[-] = '+str(xc_drop)+'\n')
-    f.write('\Delta\,T{water}[K] = '+str(Th_drop)+'\n')
+    f.write('\Delta\,T_{water}[K] = '+str(Th_drop)+'\n')
     f.write('\n')
     #f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
     #f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))

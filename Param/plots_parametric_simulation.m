@@ -103,6 +103,8 @@ mkdir(directory,'figures')
 
 plot_error = 0; % option to plot relative error to last term computed 0 when deactivated, 1 to activate
 fluids = [{'R134a'},{'Ammonia'},{'Propane'}];
+corrPD = [{'Gaddis'},{'Zukauskas'}];
+layout = [{'Staggered'},{'In line'}];
 
 for i=1:length(files) % loop on files (lines of Data_plot)
     
@@ -127,6 +129,16 @@ for i=1:length(files) % loop on files (lines of Data_plot)
                     plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
                         'x--','Linewidth',width,'Color',color(l,:))
                     Leg=[Leg,strcat('$',fluids(l),'$')];
+                    
+                elseif isequal(fields{1}, 'corrPD')
+                    plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
+                        'x--','Linewidth',width,'Color',color(l,:))
+                    Leg=[Leg,strcat('$',corrPD(l),'$')];
+                    
+                elseif isequal(fields{1}, 'layout')
+                    plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
+                        'x--','Linewidth',width,'Color',color(l,:))
+                    Leg=[Leg,strcat('$',layout(l),'$')];
                     
                 else
                     plot(Data_plot{i,j}(2,:,l),Data_plot{i,j}(k,:,l),...
