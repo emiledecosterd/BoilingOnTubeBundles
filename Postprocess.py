@@ -1,5 +1,5 @@
 
-from CoolProp import PropSI
+from CoolProp.CoolProp import PropsSI
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -30,12 +30,12 @@ def plotFlowPattern(config, results, current_plot):
             xc_temp = xc[j, i]
             Tc_temp = Tc[j, i]
 
-            rho_L = PropSI('D', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
-            rho_G = PropSI('D', 'T', Tc_temp, 'Q', 1.0, config['FluidType'])
-            mu_L = PropSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+            rho_L = PropsSI('D', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+            rho_G = PropsSI('D', 'T', Tc_temp, 'Q', 1.0, config['FluidType'])
+            mu_L = PropsSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
             GL_GG = 1/xc_temp-1
             G_G = config['mdot_c']*xc_temp
-            sigma = PropSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+            sigma = PropsSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
 
             # Calculate the coefficients
             abscisse = GL_GG*np.power(rho_G*rho_L/1200, 1/3)*(np.power(mu_L*(1000/rho_L)**2, 1/3)*0.073/sigma)
