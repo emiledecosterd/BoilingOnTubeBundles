@@ -86,6 +86,7 @@ class ResultsDialog(Ui_Dialog):
 		self.resizeHeightRatio = [1, 2, 2]
 
 	def loadFigures(self):
+		self.figuresList = []
 		for key in self.plotName:
 			with open(self.directoryName + '/mplt/plot_' + key, 'rb') as plotPath:
 				self.figuresList.append(pickle.load(plotPath))

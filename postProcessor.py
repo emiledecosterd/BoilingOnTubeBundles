@@ -21,9 +21,10 @@ class PostProcessor(QObject):
 	## 	Initialize data
 	#	@param config Configuration dictionnary
 	#	@param results Results diactionnary
-	def __init__(self, config, results):
+	def __init__(self, config, results, show):
 		self.config = config
 		self.results = results
+		self.show = show
 
 		# Create the directory
 		os.makedirs(self.config['filename'] + '/data')
@@ -43,13 +44,13 @@ class PostProcessor(QObject):
 
 		try:
 			# Save the boiler plots
-			plot_boiler(self.config, self.results, False)
+			plot_boiler(self.config, self.results, self.show)
 		except Exception as e:
 			raise Error('PostProcessor.savePlots.plot_boiler', e)
 
 		try:
 			# Save teh xc pipe plot
-			plot_xc_pipe(self.config, self.results, False)
+			plot_xc_pipe(self.config, self.results, self.show)
 		except Exception as e:
 			raise Error('PostProcessor.savePlots.plot_xc_pipe', e)
 

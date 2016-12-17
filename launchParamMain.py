@@ -2,7 +2,6 @@ import sys
 import math
 import numpy as np
 
-from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
@@ -12,7 +11,9 @@ from postProcess import plot_xc_pipe
 
 from PyQt5.QtCore import QObject, pyqtSignal
 
-from mainSimulation import Simulation
+from simulation import Simulation
+from postProcessor import PostProcessor
+from simulationThread import SimulationThread
 
 from time import gmtime, strftime
 
@@ -157,9 +158,11 @@ for Param_2 in Parameters_2:
                 f.write(Parameters_names_1[sim_1]+' = '+str(var_1)+'\n\n')
                 f.close()
 
-                simu = Simulation()
+                simu = Simulation(False)
 
-                simu.startSimulation(configuration)
+                results = simu.run(configuration)
+                ### Post processing
+                PostProcessor(self.configuration, results, False)
 
             count +=1
 
@@ -171,3 +174,5 @@ for Param_2 in Parameters_2:
 
 f=open('status.txt', 'a')
 f.write('Simulation completed')
+
+

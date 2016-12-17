@@ -58,8 +58,8 @@ class MainController(QtCore.QObject):
 		sys.stdout = self.console
 
 		# Create the simulation and its thread
-		simulation = Simulation()
-		self.simulationThread = SimulationThread(self)
+		simulation = Simulation(True)
+		self.simulationThread = SimulationThread()
 		simulation.moveToThread(self.simulationThread)
 		self.simulationThread.finished.connect(simulation.deleteLater)
 		simulation.progressUpdated.connect(self.updateProgress)
@@ -191,7 +191,7 @@ class MainController(QtCore.QObject):
 			return
 
 		# Post process, no GUI
-		postProcessor = PostProcessor(self.currentSimulationConfiguration, self.results)
+		postProcessor = PostProcessor(self.currentSimulationConfiguration, self.results, False)
 
 		# Plot the result
 		self.isLongPlotter = True

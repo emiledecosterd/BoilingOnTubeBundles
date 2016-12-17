@@ -8,6 +8,7 @@ from CoolProp.CoolProp import PropsSI
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
 
+
 # Qt and GUI packages
 from PyQt5.QtCore import QObject, pyqtSignal, QThread
 from error import Error
@@ -23,6 +24,15 @@ class Simulation(QObject):
 	simulationCompleted = pyqtSignal(dict)
 	errorOccured = pyqtSignal(Error)
 	resetSimulationStatusRequested = pyqtSignal()
+
+	# In order to use this class from a script
+	parallel = False
+
+	##	Constructor
+	#	@param 	parallel 	True if class should be used in GUI, False if used from script
+	def __init__(self, parallelComputing):
+		super(Simulation, self).__init__()
+		self.parallel = parallelComputing
 
 	##	run()
 	#	This method launches the simulation
@@ -84,12 +94,13 @@ class Simulation(QObject):
 		for i in range(1, geom['Nt']+1):
 			for j in range(1, geom['n']+1):
 
-				# Check if simulation should stop
-				currentThread = QThread.currentThread()
-				if currentThread.stopSimulationRequested:
-					currentThread.reset()
-					self.simulationCompleted.emit({})
-					return
+				if self.parallel:
+					# Check if simulation should stop
+					currentThread = QThread.currentThread()
+					if currentThread.stopSimulationRequested:
+						currentThread.reset()
+						self.simulationCompleted.emit({})
+						return
 
 				# Send current progress to controller
 				currentLoop = currentLoop+1
@@ -106,13 +117,7 @@ class Simulation(QObject):
 
 					np.set_printoptions(precision=3)
 
-				print('INFO: Calculation complete !\n')
-
-				Ph_drop = Ph[ geom['Nt'],geom['n']]-flowInputs['Ph_in']
-				Pc_drop = Pc[ geom['Nt'],geom['n']]-Pc_in
-				Th_drop = Th[ geom['Nt'],geom['n']]-flowInputs['Th_in']
-				Tc_drop = Tc[ geom['Nt'],geom['n']]-flowInputs['Tc_in']
-				xc_drop = xc[ geom['Nt'],geom['n']]-flowInputs['xc_in']
+		print('INFO: Calculation complete !\n')
 
 		# q = Qtot/(geom['Nt']*math.pi*geom['D']*geom['L'])  # [kW/m²]
 		Q=Qtot*geom['Nt_col'] # [kW]
@@ -127,8 +132,10 @@ class Simulation(QObject):
 			'eps' : eps,
 			'OtherData' : OtherData
 		}
+
+
 		self.simulationCompleted.emit(self.results)
-		return
+		return self.results 
 
 
 ##	defaultConfiguration()
