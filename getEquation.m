@@ -56,7 +56,7 @@ y2o = h-y2o;
 y3o = h3-y3o; x3o = w3 + x3o;
 x1 = 0:center(1); y1 = polyval(fit_1, x1);
 x2 = center(1):255; y2 = polyval(fit_2,x2)+180;
-x3 = center(1):320; y3 = polyval(fit_3, x3)+170;
+x3 = center(1):350; y3 = polyval(fit_3, x3)+170;
 
 figure('name', 'Identified map');
 xlim([1 width]);
