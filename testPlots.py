@@ -1,3 +1,3 @@
-from Postprocess import plotFlowPatternMap
+from postProcess import plotFlowPatternMap
 
 plotFlowPatternMap(1)

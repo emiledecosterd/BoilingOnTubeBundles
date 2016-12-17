@@ -1,5 +1,5 @@
 
-
+from CoolProp import PropSI
 import numpy as np
 import math
 import matplotlib.pyplot as plt
@@ -11,7 +11,47 @@ from mpl_toolkits.mplot3d import proj3d
 import pickle
 
 
-def plotFlowPatternMap(k):
+def plotFlowPattern(config, results, current_plot):
+
+    xc = results['xc']
+    Tc = results['Tc']
+    n = config['geom']['n']
+    Nt = config['geom']['Nt']
+
+    N_cell = np.linspace(1,n, num=n)
+    N_res_x = np.empty([1, n])
+    N_res_y = np.empty([1, n])
+
+    # Loop through all cells
+    for i in range(0, Nt):
+        for j in range(0, n):
+
+            # Get the properties needed to calculate coefficients for the map
+            xc_temp = xc[j, i]
+            Tc_temp = Tc[j, i]
+
+            rho_L = PropSI('D', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+            rho_G = PropSI('D', 'T', Tc_temp, 'Q', 1.0, config['FluidType'])
+            mu_L = PropSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+            GL_GG = 1/xc_temp-1
+            G_G = config['mdot_c']*xc_temp
+            sigma = PropSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+
+            # Calculate the coefficients
+            abscisse = GL_GG*np.power(rho_G*rho_L/1200, 1/3)*(np.power(mu_L*(1000/rho_L)**2, 1/3)*0.073/sigma)
+            ordonnee = G_G*np.power(rho_G*rho_L/1200, -1/2)
+
+            # Save value to be plotted
+            N_res_x[j] = abscisse
+            N_res_y[j] = ordonnee
+
+        current_plot.plot(N_res_x, N_res_y)
+
+
+
+
+
+def plotFlowPatternMap(config, results, k):
 
     # Draw the fixed lines, fitted from the image
     p1 = np.array([0.001, 0.0211, 123.596])
