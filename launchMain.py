@@ -45,7 +45,7 @@ geom['layout'] = 'InLine'
 geom['N'] = geom['Nt']*geom['Nt_col']
 
 # Flow Inputs
-flowInputs['Tc_in'] = 15 + 273.15
+flowInputs['Tc_in'] = 0 + 273.15
 flowInputs['Th_in'] = 15+ 273.15
 
 flowInputs['Ph_in'] = 1e5

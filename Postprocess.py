@@ -7,6 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
+<<<<<<< HEAD
 def plotFlowPatternMap(k):
 
     # Draw the fixed lines, fitted from the image
@@ -57,6 +58,13 @@ def plotFlowPatternMap(k):
 
 def makeFigure(Field, FieldName, n, Nt, show, k):
 >>>>>>> Postprocessing
+=======
+import pickle
+
+def makeFigure(Field, FieldName, config, show, k):
+    n = config['geom']['n']
+    Nt = config['geom']['Nt']
+>>>>>>> origin/Refactoring
 
     N_cell = np.linspace(1,n,num=n)
 
@@ -79,10 +87,9 @@ def makeFigure(Field, FieldName, n, Nt, show, k):
     if show :
         f.show()
     else:
-        f.savefig('./figures/'+ config['initTime']+ '/plot'+ FieldName)
-        Image.open('./figures/'+ config['initTime']+ '/plot'+ FieldName +'.png')\
-            .save('./figures/'+ config['initTime']+ '/plot'+ FieldName+'.jpg','JPEG')
-
+        with open('./figures/'+ config['initTime']+ '/mplt/plot_'+ FieldName, 'wb') as fid:
+            pickle.dump(f, fid)
+        f.savefig('./figures/'+ config['initTime']+ '/images/plot_'+ FieldName +'.png')
 
 def plot_boiler(config, results, show):
 =======
@@ -139,6 +146,7 @@ def plot_xc_pipe(xc, n, Nt, show):
 
     l=plt.figure(7)
     ax=l.gca()
+    ax.set_aspect('auto')
     ax.bar(np.linspace(1,Nt,num=Nt)-0.3,x_pipe_avg,0.3,color='b',label='Average')
     ax.bar(np.linspace(1,Nt,num=Nt),x_pipe_max,0.3,color='r',label='Max')
     ax.set_xlabel('pipe #')
@@ -156,10 +164,9 @@ def plot_xc_pipe(xc, n, Nt, show):
     if show==1:
         l.show()
     else:
-        l.savefig('./figures/' + config['initTime'] + '/plot_avg_xc')
-        Image.open('./figures/' + config['initTime'] + '/plot_avg_xc.png')\
-            .save('./figures/' + config['initTime'] + '/plot_avg_xc.jpg','JPEG')
-
+        with open('./figures/'+ config['initTime']+ '/mplt/plot_avg_xc', 'wb') as fid:
+            pickle.dump(l, fid)
+        l.savefig('./figures/'+ config['initTime']+ '/images/plot_avg_xc'+'.png')
 
 <<<<<<< HEAD
 def PostProcess_calc(config, results):
