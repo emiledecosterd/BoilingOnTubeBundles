@@ -116,8 +116,8 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
 
     f.write('Q[kW] = '+str(Q)+'\n')
     f.write('q[kW/m^2] = '+str(q_avg)+'\n')
-    f.write('\alpha_a[W/m^2/K] = ' +str(alpha_a_avg)+'\n')
-    f.write('\alpha_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
+    f.write('\\alpha_a[W/m^2/K] = ' +str(alpha_a_avg)+'\n')
+    f.write('\\alpha_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
     #f.write('U[W/m^2/K] = ' +str(U_avg)+'\n')
     f.write('\Delta\,P_{frictional}[Pa] = ' + str(Delta_P_fric)+'\n')
     f.write('\Delta\,P_{hydrostatic}[Pa] = ' + str(Delta_P_hydro)+'\n')

@@ -37,6 +37,8 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     #### Shell pressure drop (Pc) ####
     ##################################
     g = 9.81
+
+    # Properties
     prop = get_properties(Tc_out, opCond['FluidType'])
     propWall = get_properties(Tc_out, opCond['FluidType']) # To be changed with real wall temp
 
@@ -186,5 +188,5 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     P['Ph_out'] = Ph_out
     P['Pc_out'] = Pc_out
     P['deltaPc_f'] = deltaPc_f
-    P['deltaPc_s'] = deltaPc_s
+    P['deltaPc_h'] = deltaPc_s
     return(P)

@@ -48,6 +48,10 @@ geom['N'] = geom['Nt']*geom['Nt_col']
 geom['nTurns'] = 2
 geom['nLoops'] = 1
 
+if geom['nTurns'] != 0:
+	geom['Nt'] = geom['nLoops']*(geom['nTurns']+1)
+	geom['N'] = geom['Nt']*geom['Nt_col']
+
 
 # Flow Inputs
 flowInputs['Tc_in'] = 5 + 273.15

@@ -44,7 +44,7 @@ Parameters_names_2 = ['T_{w,in}[K]']
 sim_1 = 0
 sim_2 = 0
 
-path='./Param/'+'Parametric_analysis'+'_'+strftime("%Y-%m-%d %H-%M-%S", gmtime())
+path='./Param/'+'Parametric_analysis'+'_'+strftime("%Y-%m-%d %H-%M-%S")
 os.makedirs(path)
 
 configuration={}
@@ -84,6 +84,14 @@ for Param_2 in Parameters_2:
         geom['corrPD'] = 'Gaddis'
         geom['layout'] = 'Staggered'
         geom['N'] = geom['Nt']*geom['Nt_col']
+
+        # Loop pipe pattern
+        geom['nTurns'] = 2
+        geom['nLoops'] = 1
+
+        if geom['nTurns'] != 0:
+            geom['Nt'] = geom['nLoops']*(geom['nTurns']+1)
+            geom['N'] = geom['Nt']*geom['Nt_col']
 
 
         # Flow Inputs
@@ -151,5 +159,5 @@ for Param_2 in Parameters_2:
     sim_2 += 1
     sim_1 = 0
 
-    f.open(configuration['filename'], 'a')
-    f.write('Simulation completed')
+f=open(configuration['filename'], 'a')
+f.write('Simulation completed')

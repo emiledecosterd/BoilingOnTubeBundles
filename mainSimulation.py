@@ -52,6 +52,8 @@ class Simulation(QObject):
         		-> geom['dx'] : Tube cell size [m]
         		-> geom['t'] : Tube thickness [m]
         		-> geom['corr'] : which correlation to use, Mostinski, Cooper, Gorenflo (slow af)
+                -> geom['nLoops'] : Numbers of loop for the sertpantin case
+                -> geom['nTurns'] : Numbers of turns
                 -> ADD HERE THE DEFINITION OF THE ONE YOU NEED
 
             -> flowInputs : Thermodynamics variable at the Cold and Hot Fluid entrance
@@ -121,37 +123,94 @@ class Simulation(QObject):
         total = geom['Nt']*geom['n']
         currentLoop = 0
 
+
         # ForLoop over the domain to compute T, x, and eps
-        for i in range(1, geom['Nt']+1):
-            for j in range(1, geom['n']+1):
 
-                currentLoop = currentLoop+1
-                progress = currentLoop/total
-                self.progressUpdated.emit(progress)
+        ### Check for loop geometry:
+        if geom['nTurns'] ==0:
+            
+            for i in range(1, geom['Nt']+1):
+                for j in range(1, geom['n']+1):
 
-                try:
+                    currentLoop = currentLoop+1
+                    progress = currentLoop/total
+                    self.progressUpdated.emit(progress)
 
-                    [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+                    try:
 
-                except Error as e:
-                    if e.functionName == 'Error in LMTD (energyBalance)':
-                        configuration['geom']['n'] =  2*configuration['geom']['n']
-                        print('Space discretization too coarse, restarting simulation with ', configuration['geom']['n'], 'cells')
-                        self.startSimulation(configuration)
-                    else:
-                        print('error fct name', e.functionName)
-                        raise Error('Solvecell','Error in Solvecell')
+                        [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
 
-                except Exception as e:
-                    raise Error('Solvecell', e)
+                    except Error as e:
+                        if e.functionName == 'Error in LMTD (energyBalance)':
+                            configuration['geom']['n'] =  2*configuration['geom']['n']
+                            print('Space discretization too coarse, restarting simulation with ', configuration['geom']['n'], 'cells')
+                            self.startSimulation(configuration)
+                        else:
+                            print('error fct name', e.functionName)
+                            raise Error('Solvecell','Error in Solvecell')
 
-                Qtot += Q
+                    except Exception as e:
+                        raise Error('Solvecell', e)
 
-                #np.set_printoptions(precision=3)
-                #print(xc)
-                #print(eps)
-                #print(OtherData)
+                    Qtot += Q
 
+                    #np.set_printoptions(precision=3)
+                    #print(xc)
+                    #print(eps)
+                    #print(OtherData)
+        else:
+            # In the loop pipe pattern
+            n = geom['n']
+            Nt = geom['Nt']
+
+            inRightFlux = True
+
+            for i in range(1, geom['Nt']+1):
+                if i != 1:
+                    inCorner = True
+                for j in range(1, geom['n']+1):
+
+                    currentLoop = currentLoop+1
+                    progress = currentLoop/total
+                    self.progressUpdated.emit(progress)
+
+                    try:
+                        if (i %(nLoops+1) == 0):
+                            inRightFlux = !inRightFlux
+
+                        if inRightFlux:
+
+                            if inCorner == False:
+                                [Ph[i,j], Pc[i,j], Th[i,j], Tc[i,j], xc[i,j], eps[i,j], Q, OtherData[i,j]] = \
+                                    SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+
+                            else:
+                                
+
+                        else:
+                            if inCorner == False:
+
+                            else:
+                                [Ph[i,n-j], Pc[i,n-j], Th[i,n-j], Tc[i,n-j], xc[i,n-j], eps[i,n-j], Q, OtherData[i,n-j]] = \
+                                    SolveCell(opCond, geom, Th[i,j-1], Tc[i-1,j], Ph[i,j-1], Pc[i-1,j], eps[i-1,j], xc[i-1,j] )
+
+
+                    except Error as e:
+                        if e.functionName == 'Error in LMTD (energyBalance)':
+                            configuration['geom']['n'] =  2*configuration['geom']['n']
+                            print('Space discretization too coarse, restarting simulation with ', configuration['geom']['n'], 'cells')
+                            self.startSimulation(configuration)
+                        else:
+                            print('error fct name', e.functionName)
+                            raise Error('Solvecell','Error in Solvecell')
+
+                    except Exception as e:
+                        raise Error('Solvecell', e)
+
+                    # Add the heat transfered inside the cell
+                    Qtot += Q
+
+                    
 
         print('Calculation complete !\n')
         #print(Th)
