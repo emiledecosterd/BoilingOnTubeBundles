@@ -16,9 +16,9 @@ def cell_vaporQuality(opCond, geom, Th_in, Th_out, Tc_in, xc_in ):
 
     # Others properties of working fluid flux
     prop = {}
-    prop['h_L'] = PropsSI('H','T',Tc_out,'Q',0.0,opCond['FluidType'])/1000 #[kJ/kg]
-    prop['h_LG'] = (PropsSI('H','T',Tc_out,'Q',1.0,opCond['FluidType'])-\
-        PropsSI('H','T',Tc_out,'Q',0.0,opCond['FluidType']))/1000 #[kJ/kg]
+    prop['h_L'] = PropsSI('H','T',Tc_in,'Q',0.0,opCond['FluidType'])/1000 #[kJ/kg]
+    prop['h_LG'] = (PropsSI('H','T',Tc_in,'Q',1.0,opCond['FluidType'])-\
+        PropsSI('H','T',Tc_in,'Q',0.0,opCond['FluidType']))/1000 #[kJ/kg]
 
     A = geom['s']*geom['dx'] # cell bottom surface /!\ this will change with tubes geometries
     mdot_c = opCond['mdot_c']*A # [kg/s]

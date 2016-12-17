@@ -73,10 +73,10 @@ for Param_2 in Parameters_2:
         geom['Nt'] = 8
         geom['Nt_col'] = 11
         geom['L'] = 3
-        geom['n'] = 6
+        geom['n'] = 10
         geom['s'] = 22.22e-3
         geom['sh'] = 22.22e-3
-        geom['D'] = 18e-9
+        geom['D'] = 18e-3
         geom['e_i'] = 3e-6
         geom['e_o'] = 3e-6
         geom['t'] = 3e-3
