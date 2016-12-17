@@ -45,7 +45,7 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     deltaZ =  geom['s'] # Height of the cell (not only the diameter D)
     deltaPc_s = (prop['rho_L']*(1-(eps_in+eps_out)/2)+prop['rho_G']*(eps_in+eps_out)/2)*g*deltaZ
 
-    print('deltaPc_s %.3f'  %deltaPc_s)
+    #print('deltaPc_s %.3f'  %deltaPc_s)
 
 
     #### Frictionnal pressure drop ####
@@ -55,7 +55,7 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     # the two-phase multiplier is the same for both (see Consolini et al.)
 
     # Compute equivalent single-phase density and viscosity
-    rho_eq = prop['rho_L']*(1-eps_out)+prop['rho_G']*eps_out 
+    rho_eq = prop['rho_L']*(1-eps_out)+prop['rho_G']*eps_out
     mu_eq = prop['mu_L']*(1-eps_out)+prop['mu_G']*eps_out
 
     # Equivalent Reynolds number
@@ -133,7 +133,7 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
             ftv = 2.5+1.2/((a-0.85)**1.08)+0.4*(b/a-1)**3-0.01*(a/b-1)**3
             zeta_tv = ftv/(Re**0.25)
 
-            # Pressure drop coefficient 
+            # Pressure drop coefficient
             zeta = zeta_lv*fzl + (zeta_tv*fzt + fnt)*(1-math.exp(-(Re+200)/1000))
 
         # Single-Phase friction coefficient
@@ -148,7 +148,7 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     f2 = lmbd * f1  # Two-Phase equivalent friction factor
 
     deltaPc_f = 2*f2*opCond['mdot_c']**2/rho_eq
-    print('deltaPc_f %.3f' %deltaPc_f)
+    #print('deltaPc_f %.3f' %deltaPc_f)
 
     # Relative pressure at the output of the cell
     Pc_out = Pc_in - deltaPc_s - deltaPc_f
@@ -163,14 +163,20 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     rho = PropsSI("D", "T", Th_out, "Q", 0, "Water")
     mu = PropsSI("V", "T", Th_out, "Q", 0, "Water")
 
-    Re = (opCond['mdot_h']*geom['D'])/mu
+    Re_D = (opCond['mdot_h']*(geom['D']-2*geom['t']))/mu
+    f = (1.8*math.log10((6.9/Re_D)+(geom['e_i']/((geom['D']-2.0*geom['t'])*3.7))**1.11))**-2.0 # [-] friction factor for rough pipes
+    Re_e = Re_D*(geom['e_i']/(geom['D']-2.0*geom['t']))*(f/8.0)**0.5 # [-] Roughness Reynolds number
 
-    if Re < 2000:
-        f = 64/Re
+    if Re_D < 2000:
+        f = 64/Re_D
     else:
-        f = 1.325/math.pow((math.log(geom['e_i'])/(3.7*geom['D']) + (5.74/math.pow(Re,0.9))),2)
-
-    deltaPh_f = f*math.pow(opCond['mdot_c'],2)*deltaX/(2*rho*geom['D'])
+        #f = 0.25/math.pow(math.log((geom['e_i']/(3.7*geom['D'])) + (5.74/math.pow(Re,0.9))),2)
+        if Re_e < 35 :
+    		# Hydrodynamically Smooth model
+            f = (0.79*math.log(Re_D)-1.64)**-2.0 # [-] friction factor for smooth pipes
+        else:
+            f = (1.8*math.log10((6.9/Re_D)+(geom['e_i']/((geom['D']-2.0*geom['t'])*3.7))**1.11))**-2.0 # [-] friction factor for rough pipes
+    deltaPh_f = f*math.pow(opCond['mdot_h'],2)*deltaX/(2*rho*geom['D'])
 
     # Relative pressure at the output of the cell
     Ph_out = Ph_in - deltaPh_f

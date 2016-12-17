@@ -35,6 +35,8 @@ def load_sheets(fluid):
 		wb = xl.load_workbook('data/Ammonia.xlsx', read_only = True)
 	elif fluid == 'Propane':
 		wb = xl.load_workbook('data/Propane.xlsx', read_only = True)
+	elif fluid == 'R236fa':
+		wb = xl.load_workbook('data/R236fa.xlsx', read_only = True)
 
 	# Separate constants from properties
 	constants = wb['Constants']

@@ -7,30 +7,56 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
-# from PIL import Image
-# from PIL.ImageQt import ImageQt
-
-
 def plotFlowPatternMap(k):
+
+    # Draw the fixed lines, fitted from the image
+    p1 = np.array([0.001, 0.0211, 123.596])
+    p2 = np.array([2.2689, -330.1467])
+    p3 = np.array([-0.7492, 347.6838])
+
+    # The point where the curves meet
+    xcenter = 225
+    ycenter = 90
+
+    # The points to display
+    x1 = np.linspace(30,xcenter,1000)
+    x2 = np.linspace(xcenter, 255, 150) 
+    x3 = np.linspace(xcenter,350, 400) 
+    y1 = np.polyval(p1, x1) 
+    y2 = np.polyval(p2, x2)
+    y3 = np.polyval(p3, x3)
+
+    # Turn them into logscale
+    y1 = 1.0052*np.exp(0.0184*y1)
+    y2 = 1.0052*np.exp(0.0184*y2)
+    y3 = 1.0052*np.exp(0.0184*y3)
+    x1 = 0.1155*np.exp(0.0183*x1)
+    x2 = 0.1155*np.exp(0.0183*x2)
+    x3 = 0.1155*np.exp(0.0183*x3)
+
+
+    # Plot the curves
+    plt.loglog(x1, y1, 'k')
+    plt.loglog(x2, y2,'k')
+    plt.loglog(x3, y3, 'k')
 
     # Configure the plot to use latex interpreter
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
-
     x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
     y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
-
     plt.figure(k)
     plt.xlabel(x_text)
+    plt.xlim(0.1,1000)
+    plt.ylim(1,100)
     plt.ylabel(x_text)
     plt.title('Flow pattern map')
+    plt.grid(True, 'both')
 
     plt.show()
-    
 
-def makeFigure(Field, FieldName, config, show, k):
-    n = config['geom']['n']
-    Nt = config['geom']['Nt']
+def makeFigure(Field, FieldName, n, Nt, show, k):
+>>>>>>> Postprocessing
 
     N_cell = np.linspace(1,n,num=n)
 
@@ -49,6 +75,7 @@ def makeFigure(Field, FieldName, config, show, k):
 
     if Nt<=8:
         plt.legend().get_frame().set_alpha(0.5)
+<<<<<<< HEAD
     if show :
         f.show()
     else:
@@ -58,10 +85,28 @@ def makeFigure(Field, FieldName, config, show, k):
 
 
 def plot_boiler(config, results, show):
+=======
+    if show==1:
+        f.show()
+    else:
+        f.savefig('./figures/plot'+FieldName)
+
+
+def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt, show):
+>>>>>>> Postprocessing
     '''
     This plots all matrixes on a wireframe 3d plot
     '''
+    names=['T_w','T_w','T_wf','P_wf','x_wf', 'eps']
+    k=0
 
+    for i in Th, Ph, Tc, Pc, xc, eps:
+        makeFigure(i, names[k], n, Nt, show, k)
+        k+=1
+
+
+
+<<<<<<< HEAD
     names=['T_w','P_w','T_wf','P_wf','x_wf', 'eps']
     resultsNames = ['Th','Ph','Tc','Pc','xc','eps']
     k=0
@@ -75,6 +120,9 @@ def plot_boiler(config, results, show):
 
 
 def plot_xc_pipe(config, results, show):
+=======
+def plot_xc_pipe(xc, n, Nt, show):
+>>>>>>> Postprocessing
     '''
     This lots an average vapor quality per pipe
     '''
@@ -96,6 +144,14 @@ def plot_xc_pipe(config, results, show):
     ax.set_xlabel('pipe #')
     ax.set_ylabel('Vapor quality')
     plt.legend(loc=2)
+<<<<<<< HEAD
+=======
+
+    if show==1:
+        l.show()
+    else:
+        l.savefig('./figures/plot_avg_xc')
+>>>>>>> Postprocessing
 
     if show==1:
         l.show()
@@ -105,31 +161,61 @@ def plot_xc_pipe(config, results, show):
             .save('./figures/' + config['initTime'] + '/plot_avg_xc.jpg','JPEG')
 
 
+<<<<<<< HEAD
 def PostProcess_calc(config, results):
     geom = config['geom']
     Q = results['Q']
     OtherData = results['OtherData']
 
     q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N'])
+=======
+def PostProcess_calc(opCond, geom, Q, OtherData):
+    q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
+>>>>>>> Postprocessing
 
     alpha_a_tot = 0.0
-    alpha_i_tot = 0
+    alpha_i_tot = 0.0
+    U_tot = 0.0
     for i in range(1, geom['Nt']+1):
         for j in range(1, geom['n']+1):
             alpha_a_tot += OtherData[i,j]['alpha_a']
             alpha_i_tot += OtherData[i,j]['alpha_i']
-
+            U_tot += OtherData[i,j]['U']
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
     alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
-
+    U_avg = U_tot/(geom['n']*geom['Nt'])
+    R_a = 1/alpha_a_avg
+    R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
+    R_w = OtherData[1,1]['R_w']
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
+<<<<<<< HEAD
 
     results['q_avg'] = q_avg
     results['alpha_a_avg'] = alpha_a_avg
     results['alpha_i_avg'] = alpha_i_avg
 
     return(results)
+=======
+    print('Average Overall heat transfer coefficient [W/m^2/K] %.3f: ' %U_avg)
+    print('Inner thermal resistance [W/m^2/K]^-1 %.10f: ' %R_i)
+    print('Outer thermal resistance [W/m^2/K]^-1 %.10f: ' %R_a)
+    print('Wall thermal resistance [W/m^2/K]^-1 %.10f: ' %R_w)
+
+    f=open('./Param/Results_Parametric.txt', 'a')
+
+    f.write('\n Heat transfer Q [kW] : '+str(Q))
+    f.write('\n Average heat flux q [kW/m^2] : '+str(q_avg))
+    f.write('\n Average outer heat transfer coefficient [W/m^2/K]: ' +str(alpha_a_avg))
+    f.write('\n Average inner heat transfer coefficient [W/m^2/K]: ' +str(alpha_i_avg))
+    f.write('\n Average Overall heat transfer coefficient [W/m^2/K]: ' +str(U_avg))
+    f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
+    f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
+    f.write('\n Wall thermal resistance [W/m^2/K]^-1: ' +str(R_w))
+
+
+    f.close()
+>>>>>>> Postprocessing
