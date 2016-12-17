@@ -3,6 +3,7 @@
 #	The link between GUI, Simulation and PostProcessing
 
 import sys
+import time
 from copy import copy
 
 # PyQt classes
@@ -14,6 +15,8 @@ from simulationWindow import SimulationWindow, QResizableMainWindow
 from simulation import Simulation
 from error import Error
 from simulationThread import SimulationThread
+from resultsDialog import ResultsDialog
+from postProcessor import PostProcessor
 
 import pdb
 
@@ -104,6 +107,7 @@ class MainController(QtCore.QObject):
 		else:
 			# Load the current inputs in the GUI
 			self.currentSimulationConfiguration = self.mainWindow.readConfiguration()
+			self.currentSimulationConfiguration['filename'] = './results/' + (time.strftime("%Y-%m-%H-%M-%S"))
 			flowInputs = copy(self.currentSimulationConfiguration['flowInputs'])
 			try:
 				# Store the number of simulations to do
@@ -133,8 +137,6 @@ class MainController(QtCore.QObject):
 
 			# Let the simulation begin!
 			self.running = True
-			print(self.currentSimulationConfiguration)
-			print(simulationConfiguration)
 			print('INFO: Starting simulation')
 			self.mainWindow.progressBar.setProperty('visible', True)
 			self.mainWindow.runButton.setText('Stop')
@@ -181,12 +183,15 @@ class MainController(QtCore.QObject):
 
 	def handleResults(self, results):
 
-		# Post process, no GUI
+		# Check if simulation was aborted by user
 		self.results = results
 		if results == {}:
 			print('INFO: No results. Stopped by user')
 			self.results = None
 			return
+
+		# Post process, no GUI
+		postProcessor = PostProcessor(self.currentSimulationConfiguration, self.results)
 
 		# Plot the result
 		self.isLongPlotter = True
@@ -246,7 +251,19 @@ class MainController(QtCore.QObject):
 	#	@param 	None
 	def showPlots(self):
 
-		print('INFO: No plots available. Run a simulation to have some')
+		if self.results is not None:
+			try:
+				dialog = QtWidgets.QDialog(self.mainWindow)
+				resultsDialog = ResultsDialog(dialog, self.currentSimulationConfiguration)
+				dialog.exec()
+			except Error as er:
+				print(er)	
+			except Exception as e:
+				error = Error('applicationMain.showPlots', e)
+				print(error)
+			
+		else:
+			print('INFO: No plots available. Run a simulation to have some')
 
 
 	##	togglePlotter()

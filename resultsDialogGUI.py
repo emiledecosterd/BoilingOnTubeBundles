@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(object):
+class Ui_Dialog(QtWidgets.QWidget):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(941, 741)
@@ -71,6 +71,9 @@ class Ui_Dialog(object):
         self.comboBoxPlotView.addItem("")
         self.comboBoxPlotView.addItem("")
         self.horizontalLayout.addWidget(self.comboBoxPlotView)
+        self.doneButton = QtWidgets.QPushButton(Dialog)
+        self.doneButton.setObjectName("doneButton")
+        self.horizontalLayout.addWidget(self.doneButton)
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.line_4 = QtWidgets.QFrame(Dialog)
         self.line_4.setFrameShape(QtWidgets.QFrame.HLine)
@@ -86,6 +89,7 @@ class Ui_Dialog(object):
         self.verticalLayout_3.addWidget(self.plotWidget)
 
         self.retranslateUi(Dialog)
+        self.doneButton.clicked.connect(Dialog.close)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -98,4 +102,5 @@ class Ui_Dialog(object):
         self.comboBoxPlotView.setItemText(0, _translate("Dialog", "1 Plot View"))
         self.comboBoxPlotView.setItemText(1, _translate("Dialog", "4 Plots View"))
         self.comboBoxPlotView.setItemText(2, _translate("Dialog", "6 Plots View"))
+        self.doneButton.setText(_translate("Dialog", "Done"))
 

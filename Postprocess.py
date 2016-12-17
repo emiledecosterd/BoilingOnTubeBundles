@@ -85,21 +85,15 @@ def makeFigure(Field, FieldName, config, show, k):
     if show :
         f.show()
     else:
-        with open('./figures/'+ config['initTime']+ '/mplt/plot_'+ FieldName, 'wb') as fid:
+        with open(config['filename'] + '/mplt/plot_'+ FieldName, 'wb') as fid:
             pickle.dump(f, fid)
-        f.savefig('./figures/'+ config['initTime']+ '/images/plot_'+ FieldName +'.png')
+        f.savefig(config['filename'] + '/images/plot_'+ FieldName +'.png')
 
 
-def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt, show):
+def plot_boiler(config, results, show):
     '''
     This plots all matrixes on a wireframe 3d plot
     '''
-    names=['T_w','T_w','T_wf','P_wf','x_wf', 'eps']
-    k=0
-
-    for i in Th, Ph, Tc, Pc, xc, eps:
-        makeFigure(i, names[k], n, Nt, show, k)
-        k+=1
 
     names=['T_w','P_w','T_wf','P_wf','x_wf', 'eps']
     resultsNames = ['Th','Ph','Tc','Pc','xc','eps']
@@ -141,9 +135,9 @@ def plot_xc_pipe(config, results, show):
     if show==1:
         l.show()
     else:
-        with open('./figures/'+ config['initTime']+ '/mplt/plot_avg_xc', 'wb') as fid:
+        with open(config['filename'] + '/mplt/plot_avg_xc', 'wb') as fid:
             pickle.dump(l, fid)
-        l.savefig('./figures/'+ config['initTime']+ '/images/plot_avg_xc'+'.png')
+        l.savefig(config['filename'] + '/images/plot_avg_xc'+'.png')
 
 
 def PostProcess_calc(config, results):
@@ -184,7 +178,8 @@ def PostProcess_calc(config, results):
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
 
-    f=open(config['filename'], 'a')
+    newFilename = config['filename'] + '/res.txt'
+    f=open(newFilename, 'a')
 
     f.write('Q[kW] = '+str(Q)+'\n')
     f.write('q[kW/m^2] = '+str(q_avg)+'\n')

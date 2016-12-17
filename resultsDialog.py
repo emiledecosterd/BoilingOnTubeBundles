@@ -40,7 +40,7 @@ class ResultsDialog(Ui_Dialog):
 		self.verticalLayout_2.addLayout(self.gridLayout)
 
 		# Global variables
-		self.directoryName = ('./figures/' + config['initTime'])
+		self.directoryName = config['filename']
 
 		# Setup
 		self.setupLists()
@@ -240,7 +240,7 @@ class ResultsDialog(Ui_Dialog):
 	def loadData(self):
 
 		# Read data
-		file = open(self.directoryName + '/results_misc.out', 'r')
+		file = open(self.directoryName + '/data/results_misc.out', 'r')
 		lines = file.readlines()
 		file.close()
 

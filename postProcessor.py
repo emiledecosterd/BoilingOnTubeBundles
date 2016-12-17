@@ -25,13 +25,10 @@ class PostProcessor(QObject):
 		self.config = config
 		self.results = results
 
-		# Save the time at initialization
-		self.config['initTime'] = (time.strftime("%Y-%m-%H-%M-%S"))
-
 		# Create the directory
-		os.makedirs('figures/' + self.config['initTime'])
-		os.makedirs('figures/' + self.config['initTime'] + '/mplt')
-		os.makedirs('figures/' + self.config['initTime'] + '/images')
+		os.makedirs(self.config['filename'] + '/data')
+		os.makedirs(self.config['filename'] + '/mplt')
+		os.makedirs(self.config['filename'] + '/images')
 
 		# Save the plots
 		self.savePlots()
@@ -44,14 +41,23 @@ class PostProcessor(QObject):
 	#	@param results Results diactionnary
 	def savePlots(self):
 
-		# Save the boiler plots
-		plot_boiler(self.config, self.results, False)
+		try:
+			# Save the boiler plots
+			plot_boiler(self.config, self.results, False)
+		except Exception as e:
+			raise Error('PostProcessor.savePlots.plot_boiler', e)
 
-		# Save teh xc pipe plot
-		plot_xc_pipe(self.config, self.results, False)
+		try:
+			# Save teh xc pipe plot
+			plot_xc_pipe(self.config, self.results, False)
+		except Exception as e:
+			raise Error('PostProcessor.savePlots.plot_xc_pipe', e)
 
-		# Compute other calculation
-		self.results = PostProcess_calc(self.config, self.results)
+		try:
+			# Compute other calculation
+			self.results = PostProcess_calc(self.config, self.results)
+		except Exception as e:
+			raise Error('PostProcessor.savePlots.PostProcess_calc', e)
 
 	## 	Write the text file
 	#	@param results Results diactionnary
@@ -63,14 +69,14 @@ class PostProcessor(QObject):
 
 		# Write all the matrices in a .out file
 		for key in resultsNames :
-			outputFileName = './figures/' + self.config['initTime'] + '/results_'+ names[resultsNames.index(key)]+'.out'
+			outputFileName = self.config['filename'] + '/data/results_'+ names[resultsNames.index(key)]+'.out'
 			np.savetxt(outputFileName, self.results[key], fmt='%-7.2f', header=names[resultsNames.index(key)], newline='\r\n')
 
 		  
 		# Write general output in the results_misc
 		miscNames = ['Q', 'q_avg', 'alpha_a_avg', 'alpha_i_avg']
 
-		file = open('./figures/' + self.config['initTime'] + '/results_misc.out','w')
+		file = open(self.config['filename'] + '/data' + '/results_misc.out','w')
 		for key in miscNames :
 			# outputFileName = './figures/' + self.config['initTime'] + '/results_'+ names[resultsNames.index(key)]+'.out'
 			value = str('%-7.2f' %(self.results[key]))

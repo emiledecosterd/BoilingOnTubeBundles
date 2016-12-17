@@ -347,7 +347,7 @@ class SimulationWindow(Ui_MainWindow):
 	#	@param 	text 	The text to print
 	def printToConsole(self, text):
 		if text != '\n':
-			text = '>>> ' + text
+			text = '>> ' + text
 		cursor = self.console.textCursor()
 		cursor.movePosition(QtGui.QTextCursor.End)
 		cursor.insertText(text)

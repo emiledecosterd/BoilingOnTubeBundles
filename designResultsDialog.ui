@@ -129,6 +129,13 @@
          </item>
         </widget>
        </item>
+       <item>
+        <widget class="QPushButton" name="doneButton">
+         <property name="text">
+          <string>Done</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
@@ -148,5 +155,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>doneButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>890</x>
+     <y>204</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>470</x>
+     <y>370</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

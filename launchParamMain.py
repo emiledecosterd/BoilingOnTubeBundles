@@ -52,6 +52,7 @@ configuration={}
 for Param_2 in Parameters_2:
 
     configuration['filename'] = path+'/'+Param_2+'_res.txt'
+    
 
     for Param_1 in Parameters_1:
 

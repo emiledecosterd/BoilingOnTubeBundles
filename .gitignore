@@ -9,4 +9,5 @@
 latex/doxygen.sty
 latex/Makefile
 html/*
-
+figures/*
+results/*
