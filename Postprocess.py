@@ -7,7 +7,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
-<<<<<<< HEAD
+import pickle
+
+
 def plotFlowPatternMap(k):
 
     # Draw the fixed lines, fitted from the image
@@ -56,15 +58,10 @@ def plotFlowPatternMap(k):
 
     plt.show()
 
-def makeFigure(Field, FieldName, n, Nt, show, k):
->>>>>>> Postprocessing
-=======
-import pickle
 
 def makeFigure(Field, FieldName, config, show, k):
     n = config['geom']['n']
     Nt = config['geom']['Nt']
->>>>>>> origin/Refactoring
 
     N_cell = np.linspace(1,n,num=n)
 
@@ -83,7 +80,7 @@ def makeFigure(Field, FieldName, config, show, k):
 
     if Nt<=8:
         plt.legend().get_frame().set_alpha(0.5)
-<<<<<<< HEAD
+
     if show :
         f.show()
     else:
@@ -91,29 +88,13 @@ def makeFigure(Field, FieldName, config, show, k):
             pickle.dump(f, fid)
         f.savefig('./figures/'+ config['initTime']+ '/images/plot_'+ FieldName +'.png')
 
-def plot_boiler(config, results, show):
-=======
-    if show==1:
-        f.show()
-    else:
-        f.savefig('./figures/plot'+FieldName)
 
 
 def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt, show):
->>>>>>> Postprocessing
     '''
     This plots all matrixes on a wireframe 3d plot
     '''
-    names=['T_w','T_w','T_wf','P_wf','x_wf', 'eps']
-    k=0
 
-    for i in Th, Ph, Tc, Pc, xc, eps:
-        makeFigure(i, names[k], n, Nt, show, k)
-        k+=1
-
-
-
-<<<<<<< HEAD
     names=['T_w','P_w','T_wf','P_wf','x_wf', 'eps']
     resultsNames = ['Th','Ph','Tc','Pc','xc','eps']
     k=0
@@ -127,9 +108,6 @@ def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt, show):
 
 
 def plot_xc_pipe(config, results, show):
-=======
-def plot_xc_pipe(xc, n, Nt, show):
->>>>>>> Postprocessing
     '''
     This lots an average vapor quality per pipe
     '''
@@ -152,14 +130,6 @@ def plot_xc_pipe(xc, n, Nt, show):
     ax.set_xlabel('pipe #')
     ax.set_ylabel('Vapor quality')
     plt.legend(loc=2)
-<<<<<<< HEAD
-=======
-
-    if show==1:
-        l.show()
-    else:
-        l.savefig('./figures/plot_avg_xc')
->>>>>>> Postprocessing
 
     if show==1:
         l.show()
@@ -168,17 +138,13 @@ def plot_xc_pipe(xc, n, Nt, show):
             pickle.dump(l, fid)
         l.savefig('./figures/'+ config['initTime']+ '/images/plot_avg_xc'+'.png')
 
-<<<<<<< HEAD
+
 def PostProcess_calc(config, results):
     geom = config['geom']
     Q = results['Q']
     OtherData = results['OtherData']
 
     q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N'])
-=======
-def PostProcess_calc(opCond, geom, Q, OtherData):
-    q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
->>>>>>> Postprocessing
 
     alpha_a_tot = 0.0
     alpha_i_tot = 0.0
@@ -199,14 +165,7 @@ def PostProcess_calc(opCond, geom, Q, OtherData):
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
-<<<<<<< HEAD
 
-    results['q_avg'] = q_avg
-    results['alpha_a_avg'] = alpha_a_avg
-    results['alpha_i_avg'] = alpha_i_avg
-
-    return(results)
-=======
     print('Average Overall heat transfer coefficient [W/m^2/K] %.3f: ' %U_avg)
     print('Inner thermal resistance [W/m^2/K]^-1 %.10f: ' %R_i)
     print('Outer thermal resistance [W/m^2/K]^-1 %.10f: ' %R_a)
@@ -225,4 +184,11 @@ def PostProcess_calc(opCond, geom, Q, OtherData):
 
 
     f.close()
->>>>>>> Postprocessing
+
+
+    results['q_avg'] = q_avg
+    results['alpha_a_avg'] = alpha_a_avg
+    results['alpha_i_avg'] = alpha_i_avg
+
+    return(results)
+
