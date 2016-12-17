@@ -1,7 +1,5 @@
 import math
 import numpy as np
-
-from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 
 from pressureDrop import cell_pressureDrop
@@ -94,6 +92,15 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 			print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
 
 
+<<<<<<< HEAD
+=======
+			if (kt == ktmax):
+				print('WARNING : Hot temperature calculation did not converged with %d iterations. \n' %ktmax)
+				print('You can increase the Number of iterations or change the initial value (Th_out) inside the function')
+				raise Exception('Newton did not converge')
+			else:
+				print('Water temperature value at output (Th_out): %.3f. Calculation converged in %d iterations. \n' %(Th_out,kt))
+>>>>>>> PlotsPresentation
 
 		'''
 		#### 2) Vapor Quality calculation ####
@@ -126,11 +133,18 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 		'''
 		#### 4) Pressure drop calculation inside the cell ####
 		'''
+<<<<<<< HEAD
 		try:
 			[Ph_out, Pc_out] = cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_out, xc_out)
 		except Exception as e:
 			raise Error('cell_pressureDrop',e+'Error in Pressure drop calculation')
 
+=======
+		P={}
+		P = cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_out, xc_out)
+		Pc_out = P['Pc_out']
+		Ph_out = P['Ph_out']
+>>>>>>> PlotsPresentation
 		print('Working fluid pressure value at output (Pc_out): %.3f. \n' %(Pc_out))
 
 		'''
@@ -182,7 +196,14 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	# Capacity of the cell
 	Qcell = Q #[kW]
 	OtherData={}
+<<<<<<< HEAD
 	OtherData = EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
+=======
+	OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
+	OtherData['alpha_a']= outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
+	OtherData['deltaPc_f'] = P['deltaPc_f']
+	OtherData['deltaPc_h'] = P['deltaPc_h']
+>>>>>>> PlotsPresentation
 	#OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
 	#OtherData['kt']=kt
 	#OtherData['kp']=kp

@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import *
 from mainWindow import MainWindow
 from drawing import PipeDrawing
 import numpy as np
+<<<<<<< HEAD
 
 from simulation import Simulation
 from error import Error
@@ -14,6 +15,9 @@ from error import Error
 from Postprocess import *
 from postProcessor import *
 
+=======
+from mainSimulation import Simulation
+>>>>>>> PlotsPresentation
 
 '''
 /!\
@@ -118,11 +122,14 @@ class MainController(QObject):
 		print('Simulation finished')
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 		postProcessor = PostProcessor(self.configuration, results)
 
 
 =======
 >>>>>>> Postprocessing
+=======
+>>>>>>> PlotsPresentation
 		# Display results
 		self.fillCells(results)
 
@@ -228,10 +235,17 @@ class MainController(QObject):
 		self.long_plotter.drawPipes(geom['Nt'])
 		self.coordinates = self.long_plotter.drawCells(geom['Nt'], geom['n'])
 		print('Drawing finished')
+<<<<<<< HEAD
 
 
 	def fillCells(self, results):
 
+=======
+
+
+	def fillCells(self, results):
+
+>>>>>>> PlotsPresentation
 		self.long_plotter.fillCells(self.coordinates, results['Th'])
 
 

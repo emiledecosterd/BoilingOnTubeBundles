@@ -5,7 +5,6 @@ Boilling on Tube Bundles : Main Code
 import math
 import numpy as np
 
-from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 
 from feenstraCorrelation import ini_cell_voidFraction
@@ -18,9 +17,12 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 from error import Error
 =======
 >>>>>>> Postprocessing
+=======
+>>>>>>> PlotsPresentation
 
 
 class Simulation(QObject):
@@ -76,6 +78,7 @@ class Simulation(QObject):
 
         Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
 
+        geom['n'] = int(geom['n'])
 
         '''
         #### Initialization ####
@@ -150,15 +153,25 @@ class Simulation(QObject):
 
                 Qtot += Q
 
+<<<<<<< HEAD
                 np.set_printoptions(precision=3)
                 #print(xc)
                 #print(eps)
                 #print(OtherData)
 
+=======
+                #np.set_printoptions(precision=3)
+                #print(xc)
+                #print(eps)
+                #print(OtherData)
+>>>>>>> PlotsPresentation
 
         print('Calculation complete !\n')
         #print(Th)
 
+        print('Calculation complete !\n')
+        #print(Th)
+        '''
         Ph_drop = Ph[ geom['Nt'],geom['n']]-flowInputs['Ph_in']
         Pc_drop = Pc[ geom['Nt'],geom['n']]-Pc_in
         Th_drop = Th[ geom['Nt'],geom['n']]-flowInputs['Th_in']
@@ -182,15 +195,23 @@ class Simulation(QObject):
         #print('xc_drop')
         #print(xc_drop)
         #print('Heat transfer Q [kW] %.3f :' %Q)
-
+        '''
         ################################################################################
         #               Postprocessing
 
+<<<<<<< HEAD
 
         plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'],0)
         plot_xc_pipe(xc, geom['n'], geom['Nt'], 0)
         PostProcess_calc(opCond, geom, Q, OtherData)
 
+=======
+
+        #plot_boiler(Th, Ph, Tc, Pc, xc, eps, geom['n'], geom['Nt'],0)
+        #plot_xc_pipe(xc, geom['n'], geom['Nt'], 0)
+        PostProcess_calc(opCond, geom, Qtot, Pc, xc, Tc, Th, OtherData, configuration)
+
+>>>>>>> PlotsPresentation
         '''
         self.results = {
             'Th' : Th,

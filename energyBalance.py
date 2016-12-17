@@ -1,7 +1,6 @@
 import math
 import numpy as np
 
-from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 from heatTransferCoefficient import*
 from error import Error
@@ -54,7 +53,6 @@ def EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 		raise Error('Error in LMTD (energyBalance)', 'cell size is likely to be too large. Advice: increase n')
 
 
-
 	# Tests :
 	# f = U*A*LMTD-mdot_h*cp_hi*(Th_in-Th_out)
 	#print('U : %.3f ,A : %.3f, LMTD %.3f, f : %.3f' %(U,A ,LMTD, f))
@@ -65,6 +63,8 @@ def EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 	output['alpha_i']=alpha_i
 	output['balance']=U*A*LMTD-mdot_h*cp_hi*(Th_in-Th_out)
 	# add here other information to send to solvecell
+	#output['U']=U
+	#output['R_w']=R_w
 
 
 

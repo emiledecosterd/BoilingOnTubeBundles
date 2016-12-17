@@ -20,8 +20,13 @@ def innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 	Pr = cp_hi*mu_h/k_h # [-] Prandlt number
 
 	Re_D = 4.0*mdot_h/(mu_h*math.pi*(geom['D']-2.0*geom['t'])) # [-] Reynolds number
+<<<<<<< HEAD
 	#print('Re_D')
 	#print(Re_D)
+=======
+	print('Re_D')
+	print(Re_D)
+>>>>>>> PlotsPresentation
 	f = (1.8*math.log10((6.9/Re_D)+(geom['e_i']/((geom['D']-2.0*geom['t'])*3.7))**1.11))**-2.0 # [-] friction factor for rough pipes
 	Re_e = Re_D*(geom['e_i']/(geom['D']-2.0*geom['t']))*(f/8.0)**0.5 # [-] Roughness Reynolds number
 	#print('Re_e')
@@ -62,11 +67,10 @@ def outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 
 			q = mdot_h*cp_hi*(Th_in-Th_out)/A # [W/m^2]
 
-			alpha_a = 55*p_r**(0.12-0.4343*math.log(geom['e_o']*1e6))*\
+			alpha_a = 55*p_r**(0.12-0.08686*math.log(geom['e_o']*1e6))*\
 			(-0.4343*math.log(p_r))**-0.55*M**-0.5*abs(q)**0.67 # [W/m^2/K]
 
-			if opCond['TubeMat'] == 'copper':
-				alpha_a = 1.7*alpha_a
+
 
 	elif geom['corr'] == "Gorenflo":
 
@@ -104,6 +108,7 @@ def outerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 			F_pf = 1.2*p_r**0.27+2.5*p_r+p_r/(1-p_r)
 			nf = 0.9-0.3*p_r**0.3
 			alpha_a = alpha_0*F_pf*(q/q_0)**nf*(R_p/R_po)**0.133 # [W/m^2/K]
+
 
 	else : #default is Mostinski
 		p_r = Pc_in/p_crit

@@ -163,6 +163,7 @@ class MainWindow(Ui_MainWindow):
 		self.reloadGeometry()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	def setupGraphicsView(self):
 
 		# Delete GraphicsView and create a new one with the clickable utility
@@ -187,6 +188,8 @@ class MainWindow(Ui_MainWindow):
 
 =======
 >>>>>>> Postprocessing
+=======
+>>>>>>> PlotsPresentation
 
 	def reloadGeometry(self):
 	

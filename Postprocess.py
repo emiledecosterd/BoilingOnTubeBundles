@@ -7,6 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
+<<<<<<< HEAD
 import pickle
 
 
@@ -62,6 +63,9 @@ def plotFlowPatternMap(k):
 def makeFigure(Field, FieldName, config, show, k):
     n = config['geom']['n']
     Nt = config['geom']['Nt']
+=======
+def makeFigure(Field, FieldName, n, Nt, show, k):
+>>>>>>> PlotsPresentation
 
     N_cell = np.linspace(1,n,num=n)
 
@@ -80,6 +84,7 @@ def makeFigure(Field, FieldName, config, show, k):
 
     if Nt<=8:
         plt.legend().get_frame().set_alpha(0.5)
+<<<<<<< HEAD
 
     if show :
         f.show()
@@ -88,13 +93,27 @@ def makeFigure(Field, FieldName, config, show, k):
             pickle.dump(f, fid)
         f.savefig('./figures/'+ config['initTime']+ '/images/plot_'+ FieldName +'.png')
 
+=======
+    if show==1:
+        f.show()
+    else:
+        f.savefig('./figures/plot'+FieldName)
+>>>>>>> PlotsPresentation
 
 
 def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt, show):
     '''
     This plots all matrixes on a wireframe 3d plot
     '''
+    names=['T_w','T_w','T_wf','P_wf','x_wf', 'eps']
+    k=0
 
+    for i in Th, Ph, Tc, Pc, xc, eps:
+        makeFigure(i, names[k], n, Nt, show, k)
+        k+=1
+
+
+<<<<<<< HEAD
     names=['T_w','P_w','T_wf','P_wf','x_wf', 'eps']
     resultsNames = ['Th','Ph','Tc','Pc','xc','eps']
     k=0
@@ -108,6 +127,10 @@ def plot_boiler(Th, Ph, Tc, Pc, xc, eps, n, Nt, show):
 
 
 def plot_xc_pipe(config, results, show):
+=======
+
+def plot_xc_pipe(xc, n, Nt, show):
+>>>>>>> PlotsPresentation
     '''
     This lots an average vapor quality per pipe
     '''
@@ -130,6 +153,14 @@ def plot_xc_pipe(config, results, show):
     ax.set_xlabel('pipe #')
     ax.set_ylabel('Vapor quality')
     plt.legend(loc=2)
+<<<<<<< HEAD
+=======
+
+    if show==1:
+        l.show()
+    else:
+        l.savefig('./figures/plot_avg_xc')
+>>>>>>> PlotsPresentation
 
     if show==1:
         l.show()
@@ -139,20 +170,32 @@ def plot_xc_pipe(config, results, show):
         l.savefig('./figures/'+ config['initTime']+ '/images/plot_avg_xc'+'.png')
 
 
+<<<<<<< HEAD
 def PostProcess_calc(config, results):
     geom = config['geom']
     Q = results['Q']
     OtherData = results['OtherData']
 
     q_avg = Q/(math.pi*0.25*geom['D']**2*geom['L']*geom['N'])
+=======
+def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
+    q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
+>>>>>>> PlotsPresentation
 
     alpha_a_tot = 0.0
     alpha_i_tot = 0.0
     U_tot = 0.0
+<<<<<<< HEAD
+=======
+    Delta_P_fric=0.0
+    Delta_P_hydro=0.0
+
+>>>>>>> PlotsPresentation
     for i in range(1, geom['Nt']+1):
         for j in range(1, geom['n']+1):
             alpha_a_tot += OtherData[i,j]['alpha_a']
             alpha_i_tot += OtherData[i,j]['alpha_i']
+<<<<<<< HEAD
             U_tot += OtherData[i,j]['U']
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
     alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
@@ -160,11 +203,28 @@ def PostProcess_calc(config, results):
     R_a = 1/alpha_a_avg
     R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
     R_w = OtherData[1,1]['R_w']
+=======
+            #U_tot += OtherData[i,j]['U']
+
+        Delta_P_fric += OtherData[i,1]['deltaPc_f']
+        Delta_P_hydro += OtherData[i,1]['deltaPc_h']
+
+    alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
+    alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
+    #U_avg = U_tot/(geom['n']*geom['Nt'])
+    #R_a = 1/alpha_a_avg
+    #R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
+    #R_w = OtherData[1,1]['R_w']
+    Pc_drop = Pc[ 0, 1]-Pc[ geom['Nt'], 1]
+    xc_drop = xc[ geom['Nt'],1]-xc[ 0, 1]
+    Th_drop = Th[1, 0] - Th[1, geom['n']]
+>>>>>>> PlotsPresentation
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
+<<<<<<< HEAD
 
     print('Average Overall heat transfer coefficient [W/m^2/K] %.3f: ' %U_avg)
     print('Inner thermal resistance [W/m^2/K]^-1 %.10f: ' %R_i)
@@ -192,3 +252,29 @@ def PostProcess_calc(config, results):
 
     return(results)
 
+=======
+    #print('Average Overall heat transfer coefficient [W/m^2/K] %.3f: ' %U_avg)
+    #print('Inner thermal resistance [W/m^2/K]^-1 %.10f: ' %R_i)
+    #print('Outer thermal resistance [W/m^2/K]^-1 %.10f: ' %R_a)
+    #print('Wall thermal resistance [W/m^2/K]^-1 %.10f: ' %R_w)
+
+    f=open(configuration['filename'], 'a')
+
+    f.write('Q[kW] = '+str(Q)+'\n')
+    f.write('q[kW/m^2] = '+str(q_avg)+'\n')
+    f.write('\\alpha_a[W/m^2/K] = ' +str(alpha_a_avg)+'\n')
+    f.write('\\alpha_i[W/m^2/K] = ' +str(alpha_i_avg)+'\n')
+    #f.write('U[W/m^2/K] = ' +str(U_avg)+'\n')
+    f.write('\Delta\,P_{frictional}[Pa] = ' + str(Delta_P_fric)+'\n')
+    f.write('\Delta\,P_{hydrostatic}[Pa] = ' + str(Delta_P_hydro)+'\n')
+    f.write('\Delta\,P_{inlet}[Pa] = '+str(Pc_drop)+'\n')
+    f.write('\Delta\,x[-] = '+str(xc_drop)+'\n')
+    f.write('\Delta\,T_{water}[K] = '+str(Th_drop)+'\n')
+    f.write('\n')
+    #f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
+    #f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))
+    #f.write('\n Wall thermal resistance [W/m^2/K]^-1: ' +str(R_w))
+
+
+    f.close()
+>>>>>>> PlotsPresentation

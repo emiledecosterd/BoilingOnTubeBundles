@@ -3,7 +3,6 @@ Pressure drop calculations
 '''
 import math
 import numpy as np
-from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 
 
@@ -37,8 +36,15 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     #### Shell pressure drop (Pc) ####
     ##################################
     g = 9.81
-    prop = get_properties(Tc_out, opCond['FluidType'])
-    propWall = get_properties(Tc_out, opCond['FluidType']) # To be changed with real wall temp
+
+    # Properties
+    prop = {}
+    prop['mu_L'] = PropsSI('V', 'T', Tc_out, 'Q', 0.0, opCond['FluidType'])
+    prop['mu_G'] = PropsSI('V', 'T', Tc_out, 'Q', 1.0, opCond['FluidType'])
+    prop['rho_L'] = PropsSI('D', 'T', Tc_out, 'Q', 0.0, opCond['FluidType'])
+    prop['rho_G'] = PropsSI('D', 'T', Tc_out, 'Q', 1.0, opCond['FluidType'])
+
+    propWall = prop;
 
 
     #### Hydrostatic pressure drop ####
@@ -181,4 +187,10 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     # Relative pressure at the output of the cell
     Ph_out = Ph_in - deltaPh_f
 
-    return(Ph_out, Pc_out)
+
+    P={}
+    P['Ph_out'] = Ph_out
+    P['Pc_out'] = Pc_out
+    P['deltaPc_f'] = deltaPc_f
+    P['deltaPc_h'] = deltaPc_s
+    return(P)
