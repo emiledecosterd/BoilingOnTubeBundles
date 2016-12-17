@@ -4,6 +4,7 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from CoolProp.CoolProp import PropsSI
 
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
@@ -93,15 +94,18 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
         Delta_P_fric += OtherData[i,1]['deltaPc_f']
         Delta_P_hydro += OtherData[i,1]['deltaPc_h']
 
+
     alpha_a_avg = alpha_a_tot/(geom['n']*geom['Nt'])
     alpha_i_avg = alpha_i_tot/(geom['n']*geom['Nt'])
     #U_avg = U_tot/(geom['n']*geom['Nt'])
     #R_a = 1/alpha_a_avg
     #R_i = geom['D']/((geom['D']-2*geom['t'])*alpha_i_avg)
     #R_w = OtherData[1,1]['R_w']
-    Pc_drop = Pc[ 1, 1]-Pc[ geom['Nt'], 1]
+    Pc_drop = Pc[ 0, 1]-Pc[ geom['Nt'], 1]
     xc_drop = xc[ geom['Nt'],1]-xc[ 0, 1]
     Th_drop = Th[1, 0] - Th[1, geom['n']]
+
+    Power = (Pc_drop*opCond['mdot_c'])/PropsSI('D', 'T', Tc[1,1] ,'Q', configuration['flowInputs']['xc_in'] ,configuration['opCond']['FluidType'])
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
@@ -124,6 +128,7 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
     f.write('\Delta\,P_{inlet}[Pa] = '+str(Pc_drop)+'\n')
     f.write('\Delta\,x[-] = '+str(xc_drop)+'\n')
     f.write('\Delta\,T{water}[K] = '+str(Th_drop)+'\n')
+    f.write('P_{pump}[W] = '+str(Power)+'\n')
     f.write('\n')
     #f.write('\n Inner thermal resistance [W/m^2/K]^-1: ' +str(R_a))
     #f.write('\n Outer thermal resistance [W/m^2/K]^-1: ' +str(R_i))

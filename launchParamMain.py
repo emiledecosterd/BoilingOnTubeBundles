@@ -23,12 +23,12 @@ import os
 
 
 # parameters 1 go on the x-axis
-Parameters_1 = ['Tc_in']
-Dictionnaries_1 = ['flowInputs']
-Starts_1 = [0 + 273.15]
-Ends_1 = [5 + 273.5]
-Number_points_1 = [2]
-Parameters_names_1 = ['T_{sat}[K]']
+Parameters_1 = ['mdot_c']
+Dictionnaries_1 = ['opCond']
+Starts_1 = [1]
+Ends_1 = [25]
+Number_points_1 = [3]
+Parameters_names_1 = ['\dot{m}_c[kg/s]']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
@@ -70,23 +70,23 @@ for Param_2 in Parameters_2:
         opCond['TubeThermalConductivity']= 400
 
         # Geometrical Inputs
-        geom['Nt'] = 4
-        geom['Nt_col'] = 3
-        geom['L'] = 1
-        geom['n'] = 6
-        geom['s'] = 22.22e-3
-        geom['sh'] = 22.22e-3
-        geom['D'] = 15e-3
+        geom['Nt'] = 11
+        geom['Nt_col'] = 11
+        geom['L'] = 3
+        geom['n'] = 10
+        geom['s'] = 45e-3
+        geom['sh'] = 45e-3
+        geom['D'] = 30e-3
         geom['e_i'] = 3e-6
-        geom['e_o'] = 2.3e-6
-        geom['t'] = 2e-3
+        geom['e_o'] = 3e-6
+        geom['t'] = 3e-3
         geom['corr'] = 'Cooper'
         geom['corrPD'] = 'Gaddis'
-        geom['layout'] = 'Staggered'
+        geom['layout'] = 'InLine'
         geom['N'] = geom['Nt']*geom['Nt_col']
 
         # Flow Inputs
-        flowInputs['Tc_in'] = 0 + 273.15
+        flowInputs['Tc_in'] = 5 + 273.15
         flowInputs['Th_in'] = 20+ 273.15
         flowInputs['Ph_in'] = 1e5
         flowInputs['xc_in'] = 0.05
@@ -96,8 +96,8 @@ for Param_2 in Parameters_2:
         #opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
         #opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
-        opCond['mdot_c'] = 20
-        opCond['mdot_h'] = 300
+        opCond['mdot_c'] = 15
+        opCond['mdot_h'] = 40
 
         configuration['opCond'] = opCond
         configuration['geom'] = geom
