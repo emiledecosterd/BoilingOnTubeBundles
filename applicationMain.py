@@ -186,6 +186,7 @@ class MainController(QtCore.QObject):
 		if results == {}:
 			print('INFO: No results. Stopped by user')
 			self.results = None
+			return
 
 		# Plot the result
 		self.isLongPlotter = True
