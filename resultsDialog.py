@@ -102,6 +102,7 @@ class ResultsDialog(Ui_Dialog):
 
 		# Create new objects
 		self.widgetsList.append(QtWidgets.QWidget(self.plotWidget))
+		self.widgetsList[-1].setMinimumSize(400,300)
 		self.layoutVertList.append(QtWidgets.QVBoxLayout(self.widgetsList[-1]))
 
 		# self.layoutVertList.append(QtWidgets.QVBoxLayout(self.plotWidget))
@@ -283,7 +284,7 @@ if __name__ == '__main__':
 
 	config = {}
 	results = {}
-	config['initTime'] = '201612110118'
+	config['initTime'] = '201612114914'
 	results['Q'] = 10
  
 	resultsDialog = ResultsDialog(dialog, config)

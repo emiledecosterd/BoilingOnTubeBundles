@@ -26,7 +26,7 @@ class PostProcessor(QObject):
 		self.results = results
 
 		# Save the time at initialization
-		self.config['initTime'] = (time.strftime("%Y%m%H%M%S"))
+		self.config['initTime'] = (time.strftime("%Y-%m-%H-%M-%S"))
 
 		# Create the directory
 		os.makedirs('figures/' + self.config['initTime'])
