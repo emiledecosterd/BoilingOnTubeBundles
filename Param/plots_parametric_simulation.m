@@ -166,6 +166,7 @@ for i=1:length(files) % loop on files (lines of Data_plot)
             
             fig_name = regexprep(strcat('Fig_',c1{i}(j),'_',param_2{i},'_',fields{k}),'/','');
             fig_name = regexprep(fig_name,'\','');
+            fig_name = regexprep(fig_name,',','');
             
             print('-f',  '-dpng', fullfile(directory,'figures',cell2mat(fig_name)))
             
