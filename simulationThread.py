@@ -1,8 +1,11 @@
-import sys
+##	@package simulationThread
+#	Contains a subclass of QThread
 
-# PyQt classes
+import sys
 from PyQt5 import QtGui, QtCore, QtWidgets
 
+##	SimulationThread
+#	Implements two method to communicate with the main simulation loop with signals
 class SimulationThread(QtCore.QThread):
 
 	stopSimulationRequested = False

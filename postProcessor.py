@@ -8,7 +8,7 @@
 import sys,os
 import time
 import numpy as np
-from Postprocess import *
+from postProcess import *
 
 # Qt and GUI packages
 from PyQt5.QtCore import QObject, pyqtSignal

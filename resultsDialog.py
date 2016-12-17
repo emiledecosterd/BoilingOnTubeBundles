@@ -15,15 +15,12 @@ matplotlib.use('Qt5Agg')
 import numpy as np
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from resultsDialogGUI import Ui_Dialog
-
 import matplotlib.pyplot as plt
 import pickle
-
 
 
 ##	ResultsDialog

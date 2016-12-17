@@ -4,7 +4,6 @@
 # Packages for the simulation
 import math
 import numpy as np
-from properties import get_properties
 from CoolProp.CoolProp import PropsSI
 from feenstraCorrelation import ini_cell_voidFraction
 from SolveCell import SolveCell
@@ -106,12 +105,8 @@ class Simulation(QObject):
 					return
 
 					np.set_printoptions(precision=3)
-				#print(xc)
-				#print(eps)
-				#print(OtherData)
-				#print(Th)
 
-				print('Calculation complete !\n')
+				print('INFO: Calculation complete !\n')
 
 				Ph_drop = Ph[ geom['Nt'],geom['n']]-flowInputs['Ph_in']
 				Pc_drop = Pc[ geom['Nt'],geom['n']]-Pc_in

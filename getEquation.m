@@ -1,19 +1,13 @@
 % Boiling on tube bundles
 % Little script to get a fit for the flow pattern map curves
 
-<<<<<<< HEAD
 close all; clear variables; clc;
 
 %%  Get the image
 map = imread('FlowPatternMap/flow_pattern_map_filtered.png');
 map = rgb2gray(map);
 figure('name', 'Grayscale image');
-=======
-% Get the image
-map = imread('FlowPatternMap/flow_pattern_map.png');
-map = rgb2gray(map);
-figure();
->>>>>>> PlotsPresentation
+
 imshow(map);
 
 % Threshold it
@@ -75,16 +69,4 @@ plot(x1o,y1o,'.k');
 plot(x2o,y2o,'.k');
 plot(x3o,y3o,'.k');
 hold off;
-=======
-figure();
-imshow(map)
 
-% Separate image
-[width, height] = size(map);
-first_map = map(1:width-215, height-75:height);
-
-
-% Get coordinates
-[x, y] = find(map);
-curve = polyfit
->>>>>>> PlotsPresentation
