@@ -94,5 +94,6 @@ eps[0,:] = epsInit
 eps[:,0] = -1
 configuration = {'opCond': opCond, 'geom': geom, 'flowInputs':flowInputs}
 
+configuration['filename'] = 'Simu_launchMain.txt'
 simu = Simulation()
 simu.startSimulation(configuration)

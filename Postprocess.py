@@ -75,7 +75,15 @@ def plot_xc_pipe(xc, n, Nt, show):
 #     time = time.strftime("%Y%m%H%M")
 #     self.simName = (time + "_" + plotName)
 
-def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
+def PostProcess_calc(Q, Pc, xc, Tc, Th, OtherData, configuration):
+
+    opCond = configuration['opCond']
+    geom = configuration['geom']
+    flowInputs = configuration['flowInputs']
+
+    Q = Q * geom['Nt_col'] # BIG MISTAKE !!!!!!!!!!!!!!!
+
+
     q_avg = Q/(math.pi*geom['D']*geom['L']*geom['N'])
 
     alpha_a_tot = 0.0
@@ -102,6 +110,7 @@ def PostProcess_calc(opCond, geom, Q, Pc, xc, Tc, Th, OtherData, configuration):
     Pc_drop = Pc[ 0, 1]-Pc[ geom['Nt'], 1]
     xc_drop = xc[ geom['Nt'],1]-xc[ 0, 1]
     Th_drop = Th[1, 0] - Th[1, geom['n']]
+
 
     print('Heat transfer Q [kW] %.3f: ' %Q)
     print('Average heat flux q [kW/m^2] %.3f: ' %q_avg)
