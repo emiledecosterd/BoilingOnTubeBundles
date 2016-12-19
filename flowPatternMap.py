@@ -92,6 +92,7 @@ def plotFlowPatternMap(config, results, show):
         print('INFO: No config and results given.')
         print('INFO: Plotting only the map.')
 
+
     # Plot the curves
     fig = plt.figure()
     rect = fig.patch
@@ -105,6 +106,11 @@ def plotFlowPatternMap(config, results, show):
     plt.ylabel(x_text)
     plt.title('Flow pattern map')
     plt.grid(True, 'both')
+    # Write infos
+    ax = plt.gca()
+    ax.text(10, 2, r'Slug flow', fontsize=12)
+    ax.text(30, 40, r'Bubbly flow', fontsize=12)
+    ax.text(0.3, 70, r'Spray flow', fontsize=12)
 
     if show:  
         plt.show()
