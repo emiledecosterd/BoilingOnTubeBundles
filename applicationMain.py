@@ -191,7 +191,12 @@ class MainController(QtCore.QObject):
 			return
 
 		# Post process, no GUI
-		postProcessor = PostProcessor(self.currentSimulationConfiguration, self.results, False)
+		try:
+			postProcessor = PostProcessor(self.currentSimulationConfiguration, self.results, False)
+		except Error as e:
+			print(e)
+		except Exception as err:
+			print(err)
 
 		# Plot the result
 		self.isLongPlotter = True

@@ -12,7 +12,6 @@ imshow(map);
 
 % Threshold it
 map = 1-(map<110);
-<<<<<<< HEAD
 figure('name', 'Thresholded map');
 imshow(map);
 

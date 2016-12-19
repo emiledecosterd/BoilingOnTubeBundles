@@ -85,7 +85,7 @@ def plotFlowPatternMap(config, results, k):
     plt.loglog(x3, y3, 'k')
 
     # Plot the points
-    plotFlowPattern(config, results)
+    plotFlowPattern(config, results, plt)
 
     # Configure the plot to use latex interpreter
     plt.rc('text', usetex=True)
