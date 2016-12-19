@@ -20,15 +20,14 @@ clear all
 %                :                   :
 %                :                   :
 %
-% See file SimulationFolder_example/FluidType_res.txt for an example.
+% See file Documentation/ParametricSimulationFolder_example/FluidType_res.txt for an example.
 %
-% Once the Data is plotted, it is saved as a .png in
-% SimulationFolder_example/figures
-
+% Once the Data is plotted, it is saved as a .png in your simulation
+% folder
 
 %% Datas are read from .txt
 
-directory = uigetdir('./','Choose Folder containing data to process');
+directory = uigetdir('./results','Choose Folder containing data to process');
 
 files = dir([directory, '/*res.txt']);
 
