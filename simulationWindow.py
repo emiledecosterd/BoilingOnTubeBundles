@@ -186,8 +186,10 @@ class SimulationWindow(Ui_MainWindow):
 
 	##	Bridge between the signals from the fields and the maincontroller
 	def inputsChanged(self):
+		sender = self.window.sender()
+
 		print('Input changed')
-		if self.checkTubeNumber():
+		if self.checkTubeNumber(sender):
 			color = '#ffffff' # White
 			self.NtSpinBox.setStyleSheet('QSpinBox { background-color: %s }' % color)
 			self.Nt_colSpinBox.setStyleSheet('QSpinBox { background-color: %s}' % color)
@@ -228,7 +230,8 @@ class SimulationWindow(Ui_MainWindow):
 
 	## Check if the shell size defined is still big enough for another pipe line or column
 	#
-	def checkTubeNumber(self):
+	def checkTubeNumber(self, sender):
+		print(sender)
 		geom = {}
 		geom['s'] = float(self.sLineEdit.text())
 		geom['sh'] = float(self.shLineEdit.text())
@@ -237,11 +240,16 @@ class SimulationWindow(Ui_MainWindow):
 		geom['Nt_col'] = self.Nt_colSpinBox.value()
 
 		if (geom['s']*geom['Nt'] >= \
-			geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds']))):
+			geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds'])) and \
+			sender == self.NtSpinBox):
 			self.NtSpinBox.setValue(round(geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds']))/geom['s']))
 			return False
-		elif (geom['sh']*geom['Nt_col'] >= \
-			geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds']))):
+		else:
+			return True
+
+		if (geom['sh']*geom['Nt_col'] >= \
+			geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds'])) and \
+			sender == self.Nt_colSpinBox):
 			self.Nt_colSpinBox.setValue(round(geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds']))/geom['sh']))
 			return False
 		else:
