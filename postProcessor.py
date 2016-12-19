@@ -9,6 +9,7 @@ import sys,os
 import time
 import numpy as np
 from postProcess import *
+from flowPatternMap import plotFlowPatternMap
 
 # Qt and GUI packages
 from PyQt5.QtCore import QObject, pyqtSignal
@@ -62,10 +63,10 @@ class PostProcessor(QObject):
 		except Exception as e:
 			raise Error('PostProcessor.savePlots.PostProcess_calc', e)
 
-		# try:
-		# 	plotFlowPatternMap(self.config, self.results, self.show)
-		# except Exception as e:
-		# 	raise Error('PostProcessor.savePlots.plotFlowPatternMap', e)
+		try:
+			plotFlowPatternMap(self.config, self.results, self.show)
+		except Exception as e:
+			raise Error('PostProcessor.savePlots.plotFlowPatternMap', e)
 
 	## 	Write the text file
 	#	@param results Results diactionnary

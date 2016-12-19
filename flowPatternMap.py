@@ -2,8 +2,13 @@ from CoolProp.CoolProp import PropsSI
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import error
+import sys
+import pickle
 
-def plotFlowPattern(config, results, current_plot):
+debug = True
+
+def plotFlowPatternTubes(config, results, current_plot):
 
     xc = results['xc']
     Tc = results['Tc']
@@ -40,9 +45,6 @@ def plotFlowPattern(config, results, current_plot):
         current_plot.plot(N_res_x, N_res_y)
 
 
-
-
-
 def plotFlowPatternMap(config, results, show):
 
     # show = True
@@ -72,21 +74,24 @@ def plotFlowPatternMap(config, results, show):
     x2 = 0.1155*np.exp(0.0183*x2)
     x3 = 0.1155*np.exp(0.0183*x3)
 
-
-    # Plot the curves
-    plt.loglog(x1, y1, 'k')
-    plt.loglog(x2, y2,'k')
-    plt.loglog(x3, y3, 'k')
-
-    # Plot the points
-    plotFlowPattern(config, results, plt)
-
     # Configure the plot to use latex interpreter
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
     y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
-    fig = plt.figure(100)
+
+    # Plot the points
+    if config is not None and results is not None:
+        plotFlowPatternTubes(config, results, plt)
+    else:
+        print('INFO: No config and results given.')
+        print('INFO: Plotting only the map.')
+
+    # Plot the curves
+    fig = plt.figure()
+    plt.loglog(x1, y1, 'k')
+    plt.loglog(x2, y2,'k')
+    plt.loglog(x3, y3, 'k')
     plt.xlabel(x_text)
     plt.xlim(0.1,1000)
     plt.ylim(1,100)
@@ -98,8 +103,16 @@ def plotFlowPatternMap(config, results, show):
         plt.show()
 
     # Save the figure
-    with open(config['filename'] + 'mplt/plot_' + 'fpm', 'wb') as fid:
-        pickle.dump(fig, fid)
+    try:
+        with open(config['filename'] + 'mplt/plot_' + 'fpm', 'wb') as fid:
+            pickle.dump(fig, fid)
         fig.savefig(config['filename'] + 'images/plot_' + 'fpm'+ '.png')
+    except Exception as e:
+        if debug is True:
+            print(e)
+        else:
+            raise Error('plotFlowPatternMap', 'Error writing file')
 
-    plt.rc('text', usetex=False)
+
+
+
