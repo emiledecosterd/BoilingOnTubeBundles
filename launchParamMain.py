@@ -1,4 +1,5 @@
 import sys
+import shutil
 import math
 import numpy as np
 
@@ -27,33 +28,34 @@ import os
 Parameters_1 = ['mdot_c']
 Dictionnaries_1 = ['opCond']
 Starts_1 = [4]
-Ends_1 = [40]
-Number_points_1 = [3]
+Ends_1 = [10]
+Number_points_1 = [2]
 Parameters_names_1 = ['G_{R134a}[kg/s/m^2]']
 # what you want written as xlabel in matlab, must NOT contain spcce
 # the latex interpreter is used
 
 # parameters 2 go in the legend
-Parameters_2 = ['corrPD']
+Parameters_2 = ['D']
 Dictionnaries_2 = ['geom']
 Starts_2 = [0.010]
-Ends_2 = [0.018]
-Number_points_2 = [5]
-Parameters_names_2 = ['corrPD']
+Ends_2 = [0.015]
+Number_points_2 = [2]
+Parameters_names_2 = ['D[m]']
 
 
 sim_1 = 0
 sim_2 = 0
 
-path='./Param/'+'Parametric_analysis'+'_'+strftime("%Y-%m-%d %H-%M-%S")
+# path='./Param/'+'Parametric_analysis'+'_'+strftime("%Y-%m-%d %H-%M-%S")
+path='./results/'+strftime("%Y-%m-%d %H-%M-%S")
 os.makedirs(path)
 
 configuration={}
 
+
 for Param_2 in Parameters_2:
 
-    configuration['filename'] = path+'/'+Param_2+'_res.txt'
-    
+    configuration['filename'] = path+'/'+Param_2
 
     for Param_1 in Parameters_1:
 
@@ -73,22 +75,22 @@ for Param_2 in Parameters_2:
 
         # Geometrical Inputs
         geom['Nt'] = 8
-        geom['Nt_col'] = 11
+        geom['Nt_col'] = 4
         geom['L'] = 3
-        geom['n'] = 10
+        geom['n'] = 6
         geom['s'] = 22.22e-3
         geom['sh'] = 22.22e-3
         geom['D'] = 18e-3
         geom['e_i'] = 3e-6
-        geom['e_o'] = 3e-6
-        geom['t'] = 3e-3
+        geom['e_o'] = 2.3e-6
+        geom['t'] = 2e-3
         geom['corr'] = 'Cooper'
         geom['corrPD'] = 'Gaddis'
-        geom['layout'] = 'InLine'
+        geom['layout'] = 'Staggered'
         geom['N'] = geom['Nt']*geom['Nt_col']
 
         # Flow Inputs
-        flowInputs['Tc_in'] = 5 + 273.15
+        flowInputs['Tc_in'] = 0 + 273.15
         flowInputs['Th_in'] = 20+ 273.15
         flowInputs['Ph_in'] = 1e5
         flowInputs['xc_in'] = 0.05
@@ -99,7 +101,7 @@ for Param_2 in Parameters_2:
         #opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
         opCond['mdot_c'] = 15
-        opCond['mdot_h'] = 40
+        opCond['mdot_h'] = 300
 
         configuration['opCond'] = opCond
         configuration['geom'] = geom
@@ -147,7 +149,7 @@ for Param_2 in Parameters_2:
                 #opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
                 #opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
-                f=open(configuration['filename'], 'a')
+                f=open(configuration['filename']+'_res.txt', 'a')
 
                 if Parameters_2 == ['FluidType'] or Parameters_2 == ['corrPD'] or Parameters_2 == ['layout']:
                     f.write('\n' +Parameters_names_2[sim_2]+' = '+str(count)+'\n')
@@ -162,7 +164,7 @@ for Param_2 in Parameters_2:
 
                 results = simu.run(configuration)
                 ### Post processing
-                PostProcessor(self.configuration, results, False)
+                PostProcessor(configuration, results, False)
 
             count +=1
 
@@ -172,7 +174,14 @@ for Param_2 in Parameters_2:
     sim_1 = 0
 
 
-f=open('status.txt', 'a')
+f=open(configuration['filename']+'_status.txt', 'a')
 f.write('Simulation completed')
+
+
+shutil.rmtree(configuration['filename'] + 'data')
+shutil.rmtree(configuration['filename'] + 'mplt')
+shutil.rmtree(configuration['filename'] + 'images')
+
+
 
 

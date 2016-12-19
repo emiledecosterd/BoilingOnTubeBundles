@@ -128,9 +128,9 @@ def makeFigure(Field, FieldName, config, show, k):
     if show :
         f.show()
     else:
-        with open(config['filename'] + '/mplt/plot_'+ FieldName, 'wb') as fid:
+        with open(config['filename'] + 'mplt/plot_'+ FieldName, 'wb') as fid:
             pickle.dump(f, fid)
-        f.savefig(config['filename'] + '/images/plot_'+ FieldName +'.png')
+        f.savefig(config['filename'] + 'images/plot_'+ FieldName +'.png')
 
 
 def plot_boiler(config, results, show):
@@ -178,9 +178,9 @@ def plot_xc_pipe(config, results, show):
     if show==1:
         l.show()
     else:
-        with open(config['filename'] + '/mplt/plot_avg_xc', 'wb') as fid:
+        with open(config['filename'] + 'mplt/plot_avg_xc', 'wb') as fid:
             pickle.dump(l, fid)
-        l.savefig(config['filename'] + '/images/plot_avg_xc'+'.png')
+        l.savefig(config['filename'] + 'images/plot_avg_xc'+'.png')
 
 
 def PostProcess_calc(config, results):
@@ -221,7 +221,7 @@ def PostProcess_calc(config, results):
     print('Average outer heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_a_avg)
     print('Average inner heat transfer coefficient [W/m^2/K] %.3f: ' %alpha_i_avg)
 
-    newFilename = config['filename'] + '/res.txt'
+    newFilename = config['filename'] + '_res.txt'
     f=open(newFilename, 'a')
 
     f.write('Q[kW] = '+str(Q)+'\n')

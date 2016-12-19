@@ -27,9 +27,11 @@ class PostProcessor(QObject):
 		self.show = show
 
 		# Create the directory
-		os.makedirs(self.config['filename'] + '/data')
-		os.makedirs(self.config['filename'] + '/mplt')
-		os.makedirs(self.config['filename'] + '/images')
+
+		if not (os.path.isdir(self.config['filename'] + 'data')):
+			os.makedirs(self.config['filename'] + 'data')
+			os.makedirs(self.config['filename'] + 'mplt')
+			os.makedirs(self.config['filename'] + 'images')
 
 		# Save the plots
 		self.savePlots()
@@ -75,14 +77,14 @@ class PostProcessor(QObject):
 
 		# Write all the matrices in a .out file
 		for key in resultsNames :
-			outputFileName = self.config['filename'] + '/data/results_'+ names[resultsNames.index(key)]+'.out'
+			outputFileName = self.config['filename'] + 'data/results_'+ names[resultsNames.index(key)]+'.out'
 			np.savetxt(outputFileName, self.results[key], fmt='%-7.2f', header=names[resultsNames.index(key)], newline='\r\n')
 
 		  
 		# Write general output in the results_misc
 		miscNames = ['Q', 'q_avg', 'alpha_a_avg', 'alpha_i_avg']
 
-		file = open(self.config['filename'] + '/data' + '/results_misc.out','w')
+		file = open(self.config['filename'] + 'data' + '/results_misc.out','w')
 		for key in miscNames :
 			# outputFileName = './figures/' + self.config['initTime'] + '/results_'+ names[resultsNames.index(key)]+'.out'
 			value = str('%-7.2f' %(self.results[key]))

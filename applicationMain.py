@@ -107,7 +107,7 @@ class MainController(QtCore.QObject):
 		else:
 			# Load the current inputs in the GUI
 			self.currentSimulationConfiguration = self.mainWindow.readConfiguration()
-			self.currentSimulationConfiguration['filename'] = './results/' + (time.strftime("%Y-%m-%H-%M-%S"))
+			self.currentSimulationConfiguration['filename'] = './results/' + (time.strftime("%Y-%m-%d %H-%M-%S") + '/')
 			flowInputs = copy(self.currentSimulationConfiguration['flowInputs'])
 			try:
 				# Store the number of simulations to do
