@@ -53,7 +53,7 @@ def plotFlowPattern(config, results, current_plot):
 
 def plotFlowPatternMap(config, results, show):
 
-    show = True
+    # show = True
 
     # Draw the fixed lines, fitted from the image
     p1 = np.array([0.001, 0.0211, 123.596])

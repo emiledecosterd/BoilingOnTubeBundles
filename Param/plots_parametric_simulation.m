@@ -1,6 +1,30 @@
 close all
 clear all
 
+% This script reads data in *_res.txt files written by launchParamMain.py
+% and plots it. The data structure should be
+%
+% name_of_Param_2 = value of Param 2(1)
+% name_of_Param_1 = value of Param 2(1)
+%
+% name_of_result_1 = value of result 1
+% name_of_result_2 = value of result 2
+%                :                   :
+%                :                   :
+%
+% name_of_Param_2 = value of Param 2(1)
+% name_of_Param_1 = value of Param 2(2)
+%
+% name_of_result_1 = value of result 1
+% name_of_result_2 = value of result 2
+%                :                   :
+%                :                   :
+%
+% See file SimulationFolder_example/FluidType_res.txt for an example.
+%
+% Once the Data is plotted, it is saved as a .png in
+% SimulationFolder_example/figures
+
 
 %% Datas are read from .txt
 
@@ -152,12 +176,13 @@ for i=1:length(files) % loop on files (lines of Data_plot)
             xlabel(strcat('$', c1{i}(j), '$'))
             
             if plot_error == 1
-                ylabel(strcat('$', fields{k}(1:strfind(fields{k}, '[')-1),'\%', '$'))
+                ylabel(strcat('$','Error\, on\, ', fields{k}(1:strfind(fields{k}, '[')-1),'[\%]', '$'))
             else
                 ylabel(strcat('$', fields{k}, '$'))
             end
+            
             h=legend(Leg,'Location','best' );
-            set(h,'FontSize',10);
+            set(h,'FontSize',15);
             %set(h,'box','off')
             set (gca,'TicklabelInterpreter','LaTex')
             grid on

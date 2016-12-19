@@ -263,6 +263,7 @@ class SimulationWindow(Ui_MainWindow):
 			return False
 
 		else:
+			print('CARROT')
 			return True
 
 	##	Checks which fields have to be enabled or disabled depending on the 
