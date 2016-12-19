@@ -330,10 +330,10 @@ class SimulationWindow(Ui_MainWindow):
 			geom['chosenResult'] = self.results[self.chosenResultComboBox.currentIndex()]
 			geom['N'] = geom['Nt']*geom['Nt_col']
 
-			# Calculate mdotdot
+			# Calculate mdot
 			try:
 				opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
-				opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
+				opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['sh']*geom['L'])
 			except Exception as e:
 				color = '#f6989d' # red
 				if geom['Nt'] == 0:
