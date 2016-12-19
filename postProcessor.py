@@ -62,10 +62,10 @@ class PostProcessor(QObject):
 		except Exception as e:
 			raise Error('PostProcessor.savePlots.PostProcess_calc', e)
 
-		# try:
-		# 	plotFlowPatternMap(self.config, self.results, 1)
-		# except Exception as e:
-		# 	raise Error('PostProcessor.savePlots.plotFlowPatternMap', e)
+		try:
+			plotFlowPatternMap(self.config, self.results, self.show)
+		except Exception as e:
+			raise Error('PostProcessor.savePlots.plotFlowPatternMap', e)
 
 	## 	Write the text file
 	#	@param results Results diactionnary

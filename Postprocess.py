@@ -51,7 +51,7 @@ def plotFlowPattern(config, results, current_plot):
 
 
 
-def plotFlowPatternMap(config, results, k):
+def plotFlowPatternMap(config, results, show):
 
     # Draw the fixed lines, fitted from the image
     p1 = np.array([0.001, 0.0211, 123.596])
@@ -92,7 +92,7 @@ def plotFlowPatternMap(config, results, k):
     plt.rc('font', family='serif')
     x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
     y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
-    plt.figure(k)
+    fig = plt.figure(k)
     plt.xlabel(x_text)
     plt.xlim(0.1,1000)
     plt.ylim(1,100)
@@ -100,7 +100,13 @@ def plotFlowPatternMap(config, results, k):
     plt.title('Flow pattern map')
     plt.grid(True, 'both')
 
-    plt.show()
+    if show:  
+        plt.show()
+
+    # Save the figure
+    with open(config['filename'] + 'mplt/plot_' + fpm, 'wb') as fid:
+        pickle.dump(fig, fid)
+        fig.savefig(config['filename'] + 'images/plot_' + fpm + '.png')
 
 
 def makeFigure(Field, FieldName, config, show, k):
