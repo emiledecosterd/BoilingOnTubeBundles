@@ -92,8 +92,8 @@ def plotFlowPatternMap(config, results, show):
     # Configure the plot to use latex interpreter
     plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
-    x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
-    y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
+    x_text = (r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$')
+    y_text = (r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$')
     fig = plt.figure(100)
     plt.xlabel(x_text)
     plt.xlim(0.1,1000)
@@ -113,7 +113,7 @@ def plotFlowPatternMap(config, results, show):
     plt.rc('text', usetex=False)
 
 
-def makeFigure(Field, FieldName, config, show, k):
+def makeFigure(Field, FieldName, latexName, config, show, k):
     n = config['geom']['n']
     Nt = config['geom']['Nt']
 
@@ -121,14 +121,22 @@ def makeFigure(Field, FieldName, config, show, k):
 
     f = plt.figure()
 
+    f.set_figheight(11)
+    f.set_figwidth(8.5)
+
+    rect = f.patch
+    rect.set_facecolor('white')
+
+    plt.rc('font', family='serif')
+
     legendEntries=[]
     legendText=[]
 
     for i in range(Nt):
-        plt.plot(N_cell, np.squeeze(np.asarray(Field[i+1,1:n+1])),'x-',label='Pipe '+str(i+1))
+        plt.plot(N_cell, np.squeeze(np.asarray(Field[i+1,1:n+1])),'x-',label=r'$Pipe '+ str(i+1)+'$')
 
-        plt.xlabel('cell #')
-        plt.ylabel(FieldName)
+        plt.xlabel(r'$Cell \quad \#$')
+        plt.ylabel(latexName)
         plt.grid(True)
 
 
@@ -151,13 +159,15 @@ def plot_boiler(config, results, show):
     '''
 
     names=['T_w','P_w','T_wf','P_wf','x_wf', 'eps']
+    latexNames=[r'$T_{w}$',r'$P_{w}$',r'$T_{wf}$',r'$P_{wf}$',r'$x_{wf}$',r'$\varepsilon$']
     resultsNames = ['Th','Ph','Tc','Pc','xc','eps']
     k=0
 
     for key in resultsNames :
         name = names[resultsNames.index(key)]
+        latexName = latexNames[resultsNames.index(key)]
         field = results[key]
-        makeFigure(field, name, config, show, k)
+        makeFigure(field, name, latexName, config, show, k)
         k+=1
 
 
@@ -179,6 +189,12 @@ def plot_xc_pipe(config, results, show):
 
 
     l=plt.figure()
+    l.set_figheight(11)
+    l.set_figwidth(8.5)
+
+    rect = l.patch
+    rect.set_facecolor('white')
+
     ax=l.gca()
     ax.set_aspect('auto')
     ax.bar(np.linspace(1,Nt,num=Nt)-0.3,x_pipe_avg,0.3,color='b',label='Average')

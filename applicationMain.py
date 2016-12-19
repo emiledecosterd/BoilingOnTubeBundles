@@ -46,6 +46,7 @@ class MainController(QtCore.QObject):
 
 		# Create simulation window
 		window = QResizableMainWindow()
+		self.window = window
 		self.mainWindow = SimulationWindow(window)
 		self.mainWindow.setup()
 
@@ -261,6 +262,8 @@ class MainController(QtCore.QObject):
 			try:
 				dialog = QtWidgets.QDialog(self.mainWindow)
 				resultsDialog = ResultsDialog(dialog, self.currentSimulationConfiguration)
+				geomMainWindow = self.window.geometry()
+				dialog.move(QtCore.QPoint(geomMainWindow.x(), geomMainWindow.y()))
 				dialog.exec()
 			except Error as er:
 				print(er)	
