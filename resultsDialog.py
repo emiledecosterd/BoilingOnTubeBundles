@@ -40,8 +40,6 @@ class ResultsDialog(Ui_Dialog):
 		self.verticalLayout_2.addLayout(self.gridLayout)
 
 		# Global variables
-		print('TEST')
-		print(config['filename'])
 		self.directoryName = config['filename']
 
 		# Setup
@@ -274,8 +272,6 @@ class ResultsDialog(Ui_Dialog):
 		self.lineEditCapacity.setText(str(results['Q']))
 
 		# Edit the pushButton
-		print(self.directoryName[:-1])
-		print(os.path.basename(self.directoryName[:-1]))
 		self.pushButton.setText(os.path.basename(self.directoryName[:-1]))
 
 

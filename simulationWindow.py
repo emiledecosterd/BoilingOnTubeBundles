@@ -232,6 +232,8 @@ class SimulationWindow(Ui_MainWindow):
 	#
 	def checkTubeNumber(self, sender):
 		print(sender)
+		print(self.Nt_colSpinBox)
+		print(self.NtSpinBox)
 		geom = {}
 		geom['s'] = float(self.sLineEdit.text())
 		geom['sh'] = float(self.shLineEdit.text())
@@ -239,19 +241,27 @@ class SimulationWindow(Ui_MainWindow):
 		geom['Nt'] = self.NtSpinBox.value()
 		geom['Nt_col'] = self.Nt_colSpinBox.value()
 
-		if (geom['s']*geom['Nt'] >= \
+		print('ENTER CHECK KTUBE')
+		print(sender != self.NtSpinBox and sender != self.Nt_colSpinBox)
+
+		if (sender != self.NtSpinBox and sender != self.Nt_colSpinBox):
+			print('ENTER BUT LEAVE')
+			return True
+		elif (geom['s']*geom['Nt'] >= \
 			geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds'])) and \
 			sender == self.NtSpinBox):
-			self.NtSpinBox.setValue(round(geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds']))/geom['s']))
+			print('NROWs')
+			self.NtSpinBox.setValue(math.floor(geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds']))/geom['s']))
 			return False
-		else:
-			return True
 
-		if (geom['sh']*geom['Nt_col'] >= \
+		elif (geom['sh']*geom['Nt_col'] >= \
 			geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds'])) and \
 			sender == self.Nt_colSpinBox):
-			self.Nt_colSpinBox.setValue(round(geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds']))/geom['sh']))
+			print('COLS')
+			self.Nt_colSpinBox.setValue(math.floor(geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds']))/geom['sh']))
+
 			return False
+
 		else:
 			return True
 
