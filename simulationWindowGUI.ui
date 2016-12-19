@@ -43,7 +43,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-312</y>
+         <y>-186</y>
          <width>451</width>
          <height>896</height>
         </rect>
@@ -611,7 +611,7 @@
            <item row="9" column="4">
             <widget class="QLabel" name="label_25">
              <property name="text">
-              <string>[um]</string>
+              <string>[m]</string>
              </property>
             </widget>
            </item>
@@ -641,7 +641,7 @@
            <item row="10" column="4">
             <widget class="QLabel" name="label_27">
              <property name="text">
-              <string>[um]</string>
+              <string>[m]</string>
              </property>
             </widget>
            </item>

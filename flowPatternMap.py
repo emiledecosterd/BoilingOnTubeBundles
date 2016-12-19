@@ -1,3 +1,6 @@
+##  @package    flowPatternMap
+#   Contains the functions to plot the flow pattern map 
+
 from CoolProp.CoolProp import PropsSI
 import numpy as np
 import math
@@ -6,8 +9,10 @@ import error
 import sys
 import pickle
 
-debug = True
+debug = False
 
+##  plotFlowPatternTubes
+#   Plots the pipes in the right location of the flow pattern map
 def plotFlowPatternTubes(config, results, current_plot):
 
     xc = results['xc']
@@ -45,9 +50,9 @@ def plotFlowPatternTubes(config, results, current_plot):
         current_plot.plot(N_res_x, N_res_y)
 
 
+##  plotFlowPatternMap
+#   Plots the flow pattern map separation curves and if there are results, plots them
 def plotFlowPatternMap(config, results, show):
-
-    # show = True
 
     # Draw the fixed lines, fitted from the image
     p1 = np.array([0.001, 0.0211, 123.596])
@@ -75,10 +80,11 @@ def plotFlowPatternMap(config, results, show):
     x3 = 0.1155*np.exp(0.0183*x3)
 
     # Configure the plot to use latex interpreter
-    plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
     y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
+    rect = fig.patch
+    rect.set_facecolor('white')
 
     # Plot the points
     if config is not None and results is not None:
@@ -93,8 +99,8 @@ def plotFlowPatternMap(config, results, show):
     plt.loglog(x2, y2,'k')
     plt.loglog(x3, y3, 'k')
     plt.xlabel(x_text)
-    plt.xlim(0.1,1000)
-    plt.ylim(1,100)
+    #plt.xlim(0.1,1000)
+    #plt.ylim(1,100)
     plt.ylabel(x_text)
     plt.title('Flow pattern map')
     plt.grid(True, 'both')
