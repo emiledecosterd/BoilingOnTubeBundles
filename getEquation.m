@@ -98,15 +98,51 @@ x3_log = transform_x(x3);
 y1_log = transform_y(polyval(p1, x1));
 y2_log = transform_y(polyval(p2, x2));
 y3_log = transform_y(polyval(p3, x3));
-% y1_log = polyval(p1, x1_log);
-% y2_log = polyval(p1, x2_log);
-% y3_log = polyval(p1, x3_log);
 
 % Plot
 figure('name', 'Logscale');
 loglog(x1_log, y1_log, 'k');hold on;
 loglog(x2_log, y2_log, 'k');hold on;
 loglog(x3_log, y3_log, 'k');hold on;
+xlim([0.1 1000]);
+ylim([1 100]);
+
+%% Test transformation
+
+% The linear fit (pixel scale)
+p1 = [0.001, 0.0211, 123.596];
+p2 = [0, 2.2689, -330.1467];
+p3 = [0, -0.7492, 347.6838];
+
+% Transform for the x axis
+tx = @(x) 0.1155*exp(0.0183*x);
+ty = @(y) 1.0052*exp(0.0184*y);
+
+% Inverse transform for x axis
+itx = @(x) 1/0.0183*log(x/0.1155);
+
+% Coefficients of polynoms
+a = @(x) x(1);
+b = @(x) x(2);
+c = @(x) x(3);
+
+% x values for the map
+center_x = 225; % The point where the three curves meet
+center_x_log = tx(center_x); % In the log scale
+x1 = tx(linspace(30,center_x,1000));
+x2 = tx(linspace(center_x, 255, 150));
+x3 = tx(linspace(center_x, 350, 400));
+
+% The map values
+y1 = ty(a(p1)*itx(x1).^2 + b(p1)*itx(x1) + c(p1));
+y2 = ty(a(p2)*itx(x2).^2 + b(p2)*itx(x2) + c(p2));
+y3 = ty(a(p3)*itx(x3).^2 + b(p3)*itx(x3) + c(p3));
+
+% Plot
+figure('name', 'Logscale bis');
+loglog(x1, y1, 'k');hold on;
+loglog(x2, y2, 'k');hold on;
+loglog(x3, y3, 'k');hold on;
 xlim([0.1 1000]);
 ylim([1 100]);
 
