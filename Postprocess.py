@@ -19,31 +19,31 @@ def plotFlowPattern(config, results, current_plot):
     Nt = config['geom']['Nt']
 
     N_cell = np.linspace(1,n, num=n)
-    N_res_x = np.empty([1, n])
-    N_res_y = np.empty([1, n])
+    N_res_x = np.empty( n)
+    N_res_y = np.empty(n)
 
     # Loop through all cells
-    for i in range(0, Nt):
-        for j in range(0, n):
+    for i in range(1, Nt+1):
+        for j in range(1, n+1):
 
             # Get the properties needed to calculate coefficients for the map
-            xc_temp = xc[j, i]
-            Tc_temp = Tc[j, i]
+            xc_temp = xc[i, j]
+            Tc_temp = Tc[i, j]
 
-            rho_L = PropsSI('D', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
-            rho_G = PropsSI('D', 'T', Tc_temp, 'Q', 1.0, config['FluidType'])
-            mu_L = PropsSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+            rho_L = PropsSI('D', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
+            rho_G = PropsSI('D', 'T', Tc_temp, 'Q', 1.0, config['opCond']['FluidType'])
+            mu_L = PropsSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
             GL_GG = 1/xc_temp-1
-            G_G = config['mdot_c']*xc_temp
-            sigma = PropsSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['FluidType'])
+            G_G = config['opCond']['mdot_c']*xc_temp
+            sigma = PropsSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
 
             # Calculate the coefficients
             abscisse = GL_GG*np.power(rho_G*rho_L/1200, 1/3)*(np.power(mu_L*(1000/rho_L)**2, 1/3)*0.073/sigma)
             ordonnee = G_G*np.power(rho_G*rho_L/1200, -1/2)
 
             # Save value to be plotted
-            N_res_x[j] = abscisse
-            N_res_y[j] = ordonnee
+            N_res_x[j-1] = abscisse
+            N_res_y[j-1] = ordonnee
 
         current_plot.plot(N_res_x, N_res_y)
 
@@ -52,6 +52,8 @@ def plotFlowPattern(config, results, current_plot):
 
 
 def plotFlowPatternMap(config, results, show):
+
+    show = True
 
     # Draw the fixed lines, fitted from the image
     p1 = np.array([0.001, 0.0211, 123.596])
@@ -92,7 +94,7 @@ def plotFlowPatternMap(config, results, show):
     plt.rc('font', family='serif')
     x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
     y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
-    fig = plt.figure(k)
+    fig = plt.figure(100)
     plt.xlabel(x_text)
     plt.xlim(0.1,1000)
     plt.ylim(1,100)
@@ -104,9 +106,11 @@ def plotFlowPatternMap(config, results, show):
         plt.show()
 
     # Save the figure
-    with open(config['filename'] + 'mplt/plot_' + fpm, 'wb') as fid:
+    with open(config['filename'] + 'mplt/plot_' + 'fpm', 'wb') as fid:
         pickle.dump(fig, fid)
-        fig.savefig(config['filename'] + 'images/plot_' + fpm + '.png')
+        fig.savefig(config['filename'] + 'images/plot_' + 'fpm'+ '.png')
+
+    plt.rc('text', usetex=False)
 
 
 def makeFigure(Field, FieldName, config, show, k):
