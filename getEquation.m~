@@ -95,12 +95,12 @@ x2_log = transform_x(x2);
 x3_log = transform_x(x3);
 
 % New calculated values
-y1_log = transform_y(polyval(p1, x1));
-y2_log = transform_y(polyval(p2, x2));
-y3_log = transform_y(polyval(p3, x3));
-% y1_log = polyval(p1, x1_log);
-% y2_log = polyval(p1, x2_log);
-% y3_log = polyval(p1, x3_log);
+% y1_log = transform_y(polyval(p1, x1));
+% y2_log = transform_y(polyval(p2, x2));
+% y3_log = transform_y(polyval(p3, x3));
+y1_log = polyval(p1, x1_log);
+y2_log = polyval(p1, x1_log);
+y1_log = polyval(p1, x1_log);
 
 % Plot
 figure('name', 'Logscale');
