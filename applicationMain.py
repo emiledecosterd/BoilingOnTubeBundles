@@ -80,6 +80,7 @@ class MainController(QtCore.QObject):
 
 		# Show the window
 		window.show()
+		self.updatePlots()
 
 		# Launch application
 		# For more details: 
