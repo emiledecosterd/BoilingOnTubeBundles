@@ -59,8 +59,6 @@ class PipePlotter(QtCore.QObject):
 
 		# Draw the rectangle (inner)
 		innerRect = QtCore.QRectF(QtCore.QPointF(self.viewLeft,self.viewTop ), QtCore.QSizeF(self.viewWidth, self.viewHeight))
-		# self.scene.addRect(innerRect, self.outerRectPen)
-		# self.addPoint(QtCore.QPointF(self.viewLeft, self.viewTop))
 
 		# Draw the rectangle
 		self.scene.addRect(outerRect, self.outerRectPen)
@@ -221,9 +219,6 @@ class LongPipePlotter(PipePlotter):
 		coordinates_x = coordinates[0]
 		coordinates_y = coordinates[1]
 
-		#print(coordinates_x)
-		#print(coordinates_y)
-
 		# Find min and max and define color range
 		maxVal = field.max()
 		# Bidouillage
@@ -233,15 +228,11 @@ class LongPipePlotter(PipePlotter):
 		# Draw each cell
 		for i in range(1,field.shape[1]):
 			for j in range(1,field.shape[0]):
-
-				#print('(i,j) = (%i,%i)' %(i,j))
 									
 				# Get rectangle coordinates
 				top = QtCore.QPointF(coordinates_x[i-1], coordinates_y[j])
 				bottom = QtCore.QPointF(coordinates_x[i], coordinates_y[j-1])
 				rect = QtCore.QRectF(top, bottom)
-
-				#print(field[j,i])
 
 				# Get right color
 				''' /!\ To be corrected !!! '''

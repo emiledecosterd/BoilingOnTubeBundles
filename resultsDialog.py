@@ -173,8 +173,6 @@ class ResultsDialog(Ui_Dialog):
 				
 
 	def updatePlots(self):
-		print('total size')
-		print([self.plotWidget.width(), self.plotWidget.height()])
 
 		# Get the size of the window
 		totalWidth =  self.plotWidget.width()
@@ -185,7 +183,6 @@ class ResultsDialog(Ui_Dialog):
 			self.graphicsViewList[i].setParent(None)
 		self.graphicsViewList = []
 
-		print("Local size")
 		for idx, comboBox in enumerate(self.comboBoxList):
 			
 			# Recover the figure
@@ -194,13 +191,10 @@ class ResultsDialog(Ui_Dialog):
 			# Create a new plot
 			self.graphicsViewList.append(FigureCanvas(fig))
 			self.layoutVertList[idx].insertWidget(0, self.graphicsViewList[idx])
-			
 
 			# Get the local plot size
-
 			width = self.graphicsViewList[idx].width()
 			height = self.graphicsViewList[idx].height()
-			print([width, height])
 
 			# Resize
 			self.graphicsViewList[idx].resize(totalWidth/self.resizeWidthRatio\
@@ -209,20 +203,15 @@ class ResultsDialog(Ui_Dialog):
 
 			width = self.graphicsViewList[idx].width()
 			height = self.graphicsViewList[idx].height()
-			print([width, height])
-
 
 			self.graphicsViewList[idx].draw()
 
-		
-		print("\n")
 
 	def createPlot(self, dim):
 
 		fig = plt.figure()
 
 	#	 LOAD DATA
-
 	def changeOutput(self):
 
 		#Get the path of the desired directory

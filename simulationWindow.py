@@ -63,7 +63,6 @@ class SimulationWindow(Ui_MainWindow):
 	#	@param	configuration	A dictionary containing all the values for the fields
 	#	@throw	error	An error with the name of the method and the exception message
 	def setupInputs(self, configuration):
-		print('setupInputs')
 		if configuration:
 			try:
 				# Recover each dictionnary in the configuration
@@ -98,7 +97,6 @@ class SimulationWindow(Ui_MainWindow):
 
 				# flowInputs
 				self.xcLineEdit.setText(str(flowInputs['xc_in']))
-				print(flowInputs['param'])
 				self.paramCheckBox.setChecked(flowInputs['param'] is not None )
 				Tc = flowInputs['Tc']
 				Th = flowInputs['Th']
@@ -188,19 +186,16 @@ class SimulationWindow(Ui_MainWindow):
 	def inputsChanged(self):
 		sender = self.window.sender()
 
-		print('Input changed')
 		if self.checkTubeNumber(sender):
 			color = '#ffffff' # White
 			self.NtSpinBox.setStyleSheet('QSpinBox { background-color: %s }' % color)
 			self.Nt_colSpinBox.setStyleSheet('QSpinBox { background-color: %s}' % color)
-			print(self.readConfiguration())
 			self.changesOccured.emit()
 		else:
-			print('WARNNG : The current shell size cannot receive more pipe row or column')
+			print('WARNING : The current shell size cannot receive more pipe row or column')
 
 	##	Called whenever the user chooses another field to display
 	def sendChosenResult(self):
-		print('ChosenResult changed')
 		result = self.results[self.chosenResultComboBox.currentIndex()]
 		self.chosenResultChanged.emit(result)
 
@@ -231,9 +226,7 @@ class SimulationWindow(Ui_MainWindow):
 	## Check if the shell size defined is still big enough for another pipe line or column
 	#
 	def checkTubeNumber(self, sender):
-		print(sender)
-		print(self.Nt_colSpinBox)
-		print(self.NtSpinBox)
+
 		geom = {}
 		geom['s'] = float(self.sLineEdit.text())
 		geom['sh'] = float(self.shLineEdit.text())
@@ -241,29 +234,22 @@ class SimulationWindow(Ui_MainWindow):
 		geom['Nt'] = self.NtSpinBox.value()
 		geom['Nt_col'] = self.Nt_colSpinBox.value()
 
-		print('ENTER CHECK KTUBE')
-		print(sender != self.NtSpinBox and sender != self.Nt_colSpinBox)
-
 		if (sender != self.NtSpinBox and sender != self.Nt_colSpinBox):
-			print('ENTER BUT LEAVE')
 			return True
 		elif (geom['s']*geom['Nt'] >= \
 			geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds'])) and \
 			sender == self.NtSpinBox):
-			print('NROWs')
 			self.NtSpinBox.setValue(math.floor(geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds']))/geom['s']))
 			return False
 
 		elif (geom['sh']*geom['Nt_col'] >= \
 			geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds'])) and \
 			sender == self.Nt_colSpinBox):
-			print('COLS')
 			self.Nt_colSpinBox.setValue(math.floor(geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds']))/geom['sh']))
 
 			return False
 
 		else:
-			print('CARROT')
 			return True
 
 	##	Checks which fields have to be enabled or disabled depending on the 
@@ -301,7 +287,6 @@ class SimulationWindow(Ui_MainWindow):
 	##	Reads all the fields in the GUI 
 	#	@return	configuration A configuration dictionary
 	def readConfiguration(self):
-			print('Reading current fields')
 
 			# Operating conditions fields
 			opCond = {}

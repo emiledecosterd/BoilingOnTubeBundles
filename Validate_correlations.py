@@ -1,3 +1,6 @@
+##  @package    Validate_correlations
+#   Script used to evaluate all the correlations used in the code
+
 import math
 import numpy as np
 
@@ -9,9 +12,7 @@ from feenstraCorrelation import cell_voidFraction
 import os
 import glob
 
-
-
-# delets all .txt files in folder
+# deletes all .txt files in folder
 files = glob.glob('./Validation/*.txt')
 for f in files:
     os.remove(f)

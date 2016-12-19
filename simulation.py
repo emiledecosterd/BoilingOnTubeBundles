@@ -86,7 +86,6 @@ class Simulation(QObject):
 		# Main loop
 		Qtot = 0.0
 
-
 		total = geom['Nt']*geom['n']
 		currentLoop = 0
 

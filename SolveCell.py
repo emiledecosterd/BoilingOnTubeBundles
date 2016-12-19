@@ -71,10 +71,6 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 
 		while (errest > tol and kt < ktmax):
 
-			#print(prevTh_out)
-			#print(EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out))
-			#print(deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h))
-
 			Th_out = prevTh_out - EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out)['balance']\
 				/deriv_EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in, prevTh_out, Tc_out, h)
 
@@ -182,13 +178,5 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	OtherData = EnergyBalance(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)
 	OtherData['deltaPc_f'] = P['deltaPc_f']
 	OtherData['deltaPc_h'] = P['deltaPc_h']
-	#OtherData['alpha_i'] = innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out)[0]
-	#OtherData['kt']=kt
-	#OtherData['kp']=kp
-	#OtherData['Bilan2']=(mdot_c*(hc_out- hc_in) - Q)
 
 	return [Ph_out, Pc_out, Th_out, Tc_out, xc_out, eps_out, Qcell, OtherData]
-
-
-
-# wait = input("PRESS ENTER TO CONTINUE.")

@@ -73,7 +73,6 @@ for key in Parameters_2:
 sim_1 = 0
 sim_2 = 0
 
-# path='./Param/'+'Parametric_analysis'+'_'+strftime("%Y-%m-%d %H-%M-%S")
 path='./results/'+strftime("%Y-%m-%d %H-%M-%S")
 os.makedirs(path)
 
@@ -122,10 +121,6 @@ for Param_2 in Parameters_2:
         flowInputs['Ph_in'] = 1e5
         flowInputs['xc_in'] = 0.05
         Pc_in = PropsSI('P','T', flowInputs['Tc_in'], 'Q', flowInputs['xc_in'], opCond['FluidType'])
-
-        #opCond['mfr_h'] = 0.5 #mfr_hGuess
-        #opCond['mdot_h'] = opCond['mfr_h']/(geom['N']*math.pi*0.25*(geom['D']-2*geom['t'])**2)
-        #opCond['mdot_c'] = opCond['mfr_c']/(geom['Nt_col']*geom['s']*geom['L'])
 
         opCond['mdot_c'] = 5
         opCond['mdot_h'] = 300

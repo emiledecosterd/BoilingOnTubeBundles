@@ -151,7 +151,6 @@ class MainController(QtCore.QObject):
 	#	@return 	A boolean determining if yes or no a new simulation has to be started
 	def checkParam(self):
 
-		print(self.currentSimulationConfiguration)
 		if self.currentSimulationConfiguration['flowInputs']['param'] is None:
 			return False
 		else:
@@ -242,7 +241,6 @@ class MainController(QtCore.QObject):
 			result = None
 			if self.results:
 				result = self.results[configuration['geom']['chosenResult']]
-				print(result)
 			if self.isLongPlotter:
 				self.longPlotter.drawScheme(configuration['geom'], result)
 			else:

@@ -40,7 +40,5 @@ def cell_vaporQuality(opCond, geom, Th_in, Th_out, Tc_in, xc_in ):
         Q_rest = mdot_c*(hc_out-(prop['h_L']+prop['h_LG'])) # kg/s * kJ/kg = kJ/s = kW 
         hc_out = prop['h_L']+prop['h_LG']
 
-    #print('Q : %.3f, hc_in: %.3f, hc_out : %.3f, Hl: %.3f, HG: %.3f, Cp : %.3f, mdot_h : %.3f' %(Q, hc_in, hc_out,prop['h_L'],prop['h_LG'],cp_hi,mdot_h ))
-
 
     return(xc_out, hc_in, hc_out, Q_rest)

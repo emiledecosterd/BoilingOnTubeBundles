@@ -105,8 +105,8 @@ except Error as e:
     if e.functionName == 'q_dnb':
         print(e.message)
     else:
-        print('\n An unexpected error has occured, check inputs \n \n \n \n \n or just stop messing with our code Jackson')
+        print('\n An unexpected error has occured, check inputs ')
 
 except Exception as e:
 
-    print('\n An unexpected error has occured, check inputs \n \n \n \n \n or just stop messing with our code Jackson')
+    print('\n An unexpected error has occured, check inputs')

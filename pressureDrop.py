@@ -51,9 +51,6 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     deltaZ =  geom['s'] # Height of the cell (not only the diameter D)
     deltaPc_s = (prop['rho_L']*(1-(eps_in+eps_out)/2)+prop['rho_G']*(eps_in+eps_out)/2)*g*deltaZ
 
-    #print('deltaPc_s %.3f'  %deltaPc_s)
-
-
     #### Frictionnal pressure drop ####
 
     # Calculating frictionnal pressure drop in function of the geometry. There is two correlation
@@ -154,7 +151,6 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     f2 = lmbd * f1  # Two-Phase equivalent friction factor
 
     deltaPc_f = 2*f2*opCond['mdot_c']**2/rho_eq
-    #print('deltaPc_f %.3f' %deltaPc_f)
 
     # Relative pressure at the output of the cell
     Pc_out = Pc_in - deltaPc_s - deltaPc_f
@@ -176,7 +172,6 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
     if Re_D < 2000:
         f = 64/Re_D
     else:
-        #f = 0.25/math.pow(math.log((geom['e_i']/(3.7*geom['D'])) + (5.74/math.pow(Re,0.9))),2)
         if Re_e < 35 :
     		# Hydrodynamically Smooth model
             f = (0.79*math.log(Re_D)-1.64)**-2.0 # [-] friction factor for smooth pipes

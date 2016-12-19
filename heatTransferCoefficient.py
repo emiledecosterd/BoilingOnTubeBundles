@@ -23,8 +23,6 @@ def innerHeatTransfer(opCond, geom, Th_in, Tc_in, Pc_in, eps_in,Th_out, Tc_out):
 
 	f = (1.8*math.log10((6.9/Re_D)+(geom['e_i']/((geom['D']-2.0*geom['t'])*3.7))**1.11))**-2.0 # [-] friction factor for rough pipes
 	Re_e = Re_D*(geom['e_i']/(geom['D']-2.0*geom['t']))*(f/8.0)**0.5 # [-] Roughness Reynolds number
-	#print('Re_e')
-	#print(Re_e)
 	if Re_e < 35 :
 		# Hydrodynamically Smooth model
 		f = (1.82*math.log10(Re_D)-1.64)**-2.0 # [-] friction factor for smooth pipes
