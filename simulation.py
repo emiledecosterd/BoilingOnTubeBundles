@@ -152,8 +152,8 @@ def defaultConfiguration():
 	geom = {
 		'Ds' : 1,
 		'D' : 30e-3,
-		'Nt' : 22,
-		'Nt_col' : 22,
+		'Nt' : 3,
+		'Nt_col' : 4,
 		'L' : 3.0,
 		's' : 45e-3,
 		'sh' : 45e-3,
@@ -161,7 +161,7 @@ def defaultConfiguration():
 		'layout' : 'Staggered',
 		'e_i' : 3e-6,
 		'e_o' : 3e-6,
-		'n' : 50,
+		'n' : 10,
 		'corr' : 'Cooper',
 		'corrPD' : 'Gaddis',
 		'chosenResult' : 'xc'

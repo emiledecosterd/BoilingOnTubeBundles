@@ -6,20 +6,18 @@
 # Package for the results dialog
 
 import sys, os
-import tkinter as tk
-from tkinter import filedialog
 
-import matplotlib
 # Make sure that we are using QT5
-matplotlib.use('Qt5Agg')
-import numpy as np
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from resultsDialogGUI import Ui_Dialog
-import matplotlib.pyplot as plt
+
+# For the figures
+import numpy as np
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+
 import pickle
 
 
@@ -226,10 +224,9 @@ class ResultsDialog(Ui_Dialog):
 	#	 LOAD DATA
 
 	def changeOutput(self):
+
 		#Get the path of the desired directory
-		root = tk.Tk()
-		root.withdraw()
-		directoryName = filedialog.askdirectory()	
+		directoryName = QtWidgets.QFileDialog.getExistingDirectory(self, 'Choose directory', './results')
 
 		if not directoryName:
 			pass

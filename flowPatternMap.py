@@ -55,7 +55,7 @@ def plotFlowPatternMap(config, results, show):
     plt.loglog(x2, y2,'k')
     plt.loglog(x3, y3, 'k')
     plt.xlabel(x_text)
-    plt.ylabel(x_text)
+    plt.ylabel(y_text)
     plt.title('Flow pattern map')
     plt.grid(True, 'both')
 
