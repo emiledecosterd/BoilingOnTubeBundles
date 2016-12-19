@@ -53,6 +53,7 @@ class SimulationWindow(Ui_MainWindow):
 	def setupLists(self):
 		self.workingFluids = ['R134a', 'Propane', 'Ammonia']
 		self.tubeMaterials = ['copper', 'aluminium', 'steel', 'other']
+		self.tubeThermalConductivities = [410, 273, 30, 300]
 		self.layouts = ['Inline','Staggered']
 		self.correlationsHTC = ['Mostinski', 'Cooper', 'Gorenflo']
 		self.correlationsPD = ['Gaddis', 'Zukauskas']
@@ -208,6 +209,7 @@ class SimulationWindow(Ui_MainWindow):
 			self.tubeThermalConductivityLineEdit.setEnabled(True)
 		else:
 			self.tubeThermalConductivityLineEdit.setEnabled(False)
+		self.tubeThermalConductivityLineEdit.setText(str(self.tubeThermalConductivities[self.tubeMatComboBox.currentIndex()]))
 
 
 	##	Checks if some inputs have to be enabled depending on the correlation
