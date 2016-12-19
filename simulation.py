@@ -143,34 +143,34 @@ class Simulation(QObject):
 def defaultConfiguration():
 
 	opCond = {
-		'FluidType' : 'R134a',
-		'mfr_c' : 5.3,
-		'mfr_h' : 15,
-		'TubeMat' : 'steel',
-		'TubeThermalConductivity' : 400
+			'FluidType' : 'R134a',
+			'mfr_c' : 40,
+			'mfr_h' : 15,
+			'TubeMat' : 'other',
+			'TubeThermalConductivity' : 410
 	}
 	geom = {
-		'Ds' : 0.5,
-		'D' : 15e-3,
-		'Nt' : 3,
-		'Nt_col' : 2,
+		'Ds' : 1,
+		'D' : 30e-3,
+		'Nt' : 22,
+		'Nt_col' : 22,
 		'L' : 3.0,
-		's' : 70e-3,
-		'sh' : 70e-3,
-		't' : 5e-3,
+		's' : 45e-3,
+		'sh' : 45e-3,
+		't' : 3e-3,
 		'layout' : 'Staggered',
 		'e_i' : 3e-6,
 		'e_o' : 3e-6,
-		'n' : 8,
-		'corr' : 'Mostinski',
+		'n' : 50,
+		'corr' : 'Cooper',
 		'corrPD' : 'Gaddis',
 		'chosenResult' : 'xc'
 	}
 	flowInputs = {
-		'Tc' : [273.15],
-		'Th' : [293.15],
+		'Tc' : [268.15],
+		'Th' : [298.15],
 		'Ph' : [1e5],
-		'xc_in' : 0.13,
+		'xc_in' : 0.05,
 		'param' : None
 	}
 	configuration = {

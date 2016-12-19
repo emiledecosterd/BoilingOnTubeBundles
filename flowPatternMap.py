@@ -11,45 +11,6 @@ import pickle
 
 debug = False
 
-##  plotFlowPatternTubes
-#   Plots the pipes in the right location of the flow pattern map
-def plotFlowPatternTubes(config, results, current_plot):
-
-    xc = results['xc']
-    Tc = results['Tc']
-    n = config['geom']['n']
-    Nt = config['geom']['Nt']
-
-    N_cell = np.linspace(1,n, num=n)
-    N_res_x = np.empty( n)
-    N_res_y = np.empty(n)
-
-    # Loop through all cells
-    for i in range(1, Nt+1):
-        for j in range(1, n+1):
-
-            # Get the properties needed to calculate coefficients for the map
-            xc_temp = xc[i, j]
-            Tc_temp = Tc[i, j]
-
-            rho_L = PropsSI('D', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
-            rho_G = PropsSI('D', 'T', Tc_temp, 'Q', 1.0, config['opCond']['FluidType'])
-            mu_L = PropsSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
-            GL_GG = 1/xc_temp-1
-            G_G = config['opCond']['mdot_c']*xc_temp
-            sigma = PropsSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
-
-            # Calculate the coefficients
-            abscisse = GL_GG*np.power(rho_G*rho_L/1200, 1/3)*(np.power(mu_L*(1000/rho_L)**2, 1/3)*0.073/sigma)
-            ordonnee = G_G*np.power(rho_G*rho_L/1200, -1/2)
-
-            # Save value to be plotted
-            N_res_x[j-1] = abscisse
-            N_res_y[j-1] = ordonnee
-
-        current_plot.plot(N_res_x, N_res_y)
-
-
 ##  plotFlowPatternMap
 #   Plots the flow pattern map separation curves and if there are results, plots them
 def plotFlowPatternMap(config, results, show):
@@ -85,13 +46,6 @@ def plotFlowPatternMap(config, results, show):
     x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
     y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
 
-    # Plot the points
-    if config is not None and results is not None:
-        plotFlowPatternTubes(config, results, plt)
-    else:
-        print('INFO: No config and results given.')
-        print('INFO: Plotting only the map.')
-
 
     # Plot the curves
     fig = plt.figure()
@@ -101,16 +55,57 @@ def plotFlowPatternMap(config, results, show):
     plt.loglog(x2, y2,'k')
     plt.loglog(x3, y3, 'k')
     plt.xlabel(x_text)
-    #plt.xlim(0.1,1000)
-    #plt.ylim(1,100)
     plt.ylabel(x_text)
     plt.title('Flow pattern map')
     plt.grid(True, 'both')
+
     # Write infos
     ax = plt.gca()
     ax.text(10, 2, r'Slug flow', fontsize=12)
     ax.text(30, 40, r'Bubbly flow', fontsize=12)
     ax.text(0.3, 70, r'Spray flow', fontsize=12)
+
+    # Plot the points
+    if config is not None and results is not None:
+
+        # Plot all the points
+        xc = results['xc']
+        Tc = results['Tc']
+        n = config['geom']['n']
+        Nt = config['geom']['Nt']
+
+        N_cell = np.linspace(1,n, num=n)
+        N_res_x = np.zeros(n)
+        N_res_y = np.zeros(n)
+
+        # Loop through all cells
+        for i in range(1, Nt+1):
+            for j in range(1, n+1):
+
+                # Get the properties needed to calculate coefficients for the map
+                xc_temp = xc[i, j]
+                Tc_temp = Tc[i, j]
+
+                rho_L = PropsSI('D', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
+                rho_G = PropsSI('D', 'T', Tc_temp, 'Q', 1.0, config['opCond']['FluidType'])
+                mu_L = PropsSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
+                GL_GG = 1/xc_temp-1
+                G_G = config['opCond']['mdot_c']*xc_temp
+                sigma = PropsSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
+
+                # Calculate the coefficients
+                abscisse = GL_GG*np.power(rho_G*rho_L/1200, 1/3)*(np.power(mu_L*(1000/rho_L)**2, 1/3)*0.073/sigma)
+                ordonnee = G_G*np.power(rho_G*rho_L/1200, -1/2)
+
+                # Save value to be plotted
+                N_res_x[j-1] = abscisse
+                N_res_y[j-1] = ordonnee
+
+            plt.plot(N_res_x, N_res_y, '-x')
+
+    else:
+        print('INFO: No config and results given.')
+        print('INFO: Plotting only the map.')
 
     if show:  
         plt.show()
