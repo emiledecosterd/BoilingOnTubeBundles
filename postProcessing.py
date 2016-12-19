@@ -19,9 +19,6 @@ def makeFigure(Field, FieldName, latexName, config, show, k):
 
     f = plt.figure()
 
-    f.set_figheight(11)
-    f.set_figwidth(8.5)
-
     rect = f.patch
     rect.set_facecolor('white')
 
@@ -87,8 +84,6 @@ def plot_xc_pipe(config, results, show):
 
 
     l=plt.figure()
-    l.set_figheight(11)
-    l.set_figwidth(8.5)
 
     rect = l.patch
     rect.set_facecolor('white')

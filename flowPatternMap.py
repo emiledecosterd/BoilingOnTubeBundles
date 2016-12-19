@@ -75,7 +75,7 @@ def plotFlowPatternMap(config, results, show):
     x3 = 0.1155*np.exp(0.0183*x3)
 
     # Configure the plot to use latex interpreter
-    plt.rc('text', usetex=True)
+    # plt.rc('text', usetex=True)
     plt.rc('font', family='serif')
     x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
     y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
