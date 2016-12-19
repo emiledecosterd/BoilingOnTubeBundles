@@ -242,7 +242,7 @@ class ResultsDialog(Ui_Dialog):
 	def loadData(self):
 
 		# Read data
-		file = open(self.directoryName + 'data/results_misc.out', 'r')
+		file = open(self.directoryName + '/data/results_misc.out', 'r')
 		lines = file.readlines()
 		file.close()
 

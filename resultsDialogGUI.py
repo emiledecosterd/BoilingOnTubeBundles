@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class Ui_Dialog(QtWidgets.QWidget):
+class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
         Dialog.resize(941, 741)
@@ -98,7 +98,7 @@ class Ui_Dialog(QtWidgets.QWidget):
         self.label.setText(_translate("Dialog", "Results & Plots"))
         self.label_2.setText(_translate("Dialog", "Simulation folder"))
         self.pushButton.setText(_translate("Dialog", "PushButton"))
-        self.label_3.setText(_translate("Dialog", "Capacity Q [W] :"))
+        self.label_3.setText(_translate("Dialog", "Capacity Q [kW] :"))
         self.comboBoxPlotView.setItemText(0, _translate("Dialog", "1 Plot View"))
         self.comboBoxPlotView.setItemText(1, _translate("Dialog", "4 Plots View"))
         self.comboBoxPlotView.setItemText(2, _translate("Dialog", "6 Plots View"))

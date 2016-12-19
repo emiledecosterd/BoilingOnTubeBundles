@@ -70,7 +70,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Capacity Q [W] :</string>
+          <string>Capacity Q [kW] :</string>
          </property>
         </widget>
        </item>

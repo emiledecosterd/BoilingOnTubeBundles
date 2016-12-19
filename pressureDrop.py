@@ -109,7 +109,7 @@ def cell_pressureDrop(opCond, geom, Th_out, Tc_out, Pc_in, Ph_in, eps_in, eps_ou
             # Pressure drop coefficient
             zeta = zeta_lf*fzl + (zeta_tf*fzt + fnt)*(1-math.exp(-(Re+1000)/2000))
 
-        if geom['layout'] == 'Staggered':
+        elif geom['layout'] == 'Staggered':
             # Staggered perpendicular
             if (b >= 0.5*math.sqrt(a+1)):
                 # Laminar flow staggered type pressure drop coefficient

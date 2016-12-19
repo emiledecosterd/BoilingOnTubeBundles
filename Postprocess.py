@@ -119,7 +119,7 @@ def makeFigure(Field, FieldName, config, show, k):
 
     N_cell = np.linspace(1,n,num=n)
 
-    f=plt.figure(k)
+    f = plt.figure()
 
     legendEntries=[]
     legendText=[]
@@ -127,9 +127,9 @@ def makeFigure(Field, FieldName, config, show, k):
     for i in range(Nt):
         plt.plot(N_cell, np.squeeze(np.asarray(Field[i+1,1:n+1])),'x-',label='Pipe '+str(i+1))
 
-    plt.xlabel('cell #')
-    plt.ylabel(FieldName)
-    plt.grid(True)
+        plt.xlabel('cell #')
+        plt.ylabel(FieldName)
+        plt.grid(True)
 
 
     if Nt<=8:
@@ -141,6 +141,8 @@ def makeFigure(Field, FieldName, config, show, k):
         with open(config['filename'] + 'mplt/plot_'+ FieldName, 'wb') as fid:
             pickle.dump(f, fid)
         f.savefig(config['filename'] + 'images/plot_'+ FieldName +'.png')
+
+
 
 
 def plot_boiler(config, results, show):
@@ -176,7 +178,7 @@ def plot_xc_pipe(config, results, show):
         x_pipe_max[i] = np.max(xc[i+1,1:n+1])
 
 
-    l=plt.figure(7)
+    l=plt.figure()
     ax=l.gca()
     ax.set_aspect('auto')
     ax.bar(np.linspace(1,Nt,num=Nt)-0.3,x_pipe_avg,0.3,color='b',label='Average')
