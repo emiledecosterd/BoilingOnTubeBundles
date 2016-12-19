@@ -187,11 +187,14 @@ class SimulationWindow(Ui_MainWindow):
 	##	Bridge between the signals from the fields and the maincontroller
 	def inputsChanged(self):
 		print('Input changed')
-		color = '#ffffff' # White
-		self.NtSpinBox.setStyleSheet('QSpinBox { background-color: %s }' % color)
-		self.Nt_colSpinBox.setStyleSheet('QSpinBox { background-color: %s}' % color)
-		print(self.readConfiguration())
-		self.changesOccured.emit()
+		if self.checkTubeNumber():
+			color = '#ffffff' # White
+			self.NtSpinBox.setStyleSheet('QSpinBox { background-color: %s }' % color)
+			self.Nt_colSpinBox.setStyleSheet('QSpinBox { background-color: %s}' % color)
+			print(self.readConfiguration())
+			self.changesOccured.emit()
+		else:
+			print('WARNNG : The current shell size cannot receive more pipe row or column')
 
 	##	Called whenever the user chooses another field to display
 	def sendChosenResult(self):
@@ -221,8 +224,28 @@ class SimulationWindow(Ui_MainWindow):
 			self.shLineEdit.setEnabled(False)
 			self.layoutComboBox.setEnabled(False)
 
-
 	currentCheckBox = None
+
+	## Check if the shell size defined is still big enough for another pipe line or column
+	#
+	def checkTubeNumber(self):
+		geom = {}
+		geom['s'] = float(self.sLineEdit.text())
+		geom['sh'] = float(self.shLineEdit.text())
+		geom['Ds'] = float(self.DsLineEdit.text())
+		geom['Nt'] = self.NtSpinBox.value()
+		geom['Nt_col'] = self.Nt_colSpinBox.value()
+
+		if (geom['s']*geom['Nt'] >= \
+			geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds']))):
+			self.NtSpinBox.setValue(round(geom['Ds']*math.cos(math.asin(geom['Nt_col']*geom['sh']/geom['Ds']))/geom['s']))
+			return False
+		elif (geom['sh']*geom['Nt_col'] >= \
+			geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds']))):
+			self.Nt_colSpinBox.setValue(round(geom['Ds']*math.sin(math.acos(geom['Nt']*geom['s']/geom['Ds']))/geom['sh']))
+			return False
+		else:
+			return True
 
 	##	Checks which fields have to be enabled or disabled depending on the 
 	#	user input for the parametric simulation

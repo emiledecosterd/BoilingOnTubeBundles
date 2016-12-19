@@ -40,10 +40,13 @@ class ResultsDialog(Ui_Dialog):
 		self.verticalLayout_2.addLayout(self.gridLayout)
 
 		# Global variables
+		print('TEST')
+		print(config['filename'])
 		self.directoryName = config['filename']
 
 		# Setup
 		self.setupLists()
+		self.lineEditCapacity.setReadOnly(True)
 
 		# Setup data
 		self.setupData()
@@ -77,7 +80,7 @@ class ResultsDialog(Ui_Dialog):
 		self.figuresList = []
 
 		# Setup Plot Label (Pretty)
-		self.prettyPlotName = ['Plot Tw', 'Plot Pw', 'Plot Twf', 'Plot Pwf', 'Plot x wf', 'Plot eps', 'Plot Average x wf']
+		self.prettyPlotName = ['Plot Average x wf', 'Plot Tw', 'Plot Pw', 'Plot Twf', 'Plot Pwf', 'Plot x wf', 'Plot eps']
 		self.plotName = ['avg_xc', 'T_w','P_w','T_wf','P_wf','x_wf', 'eps']
 
 		# Setup Plot Layout indexes
@@ -241,7 +244,7 @@ class ResultsDialog(Ui_Dialog):
 	def loadData(self):
 
 		# Read data
-		file = open(self.directoryName + '/data/results_misc.out', 'r')
+		file = open(self.directoryName + 'data/results_misc.out', 'r')
 		lines = file.readlines()
 		file.close()
 
@@ -271,7 +274,9 @@ class ResultsDialog(Ui_Dialog):
 		self.lineEditCapacity.setText(str(results['Q']))
 
 		# Edit the pushButton
-		self.pushButton.setText(os.path.basename(self.directoryName))
+		print(self.directoryName[:-1])
+		print(os.path.basename(self.directoryName[:-1]))
+		self.pushButton.setText(os.path.basename(self.directoryName[:-1]))
 
 
 
@@ -282,7 +287,7 @@ if __name__ == '__main__':
 
 	config = {}
 	results = {}
-	config['initTime'] = '201612114914'
+	config['filename'] = './results/2016-12-19-07-46-21/'
 	results['Q'] = 10
  
 	resultsDialog = ResultsDialog(dialog, config)
