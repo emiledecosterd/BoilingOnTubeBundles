@@ -110,17 +110,18 @@ def plotFlowPatternMap(config, results, show):
     if show:  
         plt.show()
 
+    else:
     # Save the figure
-    try:
-        with open(config['filename'] + 'mplt/plot_' + 'fpm', 'wb') as fid:
-            pickle.dump(fig, fid)
-            fid.close()
-        fig.savefig(config['filename'] + 'images/plot_' + 'fpm'+ '.png')
-    except Exception as e:
-        if debug is True:
-            print(e)
-        else:
-            raise Error('plotFlowPatternMap', 'Error writing file')
+        try:
+            with open(config['filename'] + 'mplt/plot_' + 'fpm', 'wb') as fid:
+                pickle.dump(fig, fid)
+                fid.close()
+            fig.savefig(config['filename'] + 'images/plot_' + 'fpm'+ '.png')
+        except Exception as e:
+            if debug is True:
+                print(e)
+            else:
+                raise Error('plotFlowPatternMap', 'Error writing file')
 
 
 
