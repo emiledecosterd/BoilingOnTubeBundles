@@ -27,7 +27,7 @@ import pdb
 class MainController(QtCore.QObject):
 
 	# Instance variables
-	isLongPlotter = True
+	isLongPlotter = False
 	currentSimulationConfiguration = None
 	results = None
 	running = False
@@ -197,6 +197,7 @@ class MainController(QtCore.QObject):
 
 		# Post process, no GUI
 		try:
+			print(self.currentSimulationConfiguration)
 			postProcessor = PostProcessor(self.currentSimulationConfiguration, self.results, False)
 		except Error as e:
 			print(e)
@@ -274,7 +275,7 @@ class MainController(QtCore.QObject):
 				print(error)
 			
 		else:
-			print('INFO: No plots available. Run a simulation to have some')
+			print('INFO: No plots available. Unable to find results')
 
 
 	##	togglePlotter()

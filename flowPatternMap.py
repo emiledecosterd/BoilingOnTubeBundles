@@ -5,7 +5,7 @@ from CoolProp.CoolProp import PropsSI
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import error
+from error import Error
 import sys
 import pickle
 
@@ -43,9 +43,8 @@ def plotFlowPatternMap(config, results, show):
     # Configure the plot to use latex interpreter
 
     plt.rc('font', family='serif')
-    x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{1000}{\rho_L})^2\right)^{\frac{1}{3}}\frac{0.073}{\sigma}\right]$'
-    y_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{1.2}\cdot\frac{\rho_L}{1000}\right]^{0.5}\right)$'
-
+    x_text = r'$\left(\frac{G_L}{G_G}\left[\frac{\rho_G}{\rho_Gref}\cdot\frac{\rho_L}{\rho_Lref}\right]^{0.5} \right)\left[ \left( \mu_L(\frac{\rho_Lref}{\rho_L})^2\right)^{\frac{1}{3}}\frac{\sigma_{ref}}{\sigma}\right] (10^{-3}\frac{Ns}{m^2})^{\frac{1}{3}}$'
+    y_text = r'$\left(G_G\left[\frac{\rho_G}{\rho_Gref}\cdot\frac{\rho_L}{\rho_Lref}\right]^{-0.5}\right)$'
 
     # Plot the curves
     fig = plt.figure()
@@ -54,8 +53,8 @@ def plotFlowPatternMap(config, results, show):
     plt.loglog(x1, y1, 'k')
     plt.loglog(x2, y2,'k')
     plt.loglog(x3, y3, 'k')
-    plt.xlabel(x_text)
-    plt.ylabel(y_text)
+    plt.xlabel(x_text, labelsize = 14)
+    plt.ylabel(y_text, labelsize = 14)
     plt.title('Flow pattern map')
     plt.grid(True, 'both')
 
@@ -74,6 +73,11 @@ def plotFlowPatternMap(config, results, show):
         n = config['geom']['n']
         Nt = config['geom']['Nt']
 
+        # Reference values
+        rho_G_ref = PropsSI('D', 'T', config['flowInputs']['Tc'], 'Q', 1.0, config['opCond']['FluidType'])
+        rho_L_ref = PropsSI('D', 'T', config['flowInputs']['Tc'], 'Q', 0.0, config['opCond']['FluidType'])
+        sigma_ref = PropsSI('D', 'T', config['flowInputs']['Tc'], 'Q', 0.0, config['opCond']['FluidType'])
+
         N_cell = np.linspace(1,n, num=n)
         N_res_x = np.zeros(n)
         N_res_y = np.zeros(n)
@@ -86,16 +90,17 @@ def plotFlowPatternMap(config, results, show):
                 xc_temp = xc[i, j]
                 Tc_temp = Tc[i, j]
 
+                # Current param
                 rho_L = PropsSI('D', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
                 rho_G = PropsSI('D', 'T', Tc_temp, 'Q', 1.0, config['opCond']['FluidType'])
                 mu_L = PropsSI('viscosity', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
-                GL_GG = 1/xc_temp-1
+                GL_GG = (1/xc_temp)-1
                 G_G = config['opCond']['mdot_c']*xc_temp
                 sigma = PropsSI('surface_tension', 'T', Tc_temp, 'Q', 0.0, config['opCond']['FluidType'])
 
                 # Calculate the coefficients
-                abscisse = GL_GG*np.power(rho_G*rho_L/1200, 1/3)*(np.power(mu_L*(1000/rho_L)**2, 1/3)*0.073/sigma)
-                ordonnee = G_G*np.power(rho_G*rho_L/1200, -1/2)
+                abscisse = GL_GG*np.power(rho_G/rho_G_ref*rho_L/rho_L_ref, 1/3)*(np.power(mu_L*(rho_L_ref/rho_L)**2, 1/3)*sigma_ref/sigma)*0.1
+                ordonnee = G_G*np.power(rho_G/rho_G_ref*rho_L/rho_L_ref, -1/2)
 
                 # Save value to be plotted
                 N_res_x[j-1] = abscisse

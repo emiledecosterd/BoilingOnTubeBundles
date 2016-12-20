@@ -143,16 +143,16 @@ def defaultConfiguration():
 
 	opCond = {
 			'FluidType' : 'R134a',
-			'mfr_c' : 40,
-			'mfr_h' : 15,
-			'TubeMat' : 'other',
+			'mfr_c' : 20,
+			'mfr_h' : 80,
+			'TubeMat' : 'copper',
 			'TubeThermalConductivity' : 410
 	}
 	geom = {
-		'Ds' : 1,
+		'Ds' : 1.3,
 		'D' : 30e-3,
-		'Nt' : 3,
-		'Nt_col' : 4,
+		'Nt' : 22,
+		'Nt_col' : 17,
 		'L' : 3.0,
 		's' : 45e-3,
 		'sh' : 45e-3,
