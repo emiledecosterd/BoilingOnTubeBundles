@@ -114,6 +114,7 @@ def plotFlowPatternMap(config, results, show):
     try:
         with open(config['filename'] + 'mplt/plot_' + 'fpm', 'wb') as fid:
             pickle.dump(fig, fid)
+            fid.close()
         fig.savefig(config['filename'] + 'images/plot_' + 'fpm'+ '.png')
     except Exception as e:
         if debug is True:

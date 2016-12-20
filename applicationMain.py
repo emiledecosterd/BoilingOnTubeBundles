@@ -83,6 +83,8 @@ class MainController(QtCore.QObject):
 		window.show()
 		self.updatePlots()
 
+		print('READY')
+
 		# Launch application
 		# For more details: 
 		# http://stackoverflow.com/questions/25075954/using-sys-exit-with-app-exec-in-pyqt
