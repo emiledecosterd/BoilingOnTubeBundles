@@ -48,6 +48,10 @@ class SimulationWindow(Ui_MainWindow):
 		self.setupConnections()
 		self.setupRules()
 
+		# Setup logo
+		logo = QtGui.QPixmap('./TBDesigner_logo.001.jpeg')
+		self.label.setPixmap(logo)
+
 	##	Fills the lists for all the comboboxes
 	#	@param	None
 	def setupLists(self):

@@ -47,14 +47,14 @@ def plotFlowPatternMap(config, results, show):
     y_text = r'$\left(G_G\left[\frac{\rho_G}{\rho_Gref}\cdot\frac{\rho_L}{\rho_Lref}\right]^{-0.5}\right)$'
 
     # Plot the curves
-    fig = plt.figure()
+    fig = plt.figure(figsize=(9, 9))
     rect = fig.patch
     rect.set_facecolor('white')
     plt.loglog(x1, y1, 'k')
     plt.loglog(x2, y2,'k')
     plt.loglog(x3, y3, 'k')
-    plt.xlabel(x_text, labelsize = 14)
-    plt.ylabel(y_text, labelsize = 14)
+    plt.xlabel(x_text, fontsize = 20)
+    plt.ylabel(y_text, fontsize = 20)
     plt.title('Flow pattern map')
     plt.grid(True, 'both')
 
