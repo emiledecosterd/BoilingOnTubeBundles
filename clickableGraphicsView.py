@@ -16,5 +16,4 @@ class QClickableGraphicsView(QtWidgets.QGraphicsView):
 		super(QClickableGraphicsView, self).__init__(parent)
 
 	def mousePressEvent(self, event):
-		print('Clicked')
 		self.clicked.emit()

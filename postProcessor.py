@@ -45,24 +45,28 @@ class PostProcessor(QObject):
 	#	@param results Results diactionnary
 	def savePlots(self):
 
+		print('INFO: Plotting...')
 		try:
 			# Save the boiler plots
 			plot_boiler(self.config, self.results, self.show)
 		except Exception as e:
 			raise Error('PostProcessor.savePlots.plot_boiler', e)
 
+		print('INFO: Plotting...')
 		try:
 			# Save teh xc pipe plot
 			plot_xc_pipe(self.config, self.results, self.show)
 		except Exception as e:
 			raise Error('PostProcessor.savePlots.plot_xc_pipe', e)
 
+		print('INFO: Calculating...')
 		try:
 			# Compute other calculation
 			self.results = PostProcess_calc(self.config, self.results)
 		except Exception as e:
 			raise Error('PostProcessor.savePlots.PostProcess_calc', e)
 
+		print('INFO: Plotting flow pattern map...')
 		try:
 			plotFlowPatternMap(self.config, self.results, self.show)
 		except Exception as e:
@@ -72,6 +76,7 @@ class PostProcessor(QObject):
 	#	@param results Results diactionnary
 	def writeFile(self) :
 
+		print('INFO: Writing files...')
 		# Set results name lists
 		names=['T_w','P_w','T_wf','P_wf','x_wf', 'eps']
 		resultsNames = ['Th','Ph','Tc','Pc','xc','eps']

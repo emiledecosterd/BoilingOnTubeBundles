@@ -171,7 +171,7 @@ def SolveCell(opCond, geom, Th_in, Tc_in, Ph_in, Pc_in, eps_in, xc_in ):
 	else:
 		print('q : %.3f, q_dnb : %.3f' %(q,q_dnb(opCond, geom, Tc_out)))
 
-
+	print('INFO: Calculating...')
 	# Capacity of the cell
 	Qcell = Q #[kW]
 	OtherData={}

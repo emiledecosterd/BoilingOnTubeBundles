@@ -184,6 +184,8 @@ class MainController(QtCore.QObject):
 
 	def handleResults(self, results):
 
+		print('INFO: Processing simulation results...')
+
 		# Check if simulation was aborted by user
 		self.results = results
 		if results == {}:

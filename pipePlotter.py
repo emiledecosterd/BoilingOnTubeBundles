@@ -35,6 +35,10 @@ class PipePlotter(QtCore.QObject):
 		self.cellPen = QtGui.QPen(QtCore.Qt.DotLine)
 		self.fillPen = QtGui.QPen(QtCore.Qt.NoPen)
 		self.axisLine = QtGui.QPen(QtCore.Qt.DashDotLine)
+
+		# The colors
+		self.hotColor = QtGui.QColor(QtCore.Qt.red)
+		self.coldColor = QtGui.QColor(QtCore.Qt.blue)
 	
 	##	drawOuterRect()
 	#	Draw the basis rectangle on the graphics view
@@ -236,9 +240,11 @@ class LongPipePlotter(PipePlotter):
 
 				# Get right color
 				''' /!\ To be corrected !!! '''
-				val = (field[j,i]-minVal)/(maxVal-minVal)*2/3 
-				color = QtGui.QColor()
-				color.setHsvF(val, 1.0,1.0,0.5)
+				val = (field[j,i]-minVal)/(maxVal-minVal)
+				r = int(self.coldColor.red() + val*(self.hotColor.red()-self.coldColor.red()))
+				g = 0
+				b = int(self.coldColor.blue() + val*(self.hotColor.blue() - self.coldColor.blue()))
+				color = QtGui.QColor(r,g,b, 200)
 				brush = QtGui.QBrush(color, QtCore.Qt.Dense2Pattern)
 
 				# Draw the rectangle
