@@ -76,8 +76,8 @@ class ResultsDialog(Ui_Dialog):
 		self.figuresList = []
 
 		# Setup Plot Label (Pretty)
-		self.prettyPlotName = ['Flow Pattern Map', 'Plot Average x wf', 'Plot Tw', 'Plot Pw', 'Plot Twf', 'Plot Pwf', 'Plot x wf', 'Plot eps']
-		self.plotName = ['fpm','avg_xc', 'T_w','P_w','T_wf','P_wf','x_wf', 'eps']
+		self.prettyPlotName = ['Plot Average x wf', 'Plot Tw', 'Plot Pw', 'Plot Twf', 'Plot Pwf', 'Plot x wf', 'Plot eps', 'Flow Pattern Map']
+		self.plotName = ['avg_xc', 'T_w','P_w','T_wf','P_wf','x_wf','eps', 'fpm']
 
 		# Setup Plot Layout indexes
 		self.nPlots = [1, 4, 6]
